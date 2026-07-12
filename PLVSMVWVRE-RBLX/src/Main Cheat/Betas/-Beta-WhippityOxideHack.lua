@@ -125,7 +125,7 @@ local function PLVSMVWVRE_Menu()
     local PlaceId = game.PlaceId
     local JobId = game.JobId
     local char, rootPart, Humanoid
-    local Sence = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
+    local Sence = loadstring(game:HttpGet('https://github.com/hollyntt/PLWVRE-Roblox-Script/blob/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
     local flyForce, flyConnection
 
     local ExecName = identifyexecutor()
