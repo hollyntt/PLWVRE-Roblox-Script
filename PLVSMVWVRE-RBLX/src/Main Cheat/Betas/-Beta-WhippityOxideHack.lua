@@ -125,7 +125,7 @@ local function PLVSMVWVRE_Menu()
     local PlaceId = game.PlaceId
     local JobId = game.JobId
     local char, rootPart, Humanoid
-    local Sence = loadstring(game:HttpGet('https://github.com/hollyntt/PLWVRE-Roblox-Script/blob/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
+    local Sence = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
     local flyForce, flyConnection
 
     local ExecName = identifyexecutor()
@@ -2840,8 +2840,7 @@ local function PLVSMVWVRE_Menu()
         sound.Parent = workspace -- Parent the sound to the workspace
     
         Library.Unloaded = true
-        ESP.Enabled = false
-        ESP.Box = false
+        Sense.Unload()
         workspace.Camera.FieldOfView = 70
 
         if TogglesOFF == false then
@@ -4667,6 +4666,14 @@ local function PLVSMVWVRE_Menu()
         Text = 'Load ToolHandler',
         Func = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/dqtixz/NebulaNosh-I-Gui-A.C.S-F.E-/main/By%20dqtixz"))();
+        end,
+        DoubleClick = true,
+        Tooltip = 'Loads the script'
+    })
+    local MyButton = RightGroupbox_X:AddButton({
+        Text = 'Load Novoline',
+        Func = function()
+            loadstring(game:HttpGet("https://script.roscripts.io/0tDy4zY"))()
         end,
         DoubleClick = true,
         Tooltip = 'Loads the script'

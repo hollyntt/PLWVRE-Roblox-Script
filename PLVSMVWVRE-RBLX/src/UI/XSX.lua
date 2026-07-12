@@ -3460,6 +3460,406 @@ function library:Init(key)
             return SliderFunctions
         end
         --
+        function Components:NewColorpicker(text, default, callback)
+            text = text or "color picker"
+            default = default or Color3.fromRGB(159, 115, 255)
+            callback = callback or function() end
+
+            local currentH, currentS, currentV = default:ToHSV()
+
+            local colorpickerFrame = Instance.new("Frame")
+            local colorpickerLabel = Instance.new("TextLabel")
+            local colorButtonBorder = Instance.new("Frame")
+            local colorButtonBorderCorner = Instance.new("UICorner")
+            local colorButton = Instance.new("TextButton")
+            local colorButtonCorner = Instance.new("UICorner")
+            local pickerContainer = Instance.new("Frame")
+            local canvasBorder = Instance.new("Frame")
+            local canvasBorderCorner = Instance.new("UICorner")
+            local canvas = Instance.new("Frame")
+            local canvasCorner = Instance.new("UICorner")
+            local satFrame = Instance.new("Frame")
+            local satGradient = Instance.new("UIGradient")
+            local satCorner = Instance.new("UICorner")
+            local valFrame = Instance.new("Frame")
+            local valGradient = Instance.new("UIGradient")
+            local valCorner = Instance.new("UICorner")
+            local canvasCursorBorder = Instance.new("Frame")
+            local canvasCursorBorderCorner = Instance.new("UICorner")
+            local canvasCursor = Instance.new("Frame")
+            local canvasCursorCorner = Instance.new("UICorner")
+            local hueBorder = Instance.new("Frame")
+            local hueBorderCorner = Instance.new("UICorner")
+            local hueSlider = Instance.new("Frame")
+            local hueSliderCorner = Instance.new("UICorner")
+            local hueGradient = Instance.new("UIGradient")
+            local hueCursorBorder = Instance.new("Frame")
+            local hueCursorBorderCorner = Instance.new("UICorner")
+            local hueCursor = Instance.new("Frame")
+            local hueCursorCorner = Instance.new("UICorner")
+            local hexBorder = Instance.new("Frame")
+            local hexBorderCorner = Instance.new("UICorner")
+            local hexBackground = Instance.new("Frame")
+            local hexBackgroundGradient = Instance.new("UIGradient")
+            local hexBackgroundCorner = Instance.new("UICorner")
+            local hexTextBox = Instance.new("TextBox")
+
+            colorpickerFrame.Name = "colorpickerFrame"
+            colorpickerFrame.Parent = page
+            colorpickerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            colorpickerFrame.BackgroundTransparency = 1.000
+            colorpickerFrame.ClipsDescendants = true
+            colorpickerFrame.Size = UDim2.new(0, 396, 0, 24)
+
+            colorpickerLabel.Name = "colorpickerLabel"
+            colorpickerLabel.Parent = colorpickerFrame
+            colorpickerLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            colorpickerLabel.BackgroundTransparency = 1.000
+            colorpickerLabel.Size = UDim2.new(0, 250, 0, 24)
+            colorpickerLabel.Font = Enum.Font.Code
+            colorpickerLabel.Text = text
+            colorpickerLabel.TextColor3 = Color3.fromRGB(190, 190, 190)
+            colorpickerLabel.TextSize = 14.000
+            colorpickerLabel.TextXAlignment = Enum.TextXAlignment.Left
+            colorpickerLabel.RichText = true
+
+            colorButtonBorder.Name = "colorButtonBorder"
+            colorButtonBorder.Parent = colorpickerFrame
+            colorButtonBorder.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            colorButtonBorder.Position = UDim2.new(0, 350, 0, 4)
+            colorButtonBorder.Size = UDim2.new(0, 36, 0, 16)
+
+            colorButtonBorderCorner.CornerRadius = UDim.new(0, 2)
+            colorButtonBorderCorner.Name = "colorButtonBorderCorner"
+            colorButtonBorderCorner.Parent = colorButtonBorder
+
+            colorButton.Name = "colorButton"
+            colorButton.Parent = colorButtonBorder
+            colorButton.AnchorPoint = Vector2.new(0.5, 0.5)
+            colorButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+            colorButton.Size = UDim2.new(0, 34, 0, 14)
+            colorButton.BackgroundColor3 = default
+            colorButton.AutoButtonColor = false
+            colorButton.Text = ""
+
+            colorButtonCorner.CornerRadius = UDim.new(0, 2)
+            colorButtonCorner.Name = "colorButtonCorner"
+            colorButtonCorner.Parent = colorButton
+
+            pickerContainer.Name = "pickerContainer"
+            pickerContainer.Parent = colorpickerFrame
+            pickerContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            pickerContainer.BackgroundTransparency = 1.000
+            pickerContainer.Position = UDim2.new(0, 0, 0, 24)
+            pickerContainer.Size = UDim2.new(0, 396, 0, 136)
+
+            canvasBorder.Name = "canvasBorder"
+            canvasBorder.Parent = pickerContainer
+            canvasBorder.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            canvasBorder.Position = UDim2.new(0, 10, 0, 8)
+            canvasBorder.Size = UDim2.new(0, 180, 0, 110)
+
+            canvasBorderCorner.CornerRadius = UDim.new(0, 2)
+            canvasBorderCorner.Parent = canvasBorder
+
+            canvas.Name = "canvas"
+            canvas.Parent = canvasBorder
+            canvas.AnchorPoint = Vector2.new(0.5, 0.5)
+            canvas.Position = UDim2.new(0.5, 0, 0.5, 0)
+            canvas.Size = UDim2.new(0, 178, 0, 108)
+            canvas.BackgroundColor3 = Color3.fromHSV(currentH, 1, 1)
+
+            canvasCorner.CornerRadius = UDim.new(0, 2)
+            canvasCorner.Parent = canvas
+
+            satFrame.Size = UDim2.new(1, 0, 1, 0)
+            satFrame.BackgroundTransparency = 0
+            satFrame.BorderSizePixel = 0
+            satFrame.Parent = canvas
+
+            satGradient.Color = ColorSequence.new(Color3.new(1, 1, 1))
+            satGradient.Transparency = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 0),
+                NumberSequenceKeypoint.new(1, 1)
+            }
+            satGradient.Parent = satFrame
+
+            satCorner.CornerRadius = UDim.new(0, 2)
+            satCorner.Parent = satFrame
+
+            valFrame.Size = UDim2.new(1, 0, 1, 0)
+            valFrame.BackgroundTransparency = 0
+            valFrame.BorderSizePixel = 0
+            valFrame.Parent = canvas
+
+            valGradient.Color = ColorSequence.new(Color3.new(0, 0, 0))
+            valGradient.Rotation = 90
+            valGradient.Transparency = NumberSequence.new{
+                NumberSequenceKeypoint.new(0, 1),
+                NumberSequenceKeypoint.new(1, 0)
+            }
+            valGradient.Parent = valFrame
+
+            valCorner.CornerRadius = UDim.new(0, 2)
+            valCorner.Parent = valFrame
+
+            canvasCursorBorder.Name = "canvasCursorBorder"
+            canvasCursorBorder.Parent = canvas
+            canvasCursorBorder.AnchorPoint = Vector2.new(0.5, 0.5)
+            canvasCursorBorder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            canvasCursorBorder.Size = UDim2.new(0, 8, 0, 8)
+            canvasCursorBorder.Position = UDim2.new(currentS, 0, 1 - currentV, 0)
+
+            canvasCursorBorderCorner.CornerRadius = UDim.new(1, 0)
+            canvasCursorBorderCorner.Parent = canvasCursorBorder
+
+            canvasCursor.Name = "canvasCursor"
+            canvasCursor.Parent = canvasCursorBorder
+            canvasCursor.AnchorPoint = Vector2.new(0.5, 0.5)
+            canvasCursor.Position = UDim2.new(0.5, 0, 0.5, 0)
+            canvasCursor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            canvasCursor.Size = UDim2.new(0, 6, 0, 6)
+
+            canvasCursorCorner.CornerRadius = UDim.new(1, 0)
+            canvasCursorCorner.Parent = canvasCursor
+
+            hueBorder.Name = "hueBorder"
+            hueBorder.Parent = pickerContainer
+            hueBorder.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            hueBorder.Position = UDim2.new(0, 205, 0, 8)
+            hueBorder.Size = UDim2.new(0, 180, 0, 16)
+
+            hueBorderCorner.CornerRadius = UDim.new(0, 2)
+            hueBorderCorner.Parent = hueBorder
+
+            hueSlider.Name = "hueSlider"
+            hueSlider.Parent = hueBorder
+            hueSlider.AnchorPoint = Vector2.new(0.5, 0.5)
+            hueSlider.Position = UDim2.new(0.5, 0, 0.5, 0)
+            hueSlider.Size = UDim2.new(0, 178, 0, 14)
+
+            hueSliderCorner.CornerRadius = UDim.new(0, 2)
+            hueSliderCorner.Parent = hueSlider
+
+            hueGradient.Color = ColorSequence.new{
+                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),
+                ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+                ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+                ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 255)),
+                ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
+                ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 0))
+            }
+            hueGradient.Parent = hueSlider
+
+            hueCursorBorder.Name = "hueCursorBorder"
+            hueCursorBorder.Parent = hueSlider
+            hueCursorBorder.AnchorPoint = Vector2.new(0.5, 0.5)
+            hueCursorBorder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            hueCursorBorder.Size = UDim2.new(0, 6, 1, 0)
+            hueCursorBorder.Position = UDim2.new(currentH, 0, 0.5, 0)
+
+            hueCursorBorderCorner.CornerRadius = UDim.new(0, 2)
+            hueCursorBorderCorner.Parent = hueCursorBorder
+
+            hueCursor.Name = "hueCursor"
+            hueCursor.Parent = hueCursorBorder
+            hueCursor.AnchorPoint = Vector2.new(0.5, 0.5)
+            hueCursor.Position = UDim2.new(0.5, 0, 0.5, 0)
+            hueCursor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            hueCursor.Size = UDim2.new(0, 4, 1, -2)
+
+            hueCursorCorner.CornerRadius = UDim.new(0, 2)
+            hueCursorCorner.Parent = hueCursor
+
+            hexBorder.Name = "hexBorder"
+            hexBorder.Parent = pickerContainer
+            hexBorder.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            hexBorder.Position = UDim2.new(0, 205, 0, 32)
+            hexBorder.Size = UDim2.new(0, 180, 0, 22)
+
+            hexBorderCorner.CornerRadius = UDim.new(0, 2)
+            hexBorderCorner.Parent = hexBorder
+
+            hexBackground.Name = "hexBackground"
+            hexBackground.Parent = hexBorder
+            hexBackground.AnchorPoint = Vector2.new(0.5, 0.5)
+            hexBackground.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            hexBackground.Position = UDim2.new(0.5, 0, 0.5, 0)
+            hexBackground.Size = UDim2.new(0, 178, 0, 20)
+
+            hexBackgroundGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(34, 34, 34)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(28, 28, 28))}
+            hexBackgroundGradient.Rotation = 90
+            hexBackgroundGradient.Name = "hexBackgroundGradient"
+            hexBackgroundGradient.Parent = hexBackground
+
+            hexBackgroundCorner.CornerRadius = UDim.new(0, 2)
+            hexBackgroundCorner.Name = "hexBackgroundCorner"
+            hexBackgroundCorner.Parent = hexBackground
+
+            hexTextBox.Name = "hexTextBox"
+            hexTextBox.Parent = hexBackground
+            hexTextBox.AnchorPoint = Vector2.new(0.5, 0.5)
+            hexTextBox.BackgroundTransparency = 1.000
+            hexTextBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+            hexTextBox.Size = UDim2.new(1, -8, 1, 0)
+            hexTextBox.Font = Enum.Font.Code
+            hexTextBox.Text = "#" .. default:ToHex():upper()
+            hexTextBox.TextColor3 = Color3.fromRGB(190, 190, 190)
+            hexTextBox.TextSize = 14.000
+            hexTextBox.TextXAlignment = Enum.TextXAlignment.Center
+
+            local function updateHSV()
+                local color = Color3.fromHSV(currentH, currentS, currentV)
+                canvas.BackgroundColor3 = Color3.fromHSV(currentH, 1, 1)
+                colorButton.BackgroundColor3 = color
+                hexTextBox.Text = "#" .. color:ToHex():upper()
+                pcall(function()
+                    callback(color)
+                end)
+            end
+
+            local isDraggingCanvas = false
+            local isDraggingHue = false
+
+            local function processCanvasInput(input)
+                local relativeX = math.clamp((input.Position.X - canvas.AbsolutePosition.X) / canvas.AbsoluteSize.X, 0, 1)
+                local relativeY = math.clamp((input.Position.Y - canvas.AbsolutePosition.Y) / canvas.AbsoluteSize.Y, 0, 1)
+
+                currentS = relativeX
+                currentV = 1 - relativeY
+
+                canvasCursorBorder.Position = UDim2.new(currentS, 0, 1 - currentV, 0)
+                updateHSV()
+            end
+
+            canvas.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isDraggingCanvas = true
+                    processCanvasInput(input)
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if isDraggingCanvas and input.UserInputType == Enum.UserInputType.MouseMovement then
+                    processCanvasInput(input)
+                end
+            end)
+
+            local function processHueInput(input)
+                local relativeX = math.clamp((input.Position.X - hueSlider.AbsolutePosition.X) / hueSlider.AbsoluteSize.X, 0, 1)
+                currentH = relativeX
+                hueCursorBorder.Position = UDim2.new(currentH, 0, 0.5, 0)
+                updateHSV()
+            end
+
+            hueSlider.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isDraggingHue = true
+                    processHueInput(input)
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if isDraggingHue and input.UserInputType == Enum.UserInputType.MouseMovement then
+                    processHueInput(input)
+                end
+            end)
+
+            UserInputService.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isDraggingCanvas = false
+                    isDraggingHue = false
+                end
+            end)
+
+            hexTextBox.FocusLost:Connect(function()
+                local rawText = hexTextBox.Text:gsub("#", "")
+                local success, color = pcall(function()
+                    return Color3.fromHex(rawText)
+                end)
+                if success and color then
+                    currentH, currentS, currentV = color:ToHSV()
+                    canvas.BackgroundColor3 = Color3.fromHSV(currentH, 1, 1)
+                    canvasCursorBorder.Position = UDim2.new(currentS, 0, 1 - currentV, 0)
+                    hueCursorBorder.Position = UDim2.new(currentH, 0, 0.5, 0)
+                    updateHSV()
+                else
+                    local curColor = Color3.fromHSV(currentH, currentS, currentV)
+                    hexTextBox.Text = "#" .. curColor:ToHex():upper()
+                end
+            end)
+
+            colorpickerFrame.MouseEnter:Connect(function()
+                TweenService:Create(colorpickerLabel, TweenTable["hover"], {TextColor3 = Color3.fromRGB(210, 210, 210)}):Play()
+            end)
+
+            colorpickerFrame.MouseLeave:Connect(function()
+                TweenService:Create(colorpickerLabel, TweenTable["hover"], {TextColor3 = Color3.fromRGB(190, 190, 190)}):Play()
+            end)
+
+            local expanded = false
+            CreateTween("colorpicker_toggle", 0.15)
+            colorButton.MouseButton1Click:Connect(function()
+                expanded = not expanded
+                local targetHeight = expanded and 160 or 24
+                TweenService:Create(colorpickerFrame, TweenTable["colorpicker_toggle"], {Size = UDim2.new(0, 396, 0, targetHeight)}):Play()
+
+                coroutine.wrap(function()
+                    local steps = 15
+                    for i = 1, steps do
+                        UpdatePageSize()
+                        wait(0.15 / steps)
+                    end
+                    UpdatePageSize()
+                end)()
+            end)
+
+            UpdatePageSize()
+
+            local ColorpickerFunctions = {}
+            function ColorpickerFunctions:Set(color)
+                currentH, currentS, currentV = color:ToHSV()
+                canvas.BackgroundColor3 = Color3.fromHSV(currentH, 1, 1)
+                canvasCursorBorder.Position = UDim2.new(currentS, 0, 1 - currentV, 0)
+                hueCursorBorder.Position = UDim2.new(currentH, 0, 0.5, 0)
+                updateHSV()
+                return ColorpickerFunctions
+            end
+            --
+            function ColorpickerFunctions:Text(new)
+                new = new or text
+                colorpickerLabel.Text = new
+                return ColorpickerFunctions
+            end
+            --
+            function ColorpickerFunctions:Hide()
+                colorpickerFrame.Visible = false
+                UpdatePageSize()
+                return ColorpickerFunctions
+            end
+            --
+            function ColorpickerFunctions:Show()
+                colorpickerFrame.Visible = true
+                UpdatePageSize()
+                return ColorpickerFunctions
+            end
+            --
+            function ColorpickerFunctions:Remove()
+                colorpickerFrame:Destroy()
+                UpdatePageSize()
+                return ColorpickerFunctions
+            end
+            --
+            function ColorpickerFunctions:SetFunction(new)
+                new = new or function() end
+                callback = new
+                return ColorpickerFunctions
+            end
+
+            return ColorpickerFunctions
+        end
+        --
         function Components:NewSeperator()
             local sectionFrame = Instance.new("Frame")
             local sectionLayout = Instance.new("UIListLayout")
