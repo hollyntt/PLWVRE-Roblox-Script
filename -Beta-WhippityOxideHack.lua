@@ -2995,7 +2995,7 @@ local function PLVSMVWVRE_Menu()
     getgenv().Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
     getgenv().ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
     getgenv().SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-    getgenv().ESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua'))()
+    getgenv().ESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/ESP.lua'))()
 
     local cheatname
     local BetaTag = " [BETA]";
