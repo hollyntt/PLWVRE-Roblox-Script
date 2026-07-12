@@ -125,6 +125,7 @@ local function PLVSMVWVRE_Menu()
     local PlaceId = game.PlaceId
     local JobId = game.JobId
     local char, rootPart, Humanoid
+    local Sence = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
     local flyForce, flyConnection
 
     local ExecName = identifyexecutor()
@@ -2932,6 +2933,7 @@ local function PLVSMVWVRE_Menu()
         initiate_ChatLogger() Success_Notificate("Initialized OnUpdate!") 
         Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Chatlog!")
         InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
+        Sense.Load() Success_Notificate("Initialized Sence!")
 
         Notificate(COLORS.WHITE, "Setting up Hooks...")
 
@@ -2994,7 +2996,6 @@ local function PLVSMVWVRE_Menu()
     getgenv().Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
     getgenv().ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
     getgenv().SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-    getgenv().Sence = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Sence.lua'))()
 
     local cheatname
     local BetaTag = " [BETA]";
