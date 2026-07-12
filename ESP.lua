@@ -1,5 +1,3 @@
--- esp.lua
---// Variables
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
@@ -126,7 +124,9 @@ local function removeEsp(player)
     if not esp then return end
 
     for _, drawing in pairs(esp) do
-        drawing:Remove()
+        if drawing and drawing.Remove then
+            pcall(function() drawing:Remove() end)
+        end
     end
 
     cache[player] = nil
