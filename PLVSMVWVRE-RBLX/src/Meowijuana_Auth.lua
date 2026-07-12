@@ -325,7 +325,7 @@ end
 
 local function Initiate()
     killadonisforme()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/-Beta-WhippityOxideHack.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua"))()
 end
 
 Initiate()

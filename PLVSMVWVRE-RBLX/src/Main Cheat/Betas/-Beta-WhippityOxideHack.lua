@@ -1255,10 +1255,9 @@ local function PLVSMVWVRE_Menu()
     end
 
     function ACBypassers()
-        local MainACBypasser = "https://catnip.at.ua/AnticheatBypasses.lua"
+        local MainACBypasser = "https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Outside%20Func/AnticheatBypasses.lua"
         games = {
-            [17625359962] = "https://pastefy.app/EHeqdtQs/raw",
-            [9157605735] = "https://raw.githubusercontent.com/Amethystic/scythelua/refs/heads/main/AESWUHIYW3243.lua",
+            [17625359962] = "https://pastefy.app/EHeqdtQs/raw"
         }
         
         if games[game.PlaceId] then
@@ -2995,7 +2994,7 @@ local function PLVSMVWVRE_Menu()
     getgenv().Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
     getgenv().ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
     getgenv().SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-    getgenv().ESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/ESP.lua'))()
+    getgenv().ESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Outside%20Func/ESP.lua'))()
 
     local cheatname
     local BetaTag = " [BETA]";
@@ -4777,7 +4776,7 @@ local function PLVSMVWVRE_Menu()
     local MyButton = LeftGroupBox5:AddButton({
         Text = 'Load Supported Script',
         Func = function()
-            loadstring(game:HttpGet("https://catnip.at.ua/Meowijuana_Gamalauncher.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Outside%20Func/Meowijuana_Gamalauncher.lua"))()
         end,
         DoubleClick = false,
         Tooltip = 'This loads a script for this specific game'
