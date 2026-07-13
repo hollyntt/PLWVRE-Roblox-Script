@@ -136,7 +136,7 @@ local ChamsAdjustments = {
 }
 local Aimbot = {
     Enabled = false, 
-    Hitbox = "Head", 
+    itboxes = { ["Head"] = true },
     CheckVisibility = false, 
     CheckAlive = false, 
     CheckForcefield = false, 
@@ -155,6 +155,7 @@ local Aimbot = {
     DesyncDetection = true, 
     JitterThreshold = 0.15, 
     MinPredictionConfidence = 0.1, 
+    ConfidenceAmount = 1.0, -- Added dynamic real-time tracking variable
 
     FOVRadius = 0, 
     FOVCheck = false, 
@@ -1406,25 +1407,115 @@ function AntiAimFunction()
     end
 
     local lastAimbotState = nil -- Prevents the loop from constantly rebinding
+    local currentTarget = nil -- Global target reference to maintain sticky target lock-on
+
     local function LockOnGTA5()
         if Aimbot.Enabled == lastAimbotState then return end
         lastAimbotState = Aimbot.Enabled
 
         local Camera_obj = workspace.CurrentCamera
         local LocalPlayer = Players.LocalPlayer
-        
-        -- (The rest of your inner helper functions remain here...)
-        local Resolver = {
-            TargetHistory = {},
-            PredictionConfidence = 1.0,
-            LastUpdateTime = tick(),
-            MaxHistoryDuration = Aimbot.ResolverHistory,
-            VelocitySmoothing = Aimbot.VelocitySmoothing,
-            JitterThreshold = Aimbot.JitterThreshold,
-            MinConfidence = Aimbot.MinPredictionConfidence,
-            DesyncDetection = Aimbot.DesyncDetection,
-            MaxPredictionError = Aimbot.MaxPredictionError
-        }
+
+        -- Persist resolver data across toggles so history is not lost
+        if not getgenv().PersistentResolver then
+            getgenv().PersistentResolver = {
+                TargetHistory = {},
+                PredictionConfidence = Aimbot.ConfidenceAmount,
+                LastUpdateTime = tick(),
+                MaxHistoryDuration = Aimbot.ResolverHistory,
+                VelocitySmoothing = Aimbot.VelocitySmoothing,
+                JitterThreshold = Aimbot.JitterThreshold,
+                MinConfidence = Aimbot.MinPredictionConfidence,
+                DesyncDetection = Aimbot.DesyncDetection,
+                MaxPredictionError = Aimbot.MaxPredictionError
+            }
+        end
+        local Resolver = getgenv().PersistentResolver
+
+        -- Reusable raycast params to avoid high garbage-collection overhead
+        local RaycastParameters = RaycastParams.new()
+        RaycastParameters.FilterType = Enum.RaycastFilterType.Blacklist
+        RaycastParameters.IgnoreWater = true
+
+        -- Frame-rate independent CFrame interpolation
+        local function frameIndependentLerp(startCFrame, targetCFrame, smoothing, deltaTime)
+            if smoothing <= 0 then return targetCFrame end
+            local speed = (1 / smoothing) * 2.2
+            local alpha = 1 - math.exp(-speed * deltaTime)
+            return startCFrame:Lerp(targetCFrame, math.clamp(alpha, 0, 1))
+        end
+
+        local function GetAvatarType(character)
+            local UpperTorso = character:FindFirstChild("UpperTorso")
+            return UpperTorso and "R15" or "R6"
+        end
+
+        local function GetBestHitbox(character)
+            -- Fallback: Ensure the main Aimbot table exists
+            if not Aimbot then
+                Aimbot = { Enabled = false, Hitbox = "Head" }
+            end
+
+            local HitboxPriorities = {
+                R6 = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+                R15 = {"Head", "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg"}
+            }
+            local AvatarType = GetAvatarType(character)
+
+            -- 1. Try reading the multi-choice table if it exists
+            if Aimbot.Hitboxes and type(Aimbot.Hitboxes) == "table" then
+                for _, HitboxName in ipairs(HitboxPriorities[AvatarType]) do
+                    if Aimbot.Hitboxes[HitboxName] then
+                        local Hitbox = character:FindFirstChild(HitboxName)
+                        if Hitbox then return Hitbox end
+                    end
+                enda
+            end
+
+            -- 2. Fallback to the old singular string setting if the table is missing
+            if Aimbot.Hitbox and type(Aimbot.Hitbox) == "string" and Aimbot.Hitbox ~= "" then
+                local Hitbox = character:FindFirstChild(Aimbot.Hitbox)
+                if Hitbox then return Hitbox end
+            end
+
+            -- 3. Hard fallback to Head or PrimaryPart if all else is missing
+            return character:FindFirstChild("Head") or character.PrimaryPart
+        end
+
+        -- Inner helper validation logic
+        local function checkTargetValidity(player, screenCenter, fovRadius)
+            if not player or not player.Character then return false end
+            if Aimbot.TeamCheck and LocalPlayer.Team and player.Team == LocalPlayer.Team then return false end
+
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if Aimbot.CheckAlive and (not humanoid or humanoid.Health <= 0) then return false end
+            if Aimbot.CheckForcefield and player.Character:FindFirstChildOfClass("ForceField") then return false end
+
+            local hitbox = GetBestHitbox(player.Character)
+            if not hitbox then return false end
+
+            local distance = (hitbox.Position - Camera_obj.CFrame.Position).Magnitude
+            if Aimbot.Distance > 0 and distance > Aimbot.Distance then return false end
+
+            if Aimbot.CheckVisibility then
+                local origin = Camera_obj.CFrame.Position
+                local direction = (hitbox.Position - origin).Unit
+                RaycastParameters.FilterDescendantsInstances = {LocalPlayer.Character, Camera_obj}
+                local result = workspace:Raycast(origin, direction * distance, RaycastParameters)
+                if result and result.Instance:FindFirstAncestorOfClass("Model") ~= player.Character then
+                    return false
+                end
+            end
+
+            if Aimbot.FOVCheck then
+                local screenPos, onScreen = Camera_obj:WorldToViewportPoint(hitbox.Position)
+                if not onScreen then return false end
+                local distanceCenter = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+                if distanceCenter > fovRadius then return false end
+            end
+
+            return true, hitbox
+        end
 
         local function UpdateResolverState(targetPlayer, hitbox, predictedPosition, actualPosition)
             if not Aimbot.Resolver then return end
@@ -1458,7 +1549,11 @@ function AntiAimFunction()
                         avgError = totalError / #targetData.PredictionErrors
                     end
                     local errorRatio = math.min(avgError / Resolver.MaxPredictionError, 1.0)
-                    Resolver.PredictionConfidence = math.clamp(1 - errorRatio, Resolver.MinConfidence, 1.0)
+                    local safeMin = math.min(Resolver.MinConfidence, 1.0)
+                    Resolver.PredictionConfidence = math.clamp(1 - errorRatio, safeMin, 1.0)
+                    
+                    -- Keep table value synchronized with calculation
+                    Aimbot.ConfidenceAmount = Resolver.PredictionConfidence 
                 end
             end
             targetData.LastActualPosition = actualPosition
@@ -1473,6 +1568,9 @@ function AntiAimFunction()
                 end
                 if velocityChanges / (#targetData.Velocities - 1) > 0.5 then
                     Resolver.PredictionConfidence = math.min(Resolver.PredictionConfidence, 0.3)
+                    
+                    -- Keep table value synchronized with calculation
+                    Aimbot.ConfidenceAmount = Resolver.PredictionConfidence 
                 end
             end
         end
@@ -1481,7 +1579,9 @@ function AntiAimFunction()
             local basePosition = hitbox.Position
             if Aimbot.Prediction then
                 local velocity = hitbox.Velocity or Vector3.new(0,0,0)
-                local predictionOffset = velocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
+                local latency = (getPING and getPING() or 100) / 1000 -- Fallback safety
+                local timeOfFlight = distanceToTarget / 1000
+                local predictionOffset = velocity * Aimbot.Prediction_Offset * (timeOfFlight + latency)
                 basePosition = basePosition + predictionOffset
             end
             if Aimbot.Resolver then
@@ -1499,7 +1599,9 @@ function AntiAimFunction()
                     avgVelocity = avgVelocity / math.max(totalWeight, 0.001)
                     local blendFactor = Resolver.VelocitySmoothing * (1 - Resolver.PredictionConfidence)
                     local finalVelocity = (hitbox.Velocity or Vector3.new(0,0,0)) * (1 - blendFactor) + avgVelocity * blendFactor
-                    local predictionOffset = finalVelocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
+                    local latency = (getPING and getPING() or 100) / 1000
+                    local timeOfFlight = distanceToTarget / 1000
+                    local predictionOffset = finalVelocity * Aimbot.Prediction_Offset * (timeOfFlight + latency)
                     basePosition = hitbox.Position + predictionOffset
                 end
             end
@@ -1516,128 +1618,93 @@ function AntiAimFunction()
         end
 
         local function GetEffectiveFOVRadius()
-            return Aimbot.FOVRadius * (math.max(Camera_obj.ViewportSize.X, Camera_obj.ViewportSize.Y) / 1000)
+            local radiusSetting = (Aimbot.FOVRadius and Aimbot.FOVRadius > 0) and Aimbot.FOVRadius or 100
+            return radiusSetting * (math.max(Camera_obj.ViewportSize.X, Camera_obj.ViewportSize.Y) / 1000)
         end
 
-        local function GetAvatarType(character)
-            local UpperTorso = character:FindFirstChild("UpperTorso")
-            return UpperTorso and "R15" or "R6"
-        end
+        -- Setup standard loop operations
+        if ConnectionRCS then ConnectionRCS:Disconnect() ConnectionRCS = nil end -- Purge external RCS connections
 
-        local function GetBestHitbox(character)
-            local HitboxPriorities = {
-                R6 = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
-                R15 = {"Head", "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg"}
-            }
-            local AvatarType = GetAvatarType(character)
-            if Aimbot.Hitbox ~= "" then
-                local SelectedHitbox = character:FindFirstChild(Aimbot.Hitbox)
-                if SelectedHitbox then return SelectedHitbox end
-            end
-            for _, HitboxName in ipairs(HitboxPriorities[AvatarType]) do
-                local Hitbox = character:FindFirstChild(HitboxName)
-                if Hitbox then return Hitbox end
-            end
-            return character.PrimaryPart
-        end
-
-        if RCS_Sets.Enabled then
-            if ConnectionRCS then ConnectionRCS:Disconnect() ConnectionRCS = nil end
-            ConnectionRCS = RunService.RenderStepped:Connect(function()
-                if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
-                    if RCS_Sets.RecoilControl > 0 then
-                        local RecoilIntensity = RCS_Sets.RecoilControl / RCS_Sets.RecoilDownAim
-                        local RecoilOffset = Vector3.new(
-                            (math.random() - 0.5) * RecoilIntensity,
-                            -RecoilIntensity,
-                            (math.random() - 0.5) * RecoilIntensity
-                        )
-                        local LookVector = Camera_obj.CFrame.LookVector
-                        local RightVector = Camera_obj.CFrame.RightVector
-                        local UpVector = Camera_obj.CFrame.UpVector
-                        local NewLookVector = (LookVector + RightVector * RecoilOffset.X + UpVector * RecoilOffset.Y).Unit
-                        local NewCFrame = CFrame.new(Camera_obj.CFrame.Position, Camera_obj.CFrame.Position + NewLookVector)
-                        local lerpAlpha = math.clamp(RCS_Sets.Speed * 0.02, 0.01, 0.5)
-                        Camera_obj.CFrame = Camera_obj.CFrame:Lerp(NewCFrame, lerpAlpha)
-                    end
-                end
-            end)
-        else
-            if ConnectionRCS then ConnectionRCS:Disconnect() ConnectionRCS = nil end
-        end
-
-        -- Setup the RenderStepped connection once
         if Aimbot.Enabled then
             if Connection then Connection:Disconnect() Connection = nil end
-            Connection = RunService.RenderStepped:Connect(function()
-                local ClosestTarget, ClosestMagnitude = nil, math.huge
-                local ScreenCenter_v = GetScreenCenter_obj()
+            Connection = RunService.RenderStepped:Connect(function(deltaTime)
+                local ScreenCenter = GetScreenCenter_obj()
+                local FOVRadius = GetEffectiveFOVRadius()
 
-                for _, Player_v in ipairs(Players:GetPlayers()) do
-                    if Player_v ~= LocalPlayer and Player_v.Character then
-                        local Character = Player_v.Character
-                        if Aimbot.TeamCheck then
-                            local LocalPlayerTeam = LocalPlayer.Team
-                            local TargetTeam = Player_v.Team
-                            if LocalPlayerTeam and TargetTeam and LocalPlayerTeam == TargetTeam then continue end
-                        end
-                        local Humanoid_v = Character:FindFirstChildOfClass("Humanoid")
-                        if Aimbot.CheckAlive and (not Humanoid_v or Humanoid_v.Health <= 0) then continue end
-                        if Aimbot.CheckForcefield then
-                            local Forcefield = Character:FindFirstChildOfClass("ForceField")
-                            if Forcefield then continue end
-                        end
-                        local Hitbox = GetBestHitbox(Character)
-                        if Hitbox then
-                            local TargetPosition = Hitbox.Position
-                            local Origin = Camera_obj.CFrame.Position
-                            local DistanceToTarget = (TargetPosition - Origin).Magnitude
-                            if Aimbot.Distance > 0 and DistanceToTarget > Aimbot.Distance then continue end
-                            local IsVisible = true
-                            if Aimbot.CheckVisibility then
-                                local Direction = (TargetPosition - Origin).Unit
-                                local RaycastParams_v = RaycastParams.new()
-                                RaycastParams_v.FilterDescendantsInstances = {LocalPlayer.Character, Camera_obj}
-                                RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
-                                RaycastParams_v.IgnoreWater = true
-                                local RaycastResult = workspace:Raycast(Origin, Direction * DistanceToTarget, RaycastParams_v)
-                                if RaycastResult then
-                                    local HitPart = RaycastResult.Instance
-                                    local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
-                                    IsVisible = (HitCharacter == Character)
-                                end
-                            end
-                            if IsVisible then
-                                local ScreenPosition, OnScreen = Camera_obj:WorldToScreenPoint(Hitbox.Position)
-                                if OnScreen then
-                                    local EffectiveFOVRadius = GetEffectiveFOVRadius()
-                                    local DistanceFromCenter = (Vector2.new(ScreenPosition.X, ScreenPosition.Y) - ScreenCenter_v).Magnitude
-                                    if (not Aimbot.FOVCheck or DistanceFromCenter <= EffectiveFOVRadius) and DistanceFromCenter < ClosestMagnitude then
-                                        ClosestMagnitude = DistanceFromCenter
-                                        ClosestTarget = Player_v
-                                    end
+                -- 1. Validate Target Stickiness
+                local isTargetValid, currentHitbox = checkTargetValidity(currentTarget, ScreenCenter, FOVRadius)
+
+                if not isTargetValid then
+                    currentTarget = nil
+                    currentHitbox = nil
+
+                    -- Scan for a new target closest to center of screen
+                    local closestTarget, closestMag = nil, math.huge
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        if player ~= LocalPlayer then
+                            local valid, hitbox = checkTargetValidity(player, ScreenCenter, FOVRadius)
+                            if valid and hitbox then
+                                local screenPos = Camera_obj:WorldToScreenPoint(hitbox.Position)
+                                local distCenter = (Vector2.new(screenPos.X, screenPos.Y) - ScreenCenter).Magnitude
+                                if distCenter < closestMag then
+                                    closestMag = distCenter
+                                    closestTarget = player
+                                    currentHitbox = hitbox
                                 end
                             end
                         end
                     end
+
+                    if closestTarget then
+                        currentTarget = closestTarget
+                    end
                 end
 
-                if ClosestTarget and ClosestTarget.Character then
-                    local Character = ClosestTarget.Character
-                    local Hitbox = GetBestHitbox(Character)
-                    if Hitbox then
-                        local DistanceToTarget = (Hitbox.Position - Camera_obj.CFrame.Position).Magnitude
-                        local TargetPosition = GetPredictedPosition(Hitbox, DistanceToTarget)
-                        UpdateResolverState(ClosestTarget, Hitbox, TargetPosition, Hitbox.Position)
-                        local CameraPosition = Camera_obj.CFrame.Position
-                        local TargetCFrame = CFrame.new(CameraPosition, TargetPosition)
-                        local effectiveSmoothing = Aimbot.Smoothing * (0.5 + Resolver.PredictionConfidence * 0.5)
-                        if effectiveSmoothing > 0 then
-                            Camera_obj.CFrame = Camera_obj.CFrame:Lerp(TargetCFrame, effectiveSmoothing)
-                        else
-                            Camera_obj.CFrame = TargetCFrame
+                -- 2. Execute Aim and Recoil Actions Together
+                if currentTarget and currentHitbox then
+                    local distance = (currentHitbox.Position - Camera_obj.CFrame.Position).Magnitude
+                    local targetPos = GetPredictedPosition(currentHitbox, distance)
+
+                    UpdateResolverState(currentTarget, currentHitbox, targetPos, currentHitbox.Position)
+
+                    local targetCFrame = CFrame.new(Camera_obj.CFrame.Position, targetPos)
+                    local finalCFrame = targetCFrame
+
+                    -- Apply Recoil directly to the final Look CFrame to maintain smooth aiming transitions
+                    if RCS_Sets.Enabled and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                        if RCS_Sets.RecoilControl > 0 then
+                            local recoilAmount = RCS_Sets.RecoilControl / RCS_Sets.RecoilDownAim
+                            local recoilOffset = Vector3.new(
+                                (math.random() - 0.5) * recoilAmount,
+                                -recoilAmount,
+                                (math.random() - 0.5) * recoilAmount
+                            )
+                            local right = targetCFrame.RightVector
+                            local up = targetCFrame.UpVector
+                            local look = (targetCFrame.LookVector + right * recoilOffset.X + up * recoilOffset.Y).Unit
+                            finalCFrame = CFrame.new(Camera_obj.CFrame.Position, Camera_obj.CFrame.Position + look)
                         end
-                        if Aimbot.AutoShoot then ShootGun() end
+                    end
+
+                    -- Adjust Camera smooth position using deltaTime
+                    Camera_obj.CFrame = frameIndependentLerp(Camera_obj.CFrame, finalCFrame, Aimbot.Smoothing, deltaTime)
+
+                    if Aimbot.AutoShoot then 
+                        ShootGun() 
+                    end
+                elseif RCS_Sets.Enabled and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                    -- Stand-alone RCS fallback if firing without an aim-locked target
+                    if RCS_Sets.RecoilControl > 0 then
+                        local recoilAmount = RCS_Sets.RecoilControl / RCS_Sets.RecoilDownAim
+                        local recoilOffset = Vector3.new(
+                            (math.random() - 0.5) * recoilAmount,
+                            -recoilAmount,
+                            (math.random() - 0.5) * recoilAmount
+                        )
+                        local look = (Camera_obj.CFrame.LookVector + Camera_obj.CFrame.RightVector * recoilOffset.X + Camera_obj.CFrame.UpVector * recoilOffset.Y).Unit
+                        local finalCFrame = CFrame.new(Camera_obj.CFrame.Position, Camera_obj.CFrame.Position + look)
+                        
+                        Camera_obj.CFrame = Camera_obj.CFrame:Lerp(finalCFrame, math.clamp(RCS_Sets.Speed * deltaTime * 5, 0.01, 0.5))
                     end
                 end
             end)
@@ -2638,10 +2705,34 @@ local function PLVSMVWVRE_Menu()
     local UI_Res_PredErr = TabMain:NewSlider('Prediction Error', '', false, '', {min = 0, max = 1000, default = 2}, function(Value) Aimbot.MaxPredictionError = Value end)
     local UI_Res_Smooth = TabMain:NewSlider('Resolver Smoothing', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.VelocitySmoothing = Value / 100 end)
     local UI_Res_Jitter = TabMain:NewSlider('Jitter Threshold', '', false, '', {min = 0, max = 1000, default = 15}, function(Value) Aimbot.JitterThreshold = Value / 100 end)
-    local UI_Res_Conf = TabMain:NewSlider('Min Confidence', '', false, '', {min = 0, max = 1000, default = 10}, function(Value) Aimbot.MinPredictionConfidence = Value / 100 end)
+    local UI_Chance_Conf = TabMain:NewSlider('Confidence', '', false, '', {min = 0, max = 100, default = 80}, function(Value) Aimbot.ConfidenceAmount = Value / 100 end)
+    local UI_Res_Conf = TabMain:NewSlider('Min Confidence', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.MinPredictionConfidence = Value / 100 end)
     
     TabMain:NewSection('Misc')
-    local UI_Aim_Hitbox = TabMain:NewSelector('Universial Hitbox', 'Head', { 'Head', 'Torso', 'Left Arm', 'Right Arm', 'Left Leg', 'Right Leg', "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg", 'HumanoidRootPart' }, function(Value) Aimbot.Hitbox = Value end)
+    local UI_Aim_Hitbox = TabMain:NewMultiSelector(
+    'Universal Hitbox', 
+    { 'Head' }, -- Default selection (needs to be a table)
+    { 
+        'Head', 'Torso', 'Left Arm', 'Right Arm', 'Left Leg', 'Right Leg', 
+        'UpperTorso', 'LowerTorso', 'LeftUpperArm', 'RightUpperArm', 
+        'LeftLowerArm', 'RightLowerArm', 'LeftUpperLeg', 'RightUpperLeg', 
+        'LeftLowerLeg', 'RightLowerLeg', 'HumanoidRootPart' 
+    }, 
+    function(Values)
+        -- Clear current table selection
+        table.clear(Aimbot.Hitboxes)
+        
+        -- Store the newly checked values
+        for _, value in ipairs(Values) do
+            Aimbot.Hitboxes[value] = true
+        end
+        
+        -- Safety fallback: ensure at least one hitbox is targeted
+        if #Values == 0 then
+            Aimbot.Hitboxes["Head"] = true
+        end
+    end
+)
     local UI_Aim_FOVVis = TabMain:NewToggle('FOV', false, function(Value) Aimbot.FOVVisible = Value; end)
     local UI_Aim_FOVRad = TabMain:NewSlider('Radius', '', false, '', {min = 40, max = 1234, default = 100}, function(Value) Aimbot.FOVRadius = Value end)
     local UI_Aim_FOVSides = TabMain:NewSlider('Sides', '', false, '', {min = 4, max = 100, default = 12}, function(Value) Aimbot.FOVSides = Value end)
@@ -3148,8 +3239,48 @@ local function PLVSMVWVRE_Menu()
         {Name = "Res_Jitter", Type = "Slider", Get = function() return Aimbot.JitterThreshold * 100 end, Set = function(val) Aimbot.JitterThreshold = val / 100; UI_Res_Jitter:Value(val) end},
         {Name = "Res_Conf", Type = "Slider", Get = function() return Aimbot.MinPredictionConfidence * 100 end, Set = function(val) Aimbot.MinPredictionConfidence = val / 100; UI_Res_Conf:Value(val) end},
         
+        -- Added Desync Detection config flag
+        {Name = "Res_DesyncDetection", Type = "Toggle", Get = function() return Aimbot.DesyncDetection end, Set = function(val) Aimbot.DesyncDetection = val; if UI_Res_Desync then UI_Res_Desync:Set(val) end end},
+        
         -- Misc
-        {Name = "Aim_Hitbox", Type = "Dropdown", Get = function() return Aimbot.Hitbox end, Set = function(val) Aimbot.Hitbox = val; UI_Aim_Hitbox:Text(val) end},
+        {
+            Name = "Aim_Hitboxes", 
+            Type = "Dropdown", 
+            Get = function() 
+                if not Aimbot.Hitboxes then
+                    Aimbot.Hitboxes = { ["Head"] = true }
+                end
+                local active = {}
+                for name, enabled in pairs(Aimbot.Hitboxes) do
+                    if enabled then table.insert(active, name) end
+                end
+                return table.concat(active, ",")
+            end, 
+            Set = function(val) 
+                if not Aimbot.Hitboxes then
+                    Aimbot.Hitboxes = { ["Head"] = true }
+                end
+                
+                local parsed = {}
+                table.clear(Aimbot.Hitboxes)
+                
+                for name in string.gmatch(val, "[^,]+") do
+                    Aimbot.Hitboxes[name] = true
+                    table.insert(parsed, name)
+                end
+                
+                -- Safety check fallback
+                if #parsed == 0 then
+                    Aimbot.Hitboxes["Head"] = true
+                    table.insert(parsed, "Head")
+                end
+                
+                -- Sync the visual state of the multi-selector UI
+                if UI_Aim_Hitbox and UI_Aim_Hitbox.Set then
+                    UI_Aim_Hitbox:Set(parsed)
+                end
+            end
+        },
         {Name = "Aim_FOVVis", Type = "Toggle", Get = function() return Aimbot.FOVVisible end, Set = function(val) Aimbot.FOVVisible = val; UI_Aim_FOVVis:Set(val) end},
         {Name = "Aim_FOVRad", Type = "Slider", Get = function() return Aimbot.FOVRadius end, Set = function(val) Aimbot.FOVRadius = val; UI_Aim_FOVRad:Value(val) end},
         {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) Aimbot.FOVSides = val; UI_Aim_FOVSides:Value(val) end},
