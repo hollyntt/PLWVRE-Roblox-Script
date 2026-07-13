@@ -2465,14 +2465,6 @@ local function PLVSMVWVRE_Menu()
 
     library:Introduction()
 
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://3101925304" 
-    sound.Volume = 1 
-    sound.Pitch = 0.5
-    sound.Looped = false 
-    sound.Parent = workspace 
-    sound:Play()
-
     task.wait(1)
     local Init = library:Init(Enum.KeyCode.Home)
     
@@ -3796,7 +3788,7 @@ local function CallBuild()
     end
     function Initiate()
         print("⏺️ Initting...")
-        PLVSMVWVRE_Menu()
+        sound()
         print("✅ PLVSMVWVRE_Menu executed successfully!")
     end
     function Inject()

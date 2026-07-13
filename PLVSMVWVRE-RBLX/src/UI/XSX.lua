@@ -675,6 +675,14 @@ function library:InitNotifications(text, duration, callback)
 end
 
 function library:Introduction()
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://3101925304" 
+    sound.Volume = 1 
+    sound.Pitch = 0.5
+    sound.Looped = false 
+    sound.Parent = workspace 
+    sound:Play()
+
     for _,v in next, CoreGuiService:GetChildren() do
         if v.Name == "screen" then
             v:Destroy()
@@ -839,6 +847,7 @@ function library:Introduction()
     TweenService:Create(edge, TweenTable["introduction"], {BackgroundTransparency = 1}):Play()
     wait(.2)
     introduction:Destroy()
+    sound.Ended:Connect(function() sound:Destroy() end)
 end
 
 function library:Init(key)
