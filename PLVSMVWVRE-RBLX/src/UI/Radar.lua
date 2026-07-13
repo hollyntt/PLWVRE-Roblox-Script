@@ -1,25 +1,4 @@
 -- Made by Blissful#4992
--- Restructured only to support dynamic loader settings
-
-getgenv().RadarInfo = getgenv().RadarInfo or {
-    Enabled = true,
-    Position = Vector2.new(200, 200),
-    Radius = 100,
-    Scale = 1, -- Determinant factor on the effect of the relative position for the 2D integration
-    RadarBack = Color3.fromRGB(10, 10, 10),
-    RadarBorder = Color3.fromRGB(75, 75, 75),
-    LocalPlayerDot = Color3.fromRGB(255, 255, 255),
-    PlayerDot = Color3.fromRGB(60, 170, 255),
-    Team = Color3.fromRGB(0, 255, 0),
-    Enemy = Color3.fromRGB(255, 0, 0),
-    Health_Color = true,
-    Team_Check = true
-}
-
-local RadarInfo = getgenv().RadarInfo
-
-----------------------------------------------------------------
-
 local Players = game:service("Players")
 local Player = Players.LocalPlayer
 local Mouse = Player:GetMouse()
@@ -44,6 +23,23 @@ local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
     c.Filled = Filled
     return c
 end
+
+getgenv().RadarInfo = getgenv().RadarInfo or {
+    Enabled = false,
+    Position = Vector2.new(200, 200),
+    Radius = 100,
+    Scale = 1, -- Determinant factor on the effect of the relative position for the 2D integration
+    RadarBack = Color3.fromRGB(10, 10, 10),
+    RadarBorder = Color3.fromRGB(75, 75, 75),
+    LocalPlayerDot = Color3.fromRGB(255, 255, 255),
+    PlayerDot = Color3.fromRGB(60, 170, 255),
+    Team = Color3.fromRGB(0, 255, 0),
+    Enemy = Color3.fromRGB(255, 0, 0),
+    Health_Color = true,
+    Team_Check = true
+}
+
+local RadarInfo = getgenv().RadarInfo
 
 local RadarBackground = NewCircle(0.9, RadarInfo.RadarBack, RadarInfo.Radius, true, 1)
 RadarBackground.Visible = true
@@ -72,12 +68,6 @@ local function PlaceDot(plr)
     local function Update()
         local c 
         c = game:service("RunService").RenderStepped:Connect(function()
-            -- Handle global toggle
-            if RadarInfo.Enabled == false then
-                PlayerDot.Visible = false
-                return
-            end
-
             local char = plr.Character
             if char and char:FindFirstChildOfClass("Humanoid") and char.PrimaryPart ~= nil and char:FindFirstChildOfClass("Humanoid").Health > 0 then
                 local hum = char:FindFirstChildOfClass("Humanoid")
@@ -154,17 +144,6 @@ end)
 coroutine.wrap(function()
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
-        if RadarInfo.Enabled == false then
-            if LocalPlayerDot ~= nil then LocalPlayerDot.Visible = false end
-            RadarBackground.Visible = false
-            RadarBorder.Visible = false
-            return
-        else
-            if LocalPlayerDot ~= nil then LocalPlayerDot.Visible = true end
-            RadarBackground.Visible = true
-            RadarBorder.Visible = true
-        end
-
         if LocalPlayerDot ~= nil then
             LocalPlayerDot.Color = RadarInfo.LocalPlayerDot
             LocalPlayerDot.PointA = RadarInfo.Position + Vector2.new(0, -6)
@@ -187,7 +166,6 @@ local inset = game:service("GuiService"):GetGuiInset()
 local dragging = false
 local offset = Vector2.new(0, 0)
 UIS.InputBegan:Connect(function(input)
-    if not RadarInfo.Enabled then return end
     if input.UserInputType == Enum.UserInputType.MouseButton1 and (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
         offset = RadarInfo.Position - Vector2.new(Mouse.X, Mouse.Y)
         dragging = true
@@ -204,11 +182,6 @@ coroutine.wrap(function()
     local dot = NewCircle(1, Color3.fromRGB(255, 255, 255), 3, true, 1)
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
-        if not RadarInfo.Enabled then 
-            dot.Visible = false 
-            return 
-        end
-
         if (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
             dot.Position = Vector2.new(Mouse.X, Mouse.Y + inset.Y)
             dot.Visible = true
@@ -220,3 +193,10 @@ coroutine.wrap(function()
         end
     end)
 end)()
+
+--[[ Example:
+wait(3)
+RadarInfo.Position = Vector2.new(300, 300)
+RadarInfo.Radius = 150
+RadarInfo.RadarBack = Color3.fromRGB(50, 0, 0)
+]]

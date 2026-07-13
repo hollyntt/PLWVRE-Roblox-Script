@@ -2771,18 +2771,6 @@ local function PLVSMVWVRE_Menu()
 
     -- Dedicated Arrow ESP configuration block
     TabVisuals:NewSection('Arrow ESP')
-    TabVisuals:NewButton('Initialize Arrow ESP', function()
-        pcall(function()
-            if type(ArrowESP) == "function" then
-                ArrowESP()
-            elseif type(ArrowESP) == "table" and ArrowESP.Toggle then
-                ArrowESP:Toggle(true)
-            else
-                loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))()
-            end
-            Success_Notificate("Arrow ESP Loaded")
-        end)
-    end)
     
     TabVisuals:NewToggle('Arrow ESP Enabled', true, function(Value)
         if getgenv().ArrowSettings then

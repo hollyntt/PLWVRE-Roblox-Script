@@ -2,7 +2,7 @@
 -- Restructured only to support dynamic loader settings
 
 getgenv().ArrowSettings = getgenv().ArrowSettings or {
-    Enabled = true,
+    Enabled = false,
     DistFromCenter = 80,
     TriangleHeight = 16,
     TriangleWidth = 16,
