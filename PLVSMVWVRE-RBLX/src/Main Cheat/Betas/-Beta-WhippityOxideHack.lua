@@ -355,6 +355,7 @@ local FOVCircleOutline = Drawing.new("Circle")
 local FOVCircleInnerOutline = Drawing.new("Circle")
 local FOVCircle = Drawing.new("Circle")
 
+
 local function Nametags()
     local function createBillboardGui(character)
         local head = character:FindFirstChild("Head")
@@ -499,63 +500,247 @@ local function Nametags()
     end)
 end
 
-local function ChatSpammer()
-    if ChatSpammerrr.Activated == true then
-        if game.TextChatService and game.TextChatService:FindFirstChild("TextChannels") then
-            local rbxGeneral = game.TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-            if rbxGeneral then
-                if ChatSpammerrr.Mode == 3 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode3 then currentIndex = 1  end
-                    rbxGeneral:SendAsync(Mode3[math.random(1, #Mode3)])
-                elseif ChatSpammerrr.Mode == 2 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode2 then currentIndex = 1  end
-                    rbxGeneral:SendAsync(Mode2[math.random(1, #Mode2)])
-                elseif ChatSpammerrr.Mode == 4 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode4 then currentIndex = 1  end
-                    rbxGeneral:SendAsync(Mode4[math.random(1, #Mode4)])
-                elseif ChatSpammerrr.Mode == 5 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode5 then currentIndex = 1  end
-                    rbxGeneral:SendAsync(Mode5[math.random(1, #Mode5)])
-                elseif ChatSpammerrr.Mode == 1 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode1 then currentIndex = 1  end
-                    rbxGeneral:SendAsync(Mode1[math.random(1, #Mode1)])
+function ChatSpammer()
+        getgenv().Mode1 = {
+            ":3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "You're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "TEH EPIK DUCK IS COMING!!!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "<(0_0<) <(0_0)> (>0_0)> KIRBY DANCE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "GET OFF MAH LAWN\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "all your base are belong to me!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "ROFL\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "1337\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "Muahahahaha!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "z0mg h4x!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "ub3rR0xXorzage!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "w00t!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "i r teh pwnz0r!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "Use the Chat menu to talk to me.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "I can only see menu chats\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n<3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n",
+            "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n",
+            "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n"
+        }
+
+        getgenv().Mode2 = {
+            "[=== kEm+nohOoks.c+m ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kemxnohOxks.c== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEm+nohooks.=== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmonoho======= ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmon========== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kE============= ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== =============== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kE-============ ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmOn|========= ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmOnOho/====== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmOnOho/====== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kEmonoh0oks.*== ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kemOnOhoOks.cO= ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kemOnOhoOks.c+m ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "[=== kemOnxhoOks.c+m ===]",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        }
+
+        getgenv().Mode3 = {
+            "You like that?",
+            "Im so close",
+            "hehe",
+            "Your a cutie yk",
+            "Luv",
+            "ab to goon",
+            "huge",
+            "ah~",
+            "ur railing me",
+            "OOOOOOOOOOOOOO",
+            "IM BLOWING!",
+            "i like it ROUGH"
+        }
+
+        getgenv().Mode4 = {
+            "☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️☁️",
+            "⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️",
+            "🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧🧧",
+            "😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈😈",
+            "✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨",
+            "😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮😮"
+        }
+
+        getgenv().Mode5 = {
+            "/emote dance",
+            "/emote point",
+            "/emote wave",
+            "/emote laugh" 
+        }
+
+        if ChatSpammerrr.Activated == true then
+            if game.TextChatService and game.TextChatService:FindFirstChild("TextChannels") then
+                local rbxGeneral = game.TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+                if rbxGeneral then
+                    if ChatSpammerrr.Mode == 3 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode3 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode3)
+                        local message = Mode3[randomIndex]
+                        rbxGeneral:SendAsync(message)
+                    end
+
+                    if ChatSpammerrr.Mode == 2 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode2 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode2)
+                        local message = Mode2[randomIndex]
+                        rbxGeneral:SendAsync(message)
+                    end
+
+                    if ChatSpammerrr.Mode == 4 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode4 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode4)
+                        local message = Mode4[randomIndex]
+                        rbxGeneral:SendAsync(message)
+                    end
+
+                    if ChatSpammerrr.Mode == 5 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode5 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode5)
+                        local message = Mode5[randomIndex]
+                        rbxGeneral:SendAsync(message)
+                    end
+
+                    if ChatSpammerrr.Mode == 1 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode1 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode1)
+                        local message = Mode1[randomIndex]
+                        rbxGeneral:SendAsync(message)
+                    end
                 end
             end
-        end
+    
+            if game.ReplicatedStorage and game.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
+                local sayMessageRequest = game.ReplicatedStorage.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
+                if sayMessageRequest then
+                    if ChatSpammerrr.Mode == 3 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode3 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode3)
+                        local message = Mode3[randomIndex]
+                        sayMessageRequest:FireServer(message, "All")
+                    end
 
-        if game.ReplicatedStorage and game.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
-            local sayMessageRequest = game.ReplicatedStorage.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
-            if sayMessageRequest then
-                if ChatSpammerrr.Mode == 3 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode3 then currentIndex = 1  end
-                    sayMessageRequest:FireServer(Mode3[math.random(1, #Mode3)], "All")
-                elseif ChatSpammerrr.Mode == 2 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode2 then currentIndex = 1  end
-                    sayMessageRequest:FireServer(Mode2[math.random(1, #Mode2)], "All")
-                elseif ChatSpammerrr.Mode == 4 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode4 then currentIndex = 1  end
-                    sayMessageRequest:FireServer(Mode4[math.random(1, #Mode4)], "All")
-                elseif ChatSpammerrr.Mode == 5 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode5 then currentIndex = 1  end
-                    sayMessageRequest:FireServer(Mode5[math.random(1, #Mode5)], "All")
-                elseif ChatSpammerrr.Mode == 1 then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #Mode1 then currentIndex = 1  end
-                    sayMessageRequest:FireServer(Mode1[math.random(1, #Mode1)], "All")
+                    if ChatSpammerrr.Mode == 2 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode2 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode2)
+                        local message = Mode2[randomIndex]
+                        sayMessageRequest:FireServer(message, "All")
+                    end
+
+                    if ChatSpammerrr.Mode == 4 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode4 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode4)
+                        local message = Mode4[randomIndex]
+                        sayMessageRequest:FireServer(message, "All")
+                    end
+
+                    if ChatSpammerrr.Mode == 5 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode5 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode5)
+                        local message = Mode5[randomIndex]
+                        sayMessageRequest:FireServer(message, "All")
+                    end
+                    
+                    if ChatSpammerrr.Mode == 1 then
+                        currentIndex = currentIndex + 1
+                        if currentIndex > #Mode1 then currentIndex = 1  end
+                        local randomIndex = math.random(1, #Mode1)
+                        local message = Mode1[randomIndex]
+                        sayMessageRequest:FireServer(message, "All")
+                    end
                 end
             end
         end
     end
-end
 
 local function Console()
     rconsoleclear()
@@ -1056,77 +1241,90 @@ local function AntiIdle()
     end)
 end
 
-local function AntiAimFunction()
-    local function ResetHandler()
-        if originalCFrame then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
-            originalCFrame = nil 
-            originalY = nil 
-            currentRotation = 0 
+function AntiAimFunction()
+        -- Handler
+        function ResetHandler()
+            if originalCFrame then
+                -- Restore the original CFrame and Y position
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
+                originalCFrame = nil -- Clear the stored CFrame
+                originalY = nil -- Clear the stored Y position
+                currentRotation = 0 -- Reset the rotation
+            end
         end
-    end
-
-    local function GetClosestPlayer()
-        local closestPlayer = nil
-        local closestDistance = math.huge
-        local localPlayer = game.Players.LocalPlayer
-        local localPosition = localPlayer.Character.HumanoidRootPart.Position
-
-        for _, player_obj in pairs(game.Players:GetPlayers()) do
-            if player_obj ~= localPlayer and player_obj.Character and player_obj.Character:FindFirstChild("HumanoidRootPart") then
-                local distance = (player_obj.Character.HumanoidRootPart.Position - localPosition).magnitude
-                if distance < closestDistance then
-                    closestDistance = distance
-                    closestPlayer = player_obj
+    
+        -- Nested function to get the closest player
+        function GetClosestPlayer()
+            local closestPlayer = nil
+            local closestDistance = math.huge
+            local localPlayer = game.Players.LocalPlayer
+            local localPosition = localPlayer.Character.HumanoidRootPart.Position
+    
+            for _, player in pairs(game.Players:GetPlayers()) do
+                if player ~= localPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local distance = (player.Character.HumanoidRootPart.Position - localPosition).magnitude
+                    if distance < closestDistance then
+                        closestDistance = distance
+                        closestPlayer = player
+                    end
                 end
             end
+    
+            return closestPlayer
         end
-
-        return closestPlayer
-    end
-
-    if AntiAim.Activated then
-        if not originalCFrame then
-            originalCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-            originalY = originalCFrame.Position.Y 
-        end
-
-        local closestPlayer = GetClosestPlayer()
-        if closestPlayer and closestPlayer.Character and closestPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local Hum = closestPlayer.Character.HumanoidRootPart
-            local lookVector = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Hum.Position).unit
-
-            local jitterOffset = Vector3.new(
-                (math.random() - AntiAim.Jitter_X) * AntiAim.Jitter, 
-                0, 
-                (math.random() - AntiAim.Jitter_Z) * AntiAim.Jitter  
-            )
-
-            local jitteredLookVector = (lookVector + jitterOffset).unit
-
-            currentRotation = currentRotation + (AntiAim.SpinSpeed * AntiAim.SpinDirection)
-
-            if math.abs(currentRotation) >= AntiAim.SpinSwitchInterval then
-                AntiAim.SpinDirection = -AntiAim.SpinDirection 
+    
+        -- AntiAim logic with custom jitter and spinning
+        if AntiAim.Activated then
+            -- Store the original CFrame and Y position if not already stored
+            if not originalCFrame then
+                originalCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                originalY = originalCFrame.Position.Y -- Store the original Y position
             end
-
-            local spinCFrame = CFrame.Angles(0, math.rad(currentRotation), 0)
-
-            local finalCFrame = CFrame.new(
-                Vector3.new(
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.Position.X,
-                    originalY, 
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Z
-                ),
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Position + jitteredLookVector
-            ) * spinCFrame
-
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = finalCFrame
+    
+            local closestPlayer = GetClosestPlayer()
+            if closestPlayer and closestPlayer.Character and closestPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local Hum = closestPlayer.Character.HumanoidRootPart
+                local lookVector = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Hum.Position).unit
+    
+                -- Custom jitter logic
+                local jitterOffset = Vector3.new(
+                    (math.random() - AntiAim.Jitter_X) * AntiAim.Jitter, -- Random X offset
+                    0, -- No jitter on the Y-axis to prevent falling
+                    (math.random() - AntiAim.Jitter_Z) * AntiAim.Jitter  -- Random Z offset
+                )
+    
+                -- Apply jitter to the lookVector
+                local jitteredLookVector = (lookVector + jitterOffset).unit
+    
+                -- Spinning logic with left-right angles
+                currentRotation = currentRotation + (AntiAim.SpinSpeed * AntiAim.SpinDirection)
+    
+                -- Switch direction when the rotation reaches the switch interval
+                if math.abs(currentRotation) >= AntiAim.SpinSwitchInterval then
+                    AntiAim.SpinDirection = -AntiAim.SpinDirection -- Reverse direction
+                end
+    
+                -- Create a rotation CFrame around the Y-axis
+                local spinCFrame = CFrame.Angles(0, math.rad(currentRotation), 0)
+    
+                -- Combine the jittered lookVector with the spinning effect
+                local finalCFrame = CFrame.new(
+                    Vector3.new(
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.Position.X,
+                        originalY, -- Lock the Y position to prevent falling
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Z
+                    ),
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.Position + jitteredLookVector
+                ) * spinCFrame
+    
+                -- Update the CFrame with the jittered lookVector and spinning
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = finalCFrame
+            end
+        else
+            -- Call the reset handler when AntiAim is disabled
+            ResetHandler()
         end
-    else
-        ResetHandler()
     end
-end
 
 local function CrosshairGen()
     if Crosshair.Enabled then
@@ -1813,6 +2011,36 @@ local function HitDetection(Value)
         end
     end
 
+    function PlayHitmarkerSound()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://"..SoundIDHM
+        sound.Volume = 1 -- Set volume (0 to 1)
+        sound.Pitch = 1
+        sound.Looped = false -- Set to true if you want the sound to loop
+        sound.Parent = workspace -- Parent the sound to the workspace
+        
+        -- Play the sound
+        sound:Play()
+        
+        -- Optional: Add an event to detect when the sound ends
+        sound.Ended:Connect(function() sound:Destroy() end)
+    end
+
+    function PlayKillSound()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://"..SoundIDK
+        sound.Volume = 1 -- Set volume (0 to 1)
+        sound.Pitch = 1
+        sound.Looped = false -- Set to true if you want the sound to loop
+        sound.Parent = workspace -- Parent the sound to the workspace
+        
+        -- Play the sound
+        sound:Play()
+        
+        -- Optional: Add an event to detect when the sound ends
+        sound.Ended:Connect(function() sound:Destroy() end)
+    end
+
     local function ConnectPlayer(player_obj)
         DisconnectPlayer(player_obj)
 
@@ -2026,7 +2254,6 @@ local function InitiateLagDetection()
         local isLagging = false
         
         if ping > maxPing then
-            Warning_Notificate("High ping detected: " .. formatPing(ping))
             isLagging = true
         end
         
@@ -2296,6 +2523,15 @@ local function FlingerAll()
     Reset()
 end
 
+function OnUpdate()
+    LockOnGTA5()
+    UpdateFOV()
+    CrosshairGen()
+    AntiAimFunction()
+    UpdateVisuals()
+    ChatSpammer()
+end
+
 local function Teleport(targetPlayerName)
     local player_obj = game.Players.LocalPlayer
     local character = player_obj.Character or player_obj.CharacterAdded:Wait()
@@ -2427,32 +2663,22 @@ end
 
 local cheatname = BetaBuild and "PLVSMVWVRE.lol [BETA]" or "PLVSMVWVRE.lol"
 
-local function updateWatermark()
-    local fps = getFPS()
-    local ping = getPING()
-    local character = game.Players.LocalPlayer.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            local health = math.floor(humanoid.Health)
-            local t = cheatname .. ' | ' .. Username .. " / " .. health .. "% HP" .. " / " .. "Kills: " .. KillCount .. " / " .. "OVERKILL(s): " .. OVERKillCount .. " / " .. "FPS: " .. fps .. " / " .. "Ping: " .. ping .. " | " .. ExecName
-            if Wm then
-                Wm:Text(t)
-            end
-        end
-    end
-end
-
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 -- |                                             MENU                                                |
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
 local function PLVSMVWVRE_Menu()
     local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/XSX.lua"))()
     library.title = cheatname
     
     Notif = library:InitNotifications()
-    Wm = library:Watermark(cheatname ..  " | " .. library.version ..  " | " .. library:GetUsername() .. " | rank: " .. library.rank)
+    local Wm = library:Watermark(cheatname.. " | v" .. library.version ..  " | " .. library:GetUsername() .. " | rank: " .. library.rank)
+    local FpsWm = Wm:AddWatermark("fps: " .. library.fps)
+    coroutine.wrap(function()
+        while wait(.75) do
+            FpsWm:Text("fps: " .. library.fps)
+        end
+    end)()
+
 
     -- Initialize Sense Colors to match default expectations
     Sense.teamSettings.enemy.boxColor = { Color3.fromRGB(255, 0, 0), 1 }
@@ -2477,45 +2703,48 @@ local function PLVSMVWVRE_Menu()
     
     -- // RAGE TAB
     local SectionMain = TabMain:NewSection('Main')
-    TabMain:NewToggle('Aim-lock', false, function(Value) Aimbot.Enabled = Value; end):AddKeybind(Enum.KeyCode.Minus)
-    TabMain:NewToggle('Visibility Check', false, function(Value) Aimbot.CheckVisibility = Value; end)
-    TabMain:NewToggle('Alive Check', false, function(Value) Aimbot.CheckAlive = Value; end)
-    TabMain:NewToggle('Team Check', false, function(Value) Aimbot.TeamCheck = Value; end)
-    TabMain:NewToggle('FOV Check', false, function(Value) Aimbot.FOVCheck = Value; end)
-    TabMain:NewToggle('Respawning Check', false, function(Value) Aimbot.CheckForcefield = Value; end)
-    TabMain:NewToggle('Prediction', false, function(Value) Aimbot.Prediction = Value; end)
-    TabMain:NewToggle('AutoShoot', false, function(Value) Aimbot.AutoShoot = Value; end)
-    TabMain:NewToggle('Resolver', false, function(Value) Aimbot.Resolver = Value; end)
+    local UI_Aimbot_Lock = TabMain:NewToggle('Aim-lock', false, function(Value) Aimbot.Enabled = Value; end)
+    UI_Aimbot_Lock:AddKeybind(Enum.KeyCode.Minus)
+    local UI_Aimbot_Vis = TabMain:NewToggle('Visibility Check', false, function(Value) Aimbot.CheckVisibility = Value; end)
+    local UI_Aimbot_Alive = TabMain:NewToggle('Alive Check', false, function(Value) Aimbot.CheckAlive = Value; end)
+    local UI_Aimbot_Team = TabMain:NewToggle('Team Check', false, function(Value) Aimbot.TeamCheck = Value; end)
+    local UI_Aimbot_FOV = TabMain:NewToggle('FOV Check', false, function(Value) Aimbot.FOVCheck = Value; end)
+    local UI_Aimbot_Respawn = TabMain:NewToggle('Respawning Check', false, function(Value) Aimbot.CheckForcefield = Value; end)
+    local UI_Aimbot_Pred = TabMain:NewToggle('Prediction', false, function(Value) Aimbot.Prediction = Value; end)
+    local UI_Aimbot_AutoShoot = TabMain:NewToggle('AutoShoot', false, function(Value) Aimbot.AutoShoot = Value; end)
+    local UI_Aimbot_Resolver = TabMain:NewToggle('Resolver', false, function(Value) Aimbot.Resolver = Value; end)
     
     local SectionRCS = TabMain:NewSection('Recoil Control')
-    TabMain:NewToggle('Recoil Control System', false, function(Value) RCS_Sets.Enabled = Value; end)
-    TabMain:NewSlider('RCS', '', false, '', {min = 0, max = 100, default = 0}, function(Value) RCS_Sets.RecoilControl = Value end)
-    TabMain:NewSlider('RCS (-X)', '', false, '', {min = 5, max = 1000, default = 1000}, function(Value) RCS_Sets.RecoilDownAim = Value end)
-    TabMain:NewSlider('RCS (Speed)', '', false, '', {min = 1, max = 5, default = 5}, function(Value) RCS_Sets.Speed = Value end)
+    local UI_RCS_Toggle = TabMain:NewToggle('Recoil Control System', false, function(Value) RCS_Sets.Enabled = Value; end)
+    local UI_RCS_Control = TabMain:NewSlider('RCS', '', false, '', {min = 0, max = 100, default = 0}, function(Value) RCS_Sets.RecoilControl = Value end)
+    local UI_RCS_DownAim = TabMain:NewSlider('RCS (-X)', '', false, '', {min = 5, max = 1000, default = 1000}, function(Value) RCS_Sets.RecoilDownAim = Value end)
+    local UI_RCS_Speed = TabMain:NewSlider('RCS (Speed)', '', false, '', {min = 1, max = 5, default = 5}, function(Value) RCS_Sets.Speed = Value end)
     
     local SectionSettings = TabMain:NewSection('Aimbot Settings')
-    TabMain:NewSlider('AutoShoot Delay', '', false, '', {min = 0, max = 1000, default = 0}, function(Value) Aimbot.AutoShoot_Delay = Value / 10 end)
-    TabMain:NewSlider('Smoothness', '', false, '', {min = 0, max = 30, default = 0}, function(Value) Aimbot.Smoothing = Value / 100 end)
-    TabMain:NewSlider('Distance', '', false, '', {min = 0, max = 1000, default = 0}, function(Value) Aimbot.Distance = Value end)
-    TabMain:NewSlider('Offset', '', false, '', {min = 0, max = 20, default = 0}, function(Value) Aimbot.Prediction_Offset = Value end)
+    local UI_Aim_ASDelay = TabMain:NewSlider('AutoShoot Delay', '', false, '', {min = 0, max = 1000, default = 0}, function(Value) Aimbot.AutoShoot_Delay = Value / 10 end)
+    local UI_Aim_Smooth = TabMain:NewSlider('Smoothness', '', false, '', {min = 0, max = 30, default = 0}, function(Value) Aimbot.Smoothing = Value / 100 end)
+    local UI_Aim_Dist = TabMain:NewSlider('Distance', '', false, '', {min = 0, max = 1000, default = 0}, function(Value) Aimbot.Distance = Value end)
+    local UI_Aim_Offset = TabMain:NewSlider('Offset', '', false, '', {min = 0, max = 20, default = 0}, function(Value) Aimbot.Prediction_Offset = Value end)
     
     local SectionResolver = TabMain:NewSection('Resolver Settings')
-    TabMain:NewSlider('Resolver History', '', false, '', {min = 0, max = 200, default = 5}, function(Value) Aimbot.ResolverHistory = Value / 10 end)
-    TabMain:NewSlider('Prediction Error', '', false, '', {min = 0, max = 1000, default = 2}, function(Value) Aimbot.MaxPredictionError = Value end)
-    TabMain:NewSlider('Resolver Smoothing', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.VelocitySmoothing = Value / 100 end)
-    TabMain:NewSlider('Jitter Threshold', '', false, '', {min = 0, max = 1000, default = 15}, function(Value) Aimbot.JitterThreshold = Value / 100 end)
-    TabMain:NewSlider('Min Confidence', '', false, '', {min = 0, max = 1000, default = 10}, function(Value) Aimbot.MinPredictionConfidence = Value / 100 end)
+    local UI_Res_Hist = TabMain:NewSlider('Resolver History', '', false, '', {min = 0, max = 200, default = 5}, function(Value) Aimbot.ResolverHistory = Value / 10 end)
+    local UI_Res_PredErr = TabMain:NewSlider('Prediction Error', '', false, '', {min = 0, max = 1000, default = 2}, function(Value) Aimbot.MaxPredictionError = Value end)
+    local UI_Res_Smooth = TabMain:NewSlider('Resolver Smoothing', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.VelocitySmoothing = Value / 100 end)
+    local UI_Res_Jitter = TabMain:NewSlider('Jitter Threshold', '', false, '', {min = 0, max = 1000, default = 15}, function(Value) Aimbot.JitterThreshold = Value / 100 end)
+    local UI_Res_Conf = TabMain:NewSlider('Min Confidence', '', false, '', {min = 0, max = 1000, default = 10}, function(Value) Aimbot.MinPredictionConfidence = Value / 100 end)
     
     TabMain:NewSection('Misc')
-    TabMain:NewSelector('Universial Hitbox', 'Head', { 'Head', 'Torso', 'Left Arm', 'Right Arm', 'Left Leg', 'Right Leg', "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg", 'HumanoidRootPart' }, function(Value) Aimbot.Hitbox = Value end)
-    TabMain:NewToggle('FOV', true, function(Value) Aimbot.FOVVisible = Value; end)
-    TabMain:NewSlider('Radius', '', false, '', {min = 40, max = 1234, default = 100}, function(Value) Aimbot.FOVRadius = Value end)
-    TabMain:NewSlider('Sides', '', false, '', {min = 4, max = 100, default = 12}, function(Value) Aimbot.FOVSides = Value end)
-    TabMain:NewSlider('Thickness', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.FOVThickness = Value end)
-    TabMain:NewColorpicker('FOV Color', Color3.new(255, 255, 255), function(Value) Aimbot.FOVColor = Value end)
+    local UI_Aim_Hitbox = TabMain:NewSelector('Universial Hitbox', 'Head', { 'Head', 'Torso', 'Left Arm', 'Right Arm', 'Left Leg', 'Right Leg', "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg", 'HumanoidRootPart' }, function(Value) Aimbot.Hitbox = Value end)
+    local UI_Aim_FOVVis = TabMain:NewToggle('FOV', true, function(Value) Aimbot.FOVVisible = Value; end)
+    local UI_Aim_FOVRad = TabMain:NewSlider('Radius', '', false, '', {min = 40, max = 1234, default = 100}, function(Value) Aimbot.FOVRadius = Value end)
+    local UI_Aim_FOVSides = TabMain:NewSlider('Sides', '', false, '', {min = 4, max = 100, default = 12}, function(Value) Aimbot.FOVSides = Value end)
+    local UI_Aim_FOVThick = TabMain:NewSlider('Thickness', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.FOVThickness = Value end)
+    local UI_Aim_FOVC = TabMain:NewColorpicker('FOV Color', Color3.new(255, 255, 255), function(Value) Aimbot.FOVColor = Value end)
     
-    TabMain:NewToggle('Triggerbot', false, function(Value) TriggerBot(Value) end):AddKeybind(Enum.KeyCode.Minus)
-    TabMain:NewSlider('Sensitivity', '', false, '', {min = 1, max = 100, default = 10}, function(Value) Aimbot.Triggerbot_Sensitivity = Value / 100 end)
+    local TriggerBotState = false
+    local UI_Aim_TBot = TabMain:NewToggle('Triggerbot', false, function(Value) TriggerBotState = Value; TriggerBot(Value) end)
+    UI_Aim_TBot:AddKeybind(Enum.KeyCode.Minus)
+    local UI_Aim_TSens = TabMain:NewSlider('Sensitivity', '', false, '', {min = 1, max = 100, default = 10}, function(Value) Aimbot.Triggerbot_Sensitivity = Value / 100 end)
 
     -- // VISUALS TAB
     TabVisuals:NewSection('ESP Configuration')
@@ -2526,14 +2755,10 @@ local function PLVSMVWVRE_Menu()
 
     TabVisuals:NewSelector('Edit Team Settings', 'Enemy', { 'Enemy', 'Friendly' }, function(Value)
         currentESPTeam = Value
-        
-        -- Fix: Check if UI elements are loaded yet to prevent the "attempt to index nil with 'Set'" error
         if not espControls.Enabled then return end
-        
         isESPSyncing = true
         
         local settings = Sense.teamSettings[string.lower(Value)]
-        
         espControls.Enabled:Set(settings.enabled)
         espControls.Box:Set(settings.box)
         espControls.Name:Set(settings.name)
@@ -2541,7 +2766,6 @@ local function PLVSMVWVRE_Menu()
         espControls.HealthBar:Set(settings.healthBar)
         espControls.Distance:Set(settings.distance)
         espControls.Chams:Set(settings.chams)
-        
         local color = settings.boxColor and settings.boxColor[1] or (Value == "Enemy" and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(0, 255, 0))
         espControls.Color:Set(color)
         
@@ -2569,7 +2793,6 @@ local function PLVSMVWVRE_Menu()
     espControls.Chams = TabVisuals:NewToggle('Show Chams', false, function(Value)
         if not isESPSyncing then Sense.teamSettings[string.lower(currentESPTeam)].chams = Value end
     end)
-    
     espControls.Color = TabVisuals:NewColorpicker('ESP Color', Color3.fromRGB(255, 0, 0), function(Value)
         if not isESPSyncing then
             local teamStr = string.lower(currentESPTeam)
@@ -2580,31 +2803,33 @@ local function PLVSMVWVRE_Menu()
     end)
 
     TabVisuals:NewSection('ESP Global Settings')
-    TabVisuals:NewSelector('Tracer Origin', 'Bottom', { 'Top', 'Middle', 'Bottom'}, function(Value)
+    local UI_ESP_Origin = TabVisuals:NewSelector('Tracer Origin', 'Bottom', { 'Top', 'Middle', 'Bottom'}, function(Value)
         Sense.teamSettings.enemy.tracerOrigin = Value
         Sense.teamSettings.friendly.tracerOrigin = Value
     end)
-    TabVisuals:NewSlider('Text Size', '', false, '', {min = 10, max = 24, default = 13}, function(Value) Sense.sharedSettings.textSize = Value end)
-    TabVisuals:NewSlider('Max Distance', '', false, '', {min = 50, max = 2000, default = 150}, function(Value) Sense.sharedSettings.maxDistance = Value end)
+    local UI_ESP_TextS = TabVisuals:NewSlider('Text Size', '', false, '', {min = 10, max = 24, default = 13}, function(Value) Sense.sharedSettings.textSize = Value end)
+    local UI_ESP_MaxD = TabVisuals:NewSlider('Max Distance', '', false, '', {min = 50, max = 2000, default = 150}, function(Value) Sense.sharedSettings.maxDistance = Value end)
 
     -- // MOVEMENT TAB
+    local FlyState = false
     TabMovement:NewSection('Main')
-    TabMovement:NewToggle('Fly', false, function(Value) FlyActivate(Value) end):AddKeybind(Enum.KeyCode.Minus)
-    TabMovement:NewSlider('Walkspeed', '', false, '', {min = 15, max = 120, default = playerWalkspeedCache}, function(Value) player.Character.Humanoid.WalkSpeed = Value end)
-    TabMovement:NewSlider('JumpPower', '', false, '', {min = 50, max = 9999, default = playerJumpPowerCache}, function(Value) player.Character.Humanoid.JumpPower = Value end)
-    TabMovement:NewSlider('FlySpeed', '', false, '', {min = 5, max = 1000, default = 50}, function(Value) flySpeed = Value end)
+    local UI_Move_Fly = TabMovement:NewToggle('Fly', false, function(Value) FlyState = Value; FlyActivate(Value) end)
+    UI_Move_Fly:AddKeybind(Enum.KeyCode.Minus)
+    local UI_Move_WS = TabMovement:NewSlider('Walkspeed', '', false, '', {min = 15, max = 120, default = playerWalkspeedCache}, function(Value) player.Character.Humanoid.WalkSpeed = Value end)
+    local UI_Move_JP = TabMovement:NewSlider('JumpPower', '', false, '', {min = 50, max = 9999, default = playerJumpPowerCache}, function(Value) player.Character.Humanoid.JumpPower = Value end)
+    local UI_Move_FS = TabMovement:NewSlider('FlySpeed', '', false, '', {min = 5, max = 1000, default = 50}, function(Value) flySpeed = Value end)
     TabMovement:NewButton('Reset Speeds', function()
         player.Character.Humanoid.WalkSpeed = playerWalkspeedCache
         player.Character.Humanoid.JumpPower = playerJumpPowerCache
     end)
 
     -- // LOCALPLAYER TAB
+    local SitState = false
+    local OrbitState = false
     TabLocalPlayer:NewSection('Main')
     TabLocalPlayer:NewButton('Reset', function() Reset() end)
     TabLocalPlayer:NewKeybind('Quick Reset', Enum.KeyCode.Minus, function() Reset() end)
-    TabLocalPlayer:NewButton('Create Godmode UI', function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/zephyr10101/ignore-touchinterests/main/main", true))()
-    end)
+    TabLocalPlayer:NewButton('Create Godmode UI', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/zephyr10101/ignore-touchinterests/main/main", true))() end)
     TabLocalPlayer:NewButton('Give Click Teleport', function()
         player1 = player
         q = Instance.new('HopperBin', player1.Backpack)
@@ -2636,44 +2861,40 @@ local function PLVSMVWVRE_Menu()
         Reset_two()
     end)
     
-    TabLocalPlayer:NewTextbox('Teleport to:', '', 'Player Name', 'all', 'small', true, false, function(Value)
-        Teleport(Value)
-    end)
-    TabLocalPlayer:NewToggle('Sit', false, function(Value) player.Character:WaitForChild("Humanoid").Sit = Value end)
+    TabLocalPlayer:NewTextbox('Teleport to:', '', 'Player Name', 'all', 'small', true, false, function(Value) Teleport(Value) end)
+    local UI_LP_Sit = TabLocalPlayer:NewToggle('Sit', false, function(Value) SitState = Value; player.Character:WaitForChild("Humanoid").Sit = Value end)
 
     TabLocalPlayer:NewSection('Orbit')
-    TabLocalPlayer:NewToggle('On', false, function(Value) Orbiter(Value) end)
-    TabLocalPlayer:NewTextbox('Target Orbit', '', 'Player Name', 'all', 'small', true, false, function(Value)
-        Orbiter_Settings.Target = Value
-        NAMETAG_CONFIG.NAME = Value
-        NAMETAG_CONFIG.NAMEPLATE_TAG = "Target"
-    end)
-    TabLocalPlayer:NewSlider('Height', '', false, '', {min = -10, max = 10, default = 5}, function(Value) Orbiter_Settings.Height = Value end)
-    TabLocalPlayer:NewSlider('Speed', '', false, '', {min = 1, max = 5, default = 2}, function(Value) Orbiter_Settings.Speed = Value end)
-    TabLocalPlayer:NewSlider('Radius', '', false, '', {min = 10, max = 50, default = 15}, function(Value) Orbiter_Settings.RadiusScale = Value / 10 end)
+    local UI_LP_Orbit = TabLocalPlayer:NewToggle('On', false, function(Value) OrbitState = Value; Orbiter(Value) end)
+    local UI_LP_OrbitTar = TabLocalPlayer:NewTextbox('Target Orbit', '', 'Player Name', 'all', 'small', true, false, function(Value) Orbiter_Settings.Target = Value; NAMETAG_CONFIG.NAME = Value; NAMETAG_CONFIG.NAMEPLATE_TAG = "Target" end)
+    local UI_LP_OrbitH = TabLocalPlayer:NewSlider('Height', '', false, '', {min = -10, max = 10, default = 5}, function(Value) Orbiter_Settings.Height = Value end)
+    local UI_LP_OrbitS = TabLocalPlayer:NewSlider('Speed', '', false, '', {min = 1, max = 5, default = 2}, function(Value) Orbiter_Settings.Speed = Value end)
+    local UI_LP_OrbitR = TabLocalPlayer:NewSlider('Radius', '', false, '', {min = 10, max = 50, default = 15}, function(Value) Orbiter_Settings.RadiusScale = Value / 10 end)
 
     TabLocalPlayer:NewSection('AntiAim')
-    TabLocalPlayer:NewToggle('On', false, function(Value) AntiAim.Activated = Value end)
-    TabLocalPlayer:NewSlider('Jitter Intensity', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter = Value / 100 end)
-    TabLocalPlayer:NewSlider('X', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter_X = Value / 100 end)
-    TabLocalPlayer:NewSlider('Z', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter_Z = Value / 100 end)
-    TabLocalPlayer:NewSlider('Speed', '', false, '', {min = 0, max = 100, default = 10}, function(Value) AntiAim.SpinSpeed = Value end)
-    TabLocalPlayer:NewSlider('Angle', '', false, '', {min = -180, max = 180, default = 180}, function(Value) AntiAim.SpinSwitchInterval = Value end)
-    TabLocalPlayer:NewSlider('Direction', '', false, '', {min = -1, max = 1, default = 1}, function(Value) AntiAim.SpinDirection = Value end)
+    local UI_AA_On = TabLocalPlayer:NewToggle('On', false, function(Value) AntiAim.Activated = Value end)
+    local UI_AA_Jitter = TabLocalPlayer:NewSlider('Jitter Intensity', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter = Value / 100 end)
+    local UI_AA_X = TabLocalPlayer:NewSlider('X', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter_X = Value / 100 end)
+    local UI_AA_Z = TabLocalPlayer:NewSlider('Z', '', false, '', {min = 0, max = 50, default = 0}, function(Value) AntiAim.Jitter_Z = Value / 100 end)
+    local UI_AA_Speed = TabLocalPlayer:NewSlider('Speed', '', false, '', {min = 0, max = 100, default = 10}, function(Value) AntiAim.SpinSpeed = Value end)
+    local UI_AA_Angle = TabLocalPlayer:NewSlider('Angle', '', false, '', {min = -180, max = 180, default = 180}, function(Value) AntiAim.SpinSwitchInterval = Value end)
+    local UI_AA_Dir = TabLocalPlayer:NewSlider('Direction', '', false, '', {min = -1, max = 1, default = 1}, function(Value) AntiAim.SpinDirection = Value end)
 
+    local AntiCheatState = true
+    local AntiFallDmgState = false
+    local AntiFlingState = false
     TabLocalPlayer:NewSection('Antis & Anticheat')
-    TabLocalPlayer:NewToggle('Anticheat', true, function(Value) Anticheat(Value) end)
-    TabLocalPlayer:NewSlider('Speed Threshold', '', false, '', {min = 1, max = 999, default = playerWalkspeedCache}, function(Value) Anticheat_Settings.SPEED_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Jump Threshold', '', false, '', {min = 1, max = 999, default = playerJumpPowerCache}, function(Value) Anticheat_Settings.JUMP_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Fly Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.FLY_DETECTION_THRESHOLD}, function(Value) Anticheat_Settings.FLY_DETECTION_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Fly (Velocity) Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.FLY_VELOCITY_THRESHOLD}, function(Value) Anticheat_Settings.FLY_VELOCITY_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Teleport Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.TELEPORT_THRESHOLD}, function(Value) Anticheat_Settings.TELEPORT_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Spin Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.SPIN_DETECTION_THRESHOLD}, function(Value) Anticheat_Settings.SPIN_DETECTION_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Molestation Distance', '', false, '', {min = 1, max = 15, default = 10}, function(Value) Anticheat_Settings.HOOK_DISTANCE_THRESHOLD = Value / 10 end)
-    TabLocalPlayer:NewSlider('Molestation Threshold', '', false, '', {min = 1, max = 100, default = Anticheat_Settings.HOOK_DURATION_THRESHOLD}, function(Value) Anticheat_Settings.HOOK_DURATION_THRESHOLD = Value end)
-    TabLocalPlayer:NewSlider('Spikes Threshold', '', false, '', {min = 1, max = 5, default = Anticheat_Settings.MAX_SPIKES}, function(Value) Anticheat_Settings.MAX_SPIKES = Value end)
-    
-    TabLocalPlayer:NewToggle('AutoReport for Cheating', false, function(Value) Anticheat_Settings.REPORT = Value end)
+    local UI_AC_On = TabLocalPlayer:NewToggle('Anticheat', true, function(Value) AntiCheatState = Value; Anticheat(Value) end)
+    local UI_AC_Speed = TabLocalPlayer:NewSlider('Speed Threshold', '', false, '', {min = 1, max = 999, default = playerWalkspeedCache}, function(Value) Anticheat_Settings.SPEED_THRESHOLD = Value end)
+    local UI_AC_Jump = TabLocalPlayer:NewSlider('Jump Threshold', '', false, '', {min = 1, max = 999, default = playerJumpPowerCache}, function(Value) Anticheat_Settings.JUMP_THRESHOLD = Value end)
+    local UI_AC_FlyD = TabLocalPlayer:NewSlider('Fly Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.FLY_DETECTION_THRESHOLD}, function(Value) Anticheat_Settings.FLY_DETECTION_THRESHOLD = Value end)
+    local UI_AC_FlyV = TabLocalPlayer:NewSlider('Fly (Velocity) Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.FLY_VELOCITY_THRESHOLD}, function(Value) Anticheat_Settings.FLY_VELOCITY_THRESHOLD = Value end)
+    local UI_AC_Tele = TabLocalPlayer:NewSlider('Teleport Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.TELEPORT_THRESHOLD}, function(Value) Anticheat_Settings.TELEPORT_THRESHOLD = Value end)
+    local UI_AC_Spin = TabLocalPlayer:NewSlider('Spin Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.SPIN_DETECTION_THRESHOLD}, function(Value) Anticheat_Settings.SPIN_DETECTION_THRESHOLD = Value end)
+    local UI_AC_MolD = TabLocalPlayer:NewSlider('Molestation Distance', '', false, '', {min = 1, max = 15, default = 10}, function(Value) Anticheat_Settings.HOOK_DISTANCE_THRESHOLD = Value / 10 end)
+    local UI_AC_MolT = TabLocalPlayer:NewSlider('Molestation Threshold', '', false, '', {min = 1, max = 100, default = Anticheat_Settings.HOOK_DURATION_THRESHOLD}, function(Value) Anticheat_Settings.HOOK_DURATION_THRESHOLD = Value end)
+    local UI_AC_Spikes = TabLocalPlayer:NewSlider('Spikes Threshold', '', false, '', {min = 1, max = 5, default = Anticheat_Settings.MAX_SPIKES}, function(Value) Anticheat_Settings.MAX_SPIKES = Value end)
+    local UI_AC_AutoRep = TabLocalPlayer:NewToggle('AutoReport for Cheating', false, function(Value) Anticheat_Settings.REPORT = Value end)
     TabLocalPlayer:NewButton('Pardon All', function()
         getgenv().Library:Notify("Everyone is now undetected")
         Anticheat_Settings.PARDONED = true
@@ -2687,10 +2908,15 @@ local function PLVSMVWVRE_Menu()
         Success_Notificate("VC Ban Bypassed")
     end)
     TabLocalPlayer:NewButton('Anti-AFK', function() AntiIdle() end)
-    TabLocalPlayer:NewToggle('Anti FallDmg', false, function(Value) AntiFallDmg(Value) end)
-    TabLocalPlayer:NewToggle('Anti Fling', false, function(Value) disableCanCollide(Value) end)
+    local UI_LP_FallDmg = TabLocalPlayer:NewToggle('Anti FallDmg', false, function(Value) AntiFallDmgState = Value; AntiFallDmg(Value) end)
+    local UI_LP_AntiFling = TabLocalPlayer:NewToggle('Anti Fling', false, function(Value) AntiFlingState = Value; disableCanCollide(Value) end)
 
     -- // OTHERS TAB
+    local SkyboxState = false
+    local WallClipState = false
+    local FriendBotState = false
+    local FPSCapState = 240
+    
     TabOthers:NewSection('Main')
     TabOthers:NewButton('Load Supported Script', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Outside%20Func/Meowijuana_Gamalauncher.lua"))() end)
     TabOthers:NewButton('Get GameID', function() print(game.PlaceId) setclipboard(tostring(game.PlaceId)) end)
@@ -2718,7 +2944,8 @@ local function PLVSMVWVRE_Menu()
             end
         end
     end)
-    TabOthers:NewToggle('Skybox', false, function(Value)
+    local UI_Oth_Skybox = TabOthers:NewToggle('Skybox', false, function(Value)
+        SkyboxState = Value
         if Value == true then
             local SkyBox = Instance.new("Sky")
             SkyBox.Name = "PLVSMVWVRE.lol"
@@ -2736,36 +2963,34 @@ local function PLVSMVWVRE_Menu()
             end
         end
     end)
-    TabOthers:NewToggle('Camera WallClip', false, function(Value)
-        if Value == true then
-            player.DevCameraOcclusionMode = "Invisicam"
-        else
-            player.DevCameraOcclusionMode = "Zoom"
-        end
-    end):AddKeybind(Enum.KeyCode.Minus)
+    local UI_Oth_WallClip = TabOthers:NewToggle('Camera WallClip', false, function(Value)
+        WallClipState = Value
+        if Value == true then player.DevCameraOcclusionMode = "Invisicam" else player.DevCameraOcclusionMode = "Zoom" end
+    end)
+    UI_Oth_WallClip:AddKeybind(Enum.KeyCode.Minus)
 
-    TabOthers:NewSlider('Max Zoom Dist', '', false, '', {min = 16, max = 999, default = 16}, function(Value) player.CameraMaxZoomDistance = Value end)
-    TabOthers:NewSlider('FOV', '', false, '', {min = 70, max = 120, default = 70}, function(Value) ExtraVisuals.FOV = Value end)
-    TabOthers:NewTextbox('HitMarker Sound', '5794214857', 'SoundID', 'numbers', 'small', true, false, function(Value) SoundIDHM = Value end)
-    TabOthers:NewTextbox('Kill Sound', '5764885315', 'SoundID', 'numbers', 'small', true, false, function(Value) SoundIDK = Value end)
+    local UI_Oth_Zoom = TabOthers:NewSlider('Max Zoom Dist', '', false, '', {min = 16, max = 999, default = 16}, function(Value) player.CameraMaxZoomDistance = Value end)
+    local UI_Oth_FOV = TabOthers:NewSlider('FOV', '', false, '', {min = 70, max = 120, default = 70}, function(Value) ExtraVisuals.FOV = Value end)
+    local UI_Oth_SndHM = TabOthers:NewTextbox('HitMarker Sound', '5794214857', 'SoundID', 'numbers', 'small', true, false, function(Value) SoundIDHM = Value end)
+    local UI_Oth_SndK = TabOthers:NewTextbox('Kill Sound', '5764885315', 'SoundID', 'numbers', 'small', true, false, function(Value) SoundIDK = Value end)
 
     TabOthers:NewSection('Crosshair')
-    TabOthers:NewToggle('Crosshair', false, function(Value) Crosshair.Enabled = Value end)
-    TabOthers:NewSlider('Sides', '', false, '', {min = 2, max = 4, default = 4}, function(Value) Crosshair.Sides = Value end)
-    TabOthers:NewSlider('Gap', '', false, '', {min = 10, max = 20, default = 15}, function(Value) Crosshair.Size = Value end)
-    TabOthers:NewSlider('Rotation', '', false, '', {min = 0, max = 90, default = 85}, function(Value) Crosshair.Rotation = Value end)
-    TabOthers:NewSlider('Thickness', '', false, '', {min = 1, max = 5, default = 2}, function(Value) Crosshair.Thickness = Value end)
-    TabOthers:NewSlider('Length', '', false, '', {min = 25, max = 35, default = 32}, function(Value) Crosshair.Gap = Value end)
-    TabOthers:NewSlider('Offset (x)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.x_Off = Value end)
-    TabOthers:NewSlider('Offset (y)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.y_Off = Value end)
-    TabOthers:NewColorpicker('Color', Color3.new(255, 255, 255), function(Value) Crosshair.Color = Value end)
+    local UI_Cross_On = TabOthers:NewToggle('Crosshair', false, function(Value) Crosshair.Enabled = Value end)
+    local UI_Cross_Sides = TabOthers:NewSlider('Sides', '', false, '', {min = 2, max = 4, default = 4}, function(Value) Crosshair.Sides = Value end)
+    local UI_Cross_Gap = TabOthers:NewSlider('Gap', '', false, '', {min = 10, max = 20, default = 15}, function(Value) Crosshair.Size = Value end)
+    local UI_Cross_Rot = TabOthers:NewSlider('Rotation', '', false, '', {min = 0, max = 90, default = 85}, function(Value) Crosshair.Rotation = Value end)
+    local UI_Cross_Thick = TabOthers:NewSlider('Thickness', '', false, '', {min = 1, max = 5, default = 2}, function(Value) Crosshair.Thickness = Value end)
+    local UI_Cross_Len = TabOthers:NewSlider('Length', '', false, '', {min = 25, max = 35, default = 32}, function(Value) Crosshair.Gap = Value end)
+    local UI_Cross_X = TabOthers:NewSlider('Offset (x)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.x_Off = Value end)
+    local UI_Cross_Y = TabOthers:NewSlider('Offset (y)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.y_Off = Value end)
+    local UI_Cross_C = TabOthers:NewColorpicker('Color', Color3.new(255, 255, 255), function(Value) Crosshair.Color = Value end)
 
     TabOthers:NewSection('Target Plates')
-    TabOthers:NewColorpicker('Color', Color3.new(142, 0, 255), function(Value) NAMETAG_CONFIG.NAMEPLATE_COLOR = Value end)
+    local UI_Plate_C = TabOthers:NewColorpicker('Color', Color3.new(142, 0, 255), function(Value) NAMETAG_CONFIG.NAMEPLATE_COLOR = Value end)
 
     TabOthers:NewSection('Trolling')
-    TabOthers:NewToggle('Chat Spam', false, function(Value) ChatSpammerrr.Activated = Value end)
-    TabOthers:NewSlider('ChatSpammer Mode', '', false, '', {min = 1, max = 5, default = 1}, function(Value) ChatSpammerrr.Mode = Value end)
+    local UI_Chat_On = TabOthers:NewToggle('Chat Spam', false, function(Value) ChatSpammerrr.Activated = Value end)
+    local UI_Chat_Mode = TabOthers:NewSlider('ChatSpammer Mode', '', false, '', {min = 1, max = 5, default = 1}, function(Value) ChatSpammerrr.Mode = Value end)
     TabOthers:NewButton('Become a NPC', function()
         getgenv().hurtmessages = { "That hurt!", "Watch where you're swinging!", "Ow! That's gonna leave a mark!", "Stop attacking me!", "I'm not feeling so good...", "Is that all you've got?", "Can't catch a break!", "That was a cheap shot!", "You'll regret that!" }
         if player.Character then
@@ -2773,9 +2998,7 @@ local function PLVSMVWVRE_Menu()
             local previousHealth = humanoid_v.Health
             humanoid_v.Changed:Connect(function()
                 if humanoid_v.Health < previousHealth then
-                    local randomIndex = math.random(1, #getgenv().hurtmessages)
-                    local message = getgenv().hurtmessages[randomIndex]
-                    game.TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+                    game.TextChatService.TextChannels.RBXGeneral:SendAsync(getgenv().hurtmessages[math.random(1, #getgenv().hurtmessages)])
                 end
                 previousHealth = humanoid_v.Health
             end)
@@ -2785,9 +3008,7 @@ local function PLVSMVWVRE_Menu()
             local previousHealth = humanoid_v.Health
             humanoid_v.Changed:Connect(function()
                 if humanoid_v.Health < previousHealth then
-                    local randomIndex = math.random(1, #getgenv().hurtmessages)
-                    local message = getgenv().hurtmessages[randomIndex]
-                    game.TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+                    game.TextChatService.TextChannels.RBXGeneral:SendAsync(getgenv().hurtmessages[math.random(1, #getgenv().hurtmessages)])
                 end
                 previousHealth = humanoid_v.Health
             end)
@@ -2796,11 +3017,8 @@ local function PLVSMVWVRE_Menu()
     TabOthers:NewButton('Reportbot', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/loadstrings/AutoreportRevamp.lua", true))() end)
     TabOthers:NewButton('Flingbot', function() FlingerAll() end)
     TabOthers:NewButton('Flingbot (Random Player)', function() FlingtargetPlayerName("random") end)
-    TabOthers:NewToggle('FriendBot', false, function(Value) FB(Value) end)
-    TabOthers:NewTextbox('Target Fling', '', 'Player Name', 'all', 'small', true, false, function(Value)
-        NAMETAG_CONFIG.NAME = Value
-        NAMETAG_CONFIG.NAMEPLATE_TAG = "Target"
-    end)
+    local UI_Oth_Friend = TabOthers:NewToggle('FriendBot', false, function(Value) FriendBotState = Value; FB(Value) end)
+    local UI_Oth_Targ = TabOthers:NewTextbox('Target Fling', '', 'Player Name', 'all', 'small', true, false, function(Value) NAMETAG_CONFIG.NAME = Value; NAMETAG_CONFIG.NAMEPLATE_TAG = "Target" end)
     TabOthers:NewButton('Fling Target', function()
         if NAMETAG_CONFIG.NAME == nil or NAMETAG_CONFIG.NAME == "" then
             getgenv().Library:Notify("No player chosen", 2) 
@@ -2832,6 +3050,7 @@ local function PLVSMVWVRE_Menu()
     TabOthers:NewButton('Load Chatbypasser', function() loadstring(game:HttpGet('https://raw.githubusercontent.com/cheatplug/usercreated/refs/heads/main/main.lua'))() end)
     TabOthers:NewButton('Load ToolHandler', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/dqtixz/NebulaNosh-I-Gui-A.C.S-F.E-/main/By%20dqtixz"))() end)
 
+    local UI_Oth_FPS = nil
     TabOthers:NewSection('Info')
     TabOthers:NewLabel('User ID: ' .. p.UserId, "left")
     if ExecName then
@@ -2852,12 +3071,7 @@ local function PLVSMVWVRE_Menu()
         else
             TabOthers:NewButton('Verificate UNC through sUNC', function()
                 local TeleportService = game:GetService("TeleportService")
-                local placeId = 133609342474444 
-                local function teleportToGame()
-                    local success, errorMessage = pcall(function() TeleportService:Teleport(placeId) end)
-                    if not success then warn("Teleport failed:", errorMessage) end
-                end
-                teleportToGame()
+                pcall(function() TeleportService:Teleport(133609342474444) end)
             end)
         end
         TabOthers:NewButton('Flex Executor', function()
@@ -2868,22 +3082,13 @@ local function PLVSMVWVRE_Menu()
             }
             if game.TextChatService and game.TextChatService:FindFirstChild("TextChannels") then
                 local rbxGeneral = game.TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-                if rbxGeneral then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #ExecFlex then currentIndex = 1  end
-                    rbxGeneral:SendAsync(ExecFlex[math.random(1, #ExecFlex)])
-                end
-            end
-            if game.ReplicatedStorage and game.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
+                if rbxGeneral then rbxGeneral:SendAsync(ExecFlex[math.random(1, #ExecFlex)]) end
+            elseif game.ReplicatedStorage and game.ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
                 local sayMessageRequest = game.ReplicatedStorage.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
-                if sayMessageRequest then
-                    currentIndex = currentIndex + 1
-                    if currentIndex > #ExecFlex then currentIndex = 1  end
-                    sayMessageRequest:FireServer(ExecFlex[math.random(1, #ExecFlex)], "All")
-                end
+                if sayMessageRequest then sayMessageRequest:FireServer(ExecFlex[math.random(1, #ExecFlex)], "All") end
             end
         end)
-        TabOthers:NewSlider('FPS Cap', '', false, '', {min = 60, max = 1000, default = 240}, function(Value) setfpscap(Value) end)
+        UI_Oth_FPS = TabOthers:NewSlider('FPS Cap', '', false, '', {min = 60, max = 1000, default = 240}, function(Value) FPSCapState = Value; setfpscap(Value) end)
     else
         TabOthers:NewLabel('Unknown ass hack', "left")
         TabOthers:NewLabel('? Com', "left")
@@ -2893,7 +3098,7 @@ local function PLVSMVWVRE_Menu()
         TabOthers:NewButton('Grab HWID', function() setclipboard(tostring(gethwid())) end)
         TabOthers:NewButton('Verificate LVL', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/vvult/HIdentity/main/HIdentity"))() end)
         TabOthers:NewButton('Test UNC', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/unified-naming-convention/NamingStandard/main/UNCCheckEnv.lua"))() end)
-        TabOthers:NewSlider('FPS Cap', '', false, '', {min = 60, max = 1000, default = 240}, function(Value) setfpscap(Value) end)
+        UI_Oth_FPS = TabOthers:NewSlider('FPS Cap', '', false, '', {min = 60, max = 1000, default = 240}, function(Value) FPSCapState = Value; setfpscap(Value) end)
     end
     
     -- // CONFIG TAB
@@ -2902,7 +3107,190 @@ local function PLVSMVWVRE_Menu()
     TabUISettings:NewButton('Rejoin', function() rejoin() end)
     TabUISettings:NewButton('Server Hop', function() serverhop() end)
     TabUISettings:NewButton('Rage Quit', function() game:Shutdown() end)
-    TabUISettings:NewToggle('Killfeed', false, function(Value) HitDetection(Value) end)
+    
+    local KillFeedState = false
+    local KillfeedToggle = TabUISettings:NewToggle('Killfeed', false, function(Value) 
+        KillFeedState = Value
+        HitDetection(Value) 
+    end)
+
+    -- ==========================================
+    -- // CONFIGURATION MANAGER & FLAG EXPORTS
+    -- ==========================================
+    local ConfigFlags = {
+        -- RAGE Main
+        {Name = "Aimbot_Lock", Type = "Toggle", Get = function() return Aimbot.Enabled end, Set = function(val) UI_Aimbot_Lock:Set(val) end},
+        {Name = "Aimbot_Vis", Type = "Toggle", Get = function() return Aimbot.CheckVisibility end, Set = function(val) UI_Aimbot_Vis:Set(val) end},
+        {Name = "Aimbot_Alive", Type = "Toggle", Get = function() return Aimbot.CheckAlive end, Set = function(val) UI_Aimbot_Alive:Set(val) end},
+        {Name = "Aimbot_Team", Type = "Toggle", Get = function() return Aimbot.TeamCheck end, Set = function(val) UI_Aimbot_Team:Set(val) end},
+        {Name = "Aimbot_FOVCheck", Type = "Toggle", Get = function() return Aimbot.FOVCheck end, Set = function(val) UI_Aimbot_FOV:Set(val) end},
+        {Name = "Aimbot_Forcefield", Type = "Toggle", Get = function() return Aimbot.CheckForcefield end, Set = function(val) UI_Aimbot_Respawn:Set(val) end},
+        {Name = "Aimbot_Prediction", Type = "Toggle", Get = function() return Aimbot.Prediction end, Set = function(val) UI_Aimbot_Pred:Set(val) end},
+        {Name = "Aimbot_AutoShoot", Type = "Toggle", Get = function() return Aimbot.AutoShoot end, Set = function(val) UI_Aimbot_AutoShoot:Set(val) end},
+        {Name = "Aimbot_Resolver", Type = "Toggle", Get = function() return Aimbot.Resolver end, Set = function(val) UI_Aimbot_Resolver:Set(val) end},
+        -- RCS
+        {Name = "RCS_Enabled", Type = "Toggle", Get = function() return RCS_Sets.Enabled end, Set = function(val) UI_RCS_Toggle:Set(val) end},
+        {Name = "RCS_Control", Type = "Slider", Get = function() return RCS_Sets.RecoilControl end, Set = function(val) UI_RCS_Control:Value(val) end},
+        {Name = "RCS_DownAim", Type = "Slider", Get = function() return RCS_Sets.RecoilDownAim end, Set = function(val) UI_RCS_DownAim:Value(val) end},
+        {Name = "RCS_Speed", Type = "Slider", Get = function() return RCS_Sets.Speed end, Set = function(val) UI_RCS_Speed:Value(val) end},
+        -- Aim Settings
+        {Name = "Aim_ASDelay", Type = "Slider", Get = function() return Aimbot.AutoShoot_Delay * 10 end, Set = function(val) UI_Aim_ASDelay:Value(val) end},
+        {Name = "Aim_Smooth", Type = "Slider", Get = function() return Aimbot.Smoothing * 100 end, Set = function(val) UI_Aim_Smooth:Value(val) end},
+        {Name = "Aim_Dist", Type = "Slider", Get = function() return Aimbot.Distance end, Set = function(val) UI_Aim_Dist:Value(val) end},
+        {Name = "Aim_Offset", Type = "Slider", Get = function() return Aimbot.Prediction_Offset end, Set = function(val) UI_Aim_Offset:Value(val) end},
+        -- Resolver Settings
+        {Name = "Res_Hist", Type = "Slider", Get = function() return Aimbot.ResolverHistory * 10 end, Set = function(val) UI_Res_Hist:Value(val) end},
+        {Name = "Res_PredErr", Type = "Slider", Get = function() return Aimbot.MaxPredictionError end, Set = function(val) UI_Res_PredErr:Value(val) end},
+        {Name = "Res_Smooth", Type = "Slider", Get = function() return Aimbot.VelocitySmoothing * 100 end, Set = function(val) UI_Res_Smooth:Value(val) end},
+        {Name = "Res_Jitter", Type = "Slider", Get = function() return Aimbot.JitterThreshold * 100 end, Set = function(val) UI_Res_Jitter:Value(val) end},
+        {Name = "Res_Conf", Type = "Slider", Get = function() return Aimbot.MinPredictionConfidence * 100 end, Set = function(val) UI_Res_Conf:Value(val) end},
+        -- Misc
+        {Name = "Aim_Hitbox", Type = "Dropdown", Get = function() return Aimbot.Hitbox end, Set = function(val) Aimbot.Hitbox = val; UI_Aim_Hitbox:Text(val) end},
+        {Name = "Aim_FOVVis", Type = "Toggle", Get = function() return Aimbot.FOVVisible end, Set = function(val) UI_Aim_FOVVis:Set(val) end},
+        {Name = "Aim_FOVRad", Type = "Slider", Get = function() return Aimbot.FOVRadius end, Set = function(val) UI_Aim_FOVRad:Value(val) end},
+        {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) UI_Aim_FOVSides:Value(val) end},
+        {Name = "Aim_FOVThick", Type = "Slider", Get = function() return Aimbot.FOVThickness end, Set = function(val) UI_Aim_FOVThick:Value(val) end},
+        {Name = "Aim_FOVC", Type = "Colorpicker", Get = function() return Aimbot.FOVColor end, Set = function(val) UI_Aim_FOVC:Set(val) end},
+        {Name = "Aim_TBot", Type = "Toggle", Get = function() return TriggerBotState end, Set = function(val) UI_Aim_TBot:Set(val) end},
+        {Name = "Aim_TSens", Type = "Slider", Get = function() return Aimbot.Triggerbot_Sensitivity * 100 end, Set = function(val) UI_Aim_TSens:Value(val) end},
+        -- Movement
+        {Name = "Move_Fly", Type = "Toggle", Get = function() return FlyState end, Set = function(val) UI_Move_Fly:Set(val) end},
+        {Name = "Move_WS", Type = "Slider", Get = function() return player.Character.Humanoid.WalkSpeed end, Set = function(val) UI_Move_WS:Value(val) end},
+        {Name = "Move_JP", Type = "Slider", Get = function() return player.Character.Humanoid.JumpPower end, Set = function(val) UI_Move_JP:Value(val) end},
+        {Name = "Move_FS", Type = "Slider", Get = function() return flySpeed end, Set = function(val) UI_Move_FS:Value(val) end},
+        -- LocalPlayer
+        {Name = "LP_Sit", Type = "Toggle", Get = function() return SitState end, Set = function(val) UI_LP_Sit:Set(val) end},
+        {Name = "Orbit_On", Type = "Toggle", Get = function() return OrbitState end, Set = function(val) UI_LP_Orbit:Set(val) end},
+        {Name = "Orbit_Target", Type = "Textbox", Get = function() return Orbiter_Settings.Target end, Set = function(val) Orbiter_Settings.Target = val end},
+        {Name = "Orbit_Height", Type = "Slider", Get = function() return Orbiter_Settings.Height end, Set = function(val) UI_LP_OrbitH:Value(val) end},
+        {Name = "Orbit_Speed", Type = "Slider", Get = function() return Orbiter_Settings.Speed end, Set = function(val) UI_LP_OrbitS:Value(val) end},
+        {Name = "Orbit_Radius", Type = "Slider", Get = function() return Orbiter_Settings.RadiusScale * 10 end, Set = function(val) UI_LP_OrbitR:Value(val) end},
+        {Name = "AA_On", Type = "Toggle", Get = function() return AntiAim.Activated end, Set = function(val) UI_AA_On:Set(val) end},
+        {Name = "AA_Jitter", Type = "Slider", Get = function() return AntiAim.Jitter * 100 end, Set = function(val) UI_AA_Jitter:Value(val) end},
+        {Name = "AA_X", Type = "Slider", Get = function() return AntiAim.Jitter_X * 100 end, Set = function(val) UI_AA_X:Value(val) end},
+        {Name = "AA_Z", Type = "Slider", Get = function() return AntiAim.Jitter_Z * 100 end, Set = function(val) UI_AA_Z:Value(val) end},
+        {Name = "AA_Speed", Type = "Slider", Get = function() return AntiAim.SpinSpeed end, Set = function(val) UI_AA_Speed:Value(val) end},
+        {Name = "AA_Angle", Type = "Slider", Get = function() return AntiAim.SpinSwitchInterval end, Set = function(val) UI_AA_Angle:Value(val) end},
+        {Name = "AA_Dir", Type = "Slider", Get = function() return AntiAim.SpinDirection end, Set = function(val) UI_AA_Dir:Value(val) end},
+        {Name = "AC_On", Type = "Toggle", Get = function() return AntiCheatState end, Set = function(val) UI_AC_On:Set(val) end},
+        {Name = "AC_Speed", Type = "Slider", Get = function() return Anticheat_Settings.SPEED_THRESHOLD end, Set = function(val) UI_AC_Speed:Value(val) end},
+        {Name = "AC_Jump", Type = "Slider", Get = function() return Anticheat_Settings.JUMP_THRESHOLD end, Set = function(val) UI_AC_Jump:Value(val) end},
+        {Name = "AC_FlyD", Type = "Slider", Get = function() return Anticheat_Settings.FLY_DETECTION_THRESHOLD end, Set = function(val) UI_AC_FlyD:Value(val) end},
+        {Name = "AC_FlyV", Type = "Slider", Get = function() return Anticheat_Settings.FLY_VELOCITY_THRESHOLD end, Set = function(val) UI_AC_FlyV:Value(val) end},
+        {Name = "AC_Tele", Type = "Slider", Get = function() return Anticheat_Settings.TELEPORT_THRESHOLD end, Set = function(val) UI_AC_Tele:Value(val) end},
+        {Name = "AC_Spin", Type = "Slider", Get = function() return Anticheat_Settings.SPIN_DETECTION_THRESHOLD end, Set = function(val) UI_AC_Spin:Value(val) end},
+        {Name = "AC_MolD", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DISTANCE_THRESHOLD * 10 end, Set = function(val) UI_AC_MolD:Value(val) end},
+        {Name = "AC_MolT", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DURATION_THRESHOLD end, Set = function(val) UI_AC_MolT:Value(val) end},
+        {Name = "AC_Spikes", Type = "Slider", Get = function() return Anticheat_Settings.MAX_SPIKES end, Set = function(val) UI_AC_Spikes:Value(val) end},
+        {Name = "AC_AutoRep", Type = "Toggle", Get = function() return Anticheat_Settings.REPORT end, Set = function(val) UI_AC_AutoRep:Set(val) end},
+        {Name = "LP_FallDmg", Type = "Toggle", Get = function() return AntiFallDmgState end, Set = function(val) UI_LP_FallDmg:Set(val) end},
+        {Name = "LP_AntiFling", Type = "Toggle", Get = function() return AntiFlingState end, Set = function(val) UI_LP_AntiFling:Set(val) end},
+        -- OTHERS
+        {Name = "Oth_Skybox", Type = "Toggle", Get = function() return SkyboxState end, Set = function(val) UI_Oth_Skybox:Set(val) end},
+        {Name = "Oth_WallClip", Type = "Toggle", Get = function() return WallClipState end, Set = function(val) UI_Oth_WallClip:Set(val) end},
+        {Name = "Oth_Zoom", Type = "Slider", Get = function() return player.CameraMaxZoomDistance end, Set = function(val) UI_Oth_Zoom:Value(val) end},
+        {Name = "Oth_FOV", Type = "Slider", Get = function() return ExtraVisuals.FOV end, Set = function(val) UI_Oth_FOV:Value(val) end},
+        {Name = "Oth_SndHM", Type = "Textbox", Get = function() return SoundIDHM end, Set = function(val) SoundIDHM = val end},
+        {Name = "Oth_SndK", Type = "Textbox", Get = function() return SoundIDK end, Set = function(val) SoundIDK = val end},
+        {Name = "Cross_On", Type = "Toggle", Get = function() return Crosshair.Enabled end, Set = function(val) UI_Cross_On:Set(val) end},
+        {Name = "Cross_Sides", Type = "Slider", Get = function() return Crosshair.Sides end, Set = function(val) UI_Cross_Sides:Value(val) end},
+        {Name = "Cross_Gap", Type = "Slider", Get = function() return Crosshair.Size end, Set = function(val) UI_Cross_Gap:Value(val) end},
+        {Name = "Cross_Rot", Type = "Slider", Get = function() return Crosshair.Rotation end, Set = function(val) UI_Cross_Rot:Value(val) end},
+        {Name = "Cross_Thick", Type = "Slider", Get = function() return Crosshair.Thickness end, Set = function(val) UI_Cross_Thick:Value(val) end},
+        {Name = "Cross_Len", Type = "Slider", Get = function() return Crosshair.Gap end, Set = function(val) UI_Cross_Len:Value(val) end},
+        {Name = "Cross_X", Type = "Slider", Get = function() return Crosshair.x_Off end, Set = function(val) UI_Cross_X:Value(val) end},
+        {Name = "Cross_Y", Type = "Slider", Get = function() return Crosshair.y_Off end, Set = function(val) UI_Cross_Y:Value(val) end},
+        {Name = "Cross_C", Type = "Colorpicker", Get = function() return Crosshair.Color end, Set = function(val) UI_Cross_C:Set(val) end},
+        {Name = "Plate_C", Type = "Colorpicker", Get = function() return NAMETAG_CONFIG.NAMEPLATE_COLOR end, Set = function(val) UI_Plate_C:Set(val) end},
+        {Name = "Chat_On", Type = "Toggle", Get = function() return ChatSpammerrr.Activated end, Set = function(val) UI_Chat_On:Set(val) end},
+        {Name = "Chat_Mode", Type = "Slider", Get = function() return ChatSpammerrr.Mode end, Set = function(val) UI_Chat_Mode:Value(val) end},
+        {Name = "Oth_Friend", Type = "Toggle", Get = function() return FriendBotState end, Set = function(val) UI_Oth_Friend:Set(val) end},
+        {Name = "Oth_Targ", Type = "Textbox", Get = function() return NAMETAG_CONFIG.NAME end, Set = function(val) NAMETAG_CONFIG.NAME = val; NAMETAG_CONFIG.NAMEPLATE_TAG = "Target" end},
+        {Name = "Oth_FPS", Type = "Slider", Get = function() return FPSCapState end, Set = function(val) if UI_Oth_FPS then UI_Oth_FPS:Value(val) end end},
+        {Name = "Oth_Killfeed", Type = "Toggle", Get = function() return KillFeedState end, Set = function(val) KillfeedToggle:Set(val) end},
+        -- ESP Shared Settings
+        {Name = "ESP_Origin", Type = "Dropdown", Get = function() return Sense.teamSettings.enemy.tracerOrigin end, Set = function(val) Sense.teamSettings.enemy.tracerOrigin = val; Sense.teamSettings.friendly.tracerOrigin = val; UI_ESP_Origin:Text(val) end},
+        {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) UI_ESP_TextS:Value(val) end},
+        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}
+    }
+
+    local function RegisterESPSettings(teamStr)
+        local cap = (teamStr == "enemy") and "Enemy" or "Friendly"
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Enabled", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].enabled end, Set = function(val) Sense.teamSettings[teamStr].enabled = val; if currentESPTeam == cap then espControls.Enabled:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Box", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].box end, Set = function(val) Sense.teamSettings[teamStr].box = val; if currentESPTeam == cap then espControls.Box:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Name", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].name end, Set = function(val) Sense.teamSettings[teamStr].name = val; if currentESPTeam == cap then espControls.Name:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Tracer", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].tracer end, Set = function(val) Sense.teamSettings[teamStr].tracer = val; if currentESPTeam == cap then espControls.Tracer:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_HealthBar", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].healthBar end, Set = function(val) Sense.teamSettings[teamStr].healthBar = val; if currentESPTeam == cap then espControls.HealthBar:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Distance", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].distance end, Set = function(val) Sense.teamSettings[teamStr].distance = val; if currentESPTeam == cap then espControls.Distance:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Chams", Type = "Toggle", Get = function() return Sense.teamSettings[teamStr].chams end, Set = function(val) Sense.teamSettings[teamStr].chams = val; if currentESPTeam == cap then espControls.Chams:Set(val) end end })
+        table.insert(ConfigFlags, { Name = "ESP_"..cap.."_Color", Type = "Colorpicker", Get = function() return Sense.teamSettings[teamStr].boxColor[1] end, Set = function(val) 
+            Sense.teamSettings[teamStr].boxColor = {val, 1}
+            Sense.teamSettings[teamStr].tracerColor = {val, 1}
+            Sense.teamSettings[teamStr].chamsOutlineColor = {val, 0}
+            if currentESPTeam == cap then espControls.Color:Set(val) end 
+        end })
+    end
+    
+    RegisterESPSettings("enemy")
+    RegisterESPSettings("friendly")
+
+    -- Automate loop registering
+    for _, flag in pairs(ConfigFlags) do
+        library:RegisterFlag(flag.Name, flag.Type, flag.Get, flag.Set)
+    end
+
+    TabUISettings:NewSection('Configuration')
+    local currentConfigName = "default"
+    local configList = library:ListConfigs()
+
+    TabUISettings:NewTextbox("Create New Config", "default", "Enter new name...", "all", "small", true, false, function(Value) currentConfigName = Value end)
+    local ConfigSelector = TabUISettings:NewSelector("Saved Configs", "Select...", configList, function(Value)
+        if Value ~= "Select..." then
+            currentConfigName = Value
+            print("[XSX] Selected config: " .. currentConfigName)
+        end
+    end)
+
+    TabUISettings:NewButton("Refresh Config List", function()
+        for _, oldConfig in pairs(configList) do ConfigSelector:RemoveOption(oldConfig) end
+        configList = library:ListConfigs()
+        for _, newConfig in pairs(configList) do ConfigSelector:AddOption(newConfig) end
+        print("[XSX] Config list refreshed!")
+    end)
+    TabUISettings:NewSeperator()
+    TabUISettings:NewButton("Save Config", function()
+        if currentConfigName ~= "" and currentConfigName ~= "Select..." then
+            if library:SaveConfig(currentConfigName) then
+                print("[XSX] Successfully saved config: " .. currentConfigName)
+                if not table.find(configList, currentConfigName) then
+                    table.insert(configList, currentConfigName)
+                    ConfigSelector:AddOption(currentConfigName)
+                end
+            else
+                warn("[XSX] Failed to save config.")
+            end
+        end
+    end)
+    TabUISettings:NewButton("Load Config", function()
+        if currentConfigName ~= "" and currentConfigName ~= "Select..." then
+            if library:LoadConfig(currentConfigName) then
+                print("[XSX] Successfully loaded config: " .. currentConfigName)
+            else
+                warn("[XSX] Failed to load config.")
+            end
+        end
+    end)
+    TabUISettings:NewButton("Delete Config", function()
+        if currentConfigName ~= "" and currentConfigName ~= "Select..." then
+            if library:DeleteConfig(currentConfigName) then
+                print("[XSX] Deleted config: " .. currentConfigName)
+                ConfigSelector:RemoveOption(currentConfigName)
+                local index = table.find(configList, currentConfigName)
+                if index then table.remove(configList, index) end
+                currentConfigName = "default"
+            end
+        end
+    end)
 
     Launch()
     
