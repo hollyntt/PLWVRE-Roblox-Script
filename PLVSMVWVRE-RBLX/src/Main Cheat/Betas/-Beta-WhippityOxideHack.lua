@@ -3330,7 +3330,7 @@ local function PLVSMVWVRE_Menu()
         -- ESP Shared Settings
         {Name = "ESP_Origin", Type = "Dropdown", Get = function() return Sense.teamSettings.enemy.tracerOrigin end, Set = function(val) Sense.teamSettings.enemy.tracerOrigin = val; Sense.teamSettings.friendly.tracerOrigin = val; UI_ESP_Origin:Text(val) end},
         {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) UI_ESP_TextS:Value(val) end},
-        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}
+        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}, -- Added missing comma here
         {Name = "Skeleton_Enabled", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Enabled or false end, Set = function(val) UI_Skeleton_Enabled:Set(val) end},
         {Name = "Skeleton_Thickness", Type = "Slider", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Thickness or 1 end, Set = function(val) UI_Skeleton_Thickness:Value(val) end},
         {Name = "Skeleton_Transparency", Type = "Slider", Get = function() return getgenv().SkeletonSettings and (getgenv().SkeletonSettings.Transparency * 100) or 100 end, Set = function(val) UI_Skeleton_Transparency:Value(val) end},

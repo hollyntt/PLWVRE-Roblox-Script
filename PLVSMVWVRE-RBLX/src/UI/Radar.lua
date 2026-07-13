@@ -22,7 +22,8 @@ local RadarConnections = {}
 local RadarDrawings = {}
 
 RadarInfo.Unload = function()
-    RadarInfo.Enabled = false
+    local currentRadarInfo = getgenv().RadarInfo or RadarInfo
+    currentRadarInfo.Enabled = false
     for _, conn in ipairs(RadarConnections) do
         pcall(function() conn:Disconnect() end)
     end
@@ -75,12 +76,13 @@ local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
     return c
 end
 
+-- Sync initial visibility with current config settings to prevent pop-in flickers
 local RadarBackground = NewCircle(0.9, RadarInfo.RadarBack, RadarInfo.Radius, true, 1)
-RadarBackground.Visible = true
+RadarBackground.Visible = RadarInfo.Enabled or false
 RadarBackground.Position = RadarInfo.Position
 
 local RadarBorder = NewCircle(0.75, RadarInfo.RadarBorder, RadarInfo.Radius, false, 3)
-RadarBorder.Visible = true
+RadarBorder.Visible = RadarInfo.Enabled or false
 RadarBorder.Position = RadarInfo.Position
 
 local function GetRelative(pos)
@@ -102,8 +104,11 @@ local function PlaceDot(plr)
     local function Update()
         local c 
         c = game:service("RunService").RenderStepped:Connect(function()
+            -- Read directly from getgenv() to stay updated if table is overwritten by Config Manager
+            local activeRadarInfo = getgenv().RadarInfo or RadarInfo
+
             -- Handle global toggle
-            if RadarInfo.Enabled == false then
+            if activeRadarInfo.Enabled == false then
                 PlayerDot.Visible = false
                 return
             end
@@ -111,33 +116,33 @@ local function PlaceDot(plr)
             local char = plr.Character
             if char and char:FindFirstChildOfClass("Humanoid") and char.PrimaryPart ~= nil and char:FindFirstChildOfClass("Humanoid").Health > 0 then
                 local hum = char:FindFirstChildOfClass("Humanoid")
-                local scale = RadarInfo.Scale
+                local scale = activeRadarInfo.Scale
                 local relx, rely = GetRelative(char.PrimaryPart.Position)
-                local newpos = RadarInfo.Position - Vector2.new(relx * scale, rely * scale) 
+                local newpos = activeRadarInfo.Position - Vector2.new(relx * scale, rely * scale) 
                 
-                if (newpos - RadarInfo.Position).magnitude < RadarInfo.Radius-2 then 
+                if (newpos - activeRadarInfo.Position).magnitude < activeRadarInfo.Radius-2 then 
                     PlayerDot.Radius = 3   
                     PlayerDot.Position = newpos
                     PlayerDot.Visible = true
                 else 
-                    local dist = (RadarInfo.Position - newpos).magnitude
-                    local calc = (RadarInfo.Position - newpos).unit * (dist - RadarInfo.Radius)
+                    local dist = (activeRadarInfo.Position - newpos).magnitude
+                    local calc = (activeRadarInfo.Position - newpos).unit * (dist - activeRadarInfo.Radius)
                     local inside = Vector2.new(newpos.X + calc.X, newpos.Y + calc.Y)
                     PlayerDot.Radius = 2
                     PlayerDot.Position = inside
                     PlayerDot.Visible = true
                 end
 
-                PlayerDot.Color = RadarInfo.PlayerDot
-                if RadarInfo.Team_Check then
+                PlayerDot.Color = activeRadarInfo.PlayerDot
+                if activeRadarInfo.Team_Check then
                     if plr.TeamColor == Player.TeamColor then
-                        PlayerDot.Color = RadarInfo.Team
+                        PlayerDot.Color = activeRadarInfo.Team
                     else
-                        PlayerDot.Color = RadarInfo.Enemy
+                        PlayerDot.Color = activeRadarInfo.Enemy
                     end
                 end
 
-                if RadarInfo.Health_Color then
+                if activeRadarInfo.Health_Color then
                     PlayerDot.Color = HealthBarLerp(hum.Health / hum.MaxHealth)
                 end
             else 
@@ -161,7 +166,7 @@ end
 
 local function NewLocalDot()
     local d = Drawing.new("Triangle")
-    d.Visible = true
+    d.Visible = RadarInfo.Enabled or false
     d.Thickness = 1
     d.Filled = true
     d.Color = RadarInfo.LocalPlayerDot
@@ -188,8 +193,10 @@ table.insert(RadarConnections, playerAddedConn)
 coroutine.wrap(function()
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
+        local activeRadarInfo = getgenv().RadarInfo or RadarInfo
+
         -- Handle global toggle
-        if RadarInfo.Enabled == false then
+        if activeRadarInfo.Enabled == false then
             if LocalPlayerDot ~= nil then LocalPlayerDot.Visible = false end
             RadarBackground.Visible = false
             RadarBorder.Visible = false
@@ -201,18 +208,18 @@ coroutine.wrap(function()
         end
 
         if LocalPlayerDot ~= nil then
-            LocalPlayerDot.Color = RadarInfo.LocalPlayerDot
-            LocalPlayerDot.PointA = RadarInfo.Position + Vector2.new(0, -6)
-            LocalPlayerDot.PointB = RadarInfo.Position + Vector2.new(-3, 6)
-            LocalPlayerDot.PointC = RadarInfo.Position + Vector2.new(3, 6)
+            LocalPlayerDot.Color = activeRadarInfo.LocalPlayerDot
+            LocalPlayerDot.PointA = activeRadarInfo.Position + Vector2.new(0, -6)
+            LocalPlayerDot.PointB = activeRadarInfo.Position + Vector2.new(-3, 6)
+            LocalPlayerDot.PointC = activeRadarInfo.Position + Vector2.new(3, 6)
         end
-        RadarBackground.Position = RadarInfo.Position
-        RadarBackground.Radius = RadarInfo.Radius
-        RadarBackground.Color = RadarInfo.RadarBack
+        RadarBackground.Position = activeRadarInfo.Position
+        RadarBackground.Radius = activeRadarInfo.Radius
+        RadarBackground.Color = activeRadarInfo.RadarBack
 
-        RadarBorder.Position = RadarInfo.Position
-        RadarBorder.Radius = RadarInfo.Radius
-        RadarBorder.Color = RadarInfo.RadarBorder
+        RadarBorder.Position = activeRadarInfo.Position
+        RadarBorder.Radius = activeRadarInfo.Radius
+        RadarBorder.Color = activeRadarInfo.RadarBorder
     end)
     table.insert(RadarConnections, c)
 end)()
@@ -223,9 +230,10 @@ local inset = game:service("GuiService"):GetGuiInset()
 local dragging = false
 local offset = Vector2.new(0, 0)
 UIS.InputBegan:Connect(function(input)
-    if RadarInfo.Enabled == false then return end
-    if input.UserInputType == Enum.UserInputType.MouseButton1 and (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
-        offset = RadarInfo.Position - Vector2.new(Mouse.X, Mouse.Y)
+    local activeRadarInfo = getgenv().RadarInfo or RadarInfo
+    if activeRadarInfo.Enabled == false then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - activeRadarInfo.Position).magnitude < activeRadarInfo.Radius then
+        offset = activeRadarInfo.Position - Vector2.new(Mouse.X, Mouse.Y)
         dragging = true
     end
 end)
@@ -240,19 +248,20 @@ coroutine.wrap(function()
     local dot = NewCircle(1, Color3.fromRGB(255, 255, 255), 3, true, 1)
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
-        if RadarInfo.Enabled == false then
+        local activeRadarInfo = getgenv().RadarInfo or RadarInfo
+        if activeRadarInfo.Enabled == false then
             dot.Visible = false
             return
         end
 
-        if (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
+        if (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - activeRadarInfo.Position).magnitude < activeRadarInfo.Radius then
             dot.Position = Vector2.new(Mouse.X, Mouse.Y + inset.Y)
             dot.Visible = true
         else 
             dot.Visible = false
         end
         if dragging then
-            RadarInfo.Position = Vector2.new(Mouse.X, Mouse.Y) + offset
+            activeRadarInfo.Position = Vector2.new(Mouse.X, Mouse.Y) + offset
         end
     end)
     table.insert(RadarConnections, c)
