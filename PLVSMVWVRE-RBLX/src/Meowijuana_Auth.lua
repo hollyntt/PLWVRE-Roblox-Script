@@ -1,7 +1,7 @@
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 -- |                                 If Adonis Exists Kill him Method                                |
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-function Deob()
+local function Deob()
     --// Known service names (hardcoded for compatibility)
     local KNOWN_SERVICES = {
         "AccessControlService",
@@ -260,8 +260,6 @@ function Deob()
     end)
 end
 
-Deob()
-
 local function killadonisforme() 
     -- Safe environment fallbacks
     local setthreadidentity = setthreadidentity or setidentity or setthreadcontext or (syn and syn.set_thread_identity)
@@ -361,10 +359,10 @@ local function killadonisforme()
     end
 end
 
-
 local function _X()
-    killadonisforme()
     repeat task.wait() until game:IsLoaded()
+    Deob()
+    killadonisforme()
     
     -- Added safety check for game:HttpGet to prevent crashing
     -- 1. Verify loadstring is supported in the current environment
