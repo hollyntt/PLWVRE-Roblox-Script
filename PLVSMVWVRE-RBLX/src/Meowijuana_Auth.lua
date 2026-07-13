@@ -368,25 +368,23 @@ local function _X()
     
     -- Added safety check for game:HttpGet to prevent crashing
     -- 1. Verify loadstring is supported in the current environment
-    if not loadstring then
-        warn("loadstring is not defined or enabled in this environment.")
-        return
-    end
+    local success, scriptContent = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua")
+    end)
 
-    local sourceCode = "https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua"
+    if success and scriptContent then
+        print("Received raw content length: " .. #scriptContent)
+        print("First 50 characters of content: " .. string.sub(scriptContent, 1, 50))
 
-    -- 2. Compile the string without executing it immediately
-    local compiledFunction, compileError = loadstring(sourceCode)
-
-    if compiledFunction then
-        -- 3. Execute the function safely to catch runtime errors
-        local success, runError = pcall(compiledFunction)
-        if not success then
-            warn("Runtime error occurred during execution: " .. tostring(runError))
+        local compiledChunk, compileError = loadstring(scriptContent)
+        if compiledChunk then
+            print("Compilation successful! Safe to execute.")
+            -- pcall(compiledChunk)
+        else
+            warn("Compilation failed: " .. tostring(compileError))
         end
     else
-        -- 4. Handle syntax or parsing errors gracefully
-        warn("Compilation failed: " .. tostring(compileError))
+        warn("Failed to fetch script content.")
     end
 end
 
