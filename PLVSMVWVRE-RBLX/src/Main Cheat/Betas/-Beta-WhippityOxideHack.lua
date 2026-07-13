@@ -3788,7 +3788,7 @@ local function CallBuild()
     end
     function Initiate()
         print("⏺️ Initting...")
-        sound()
+        PLVSMVWVRE_Menu()
         print("✅ PLVSMVWVRE_Menu executed successfully!")
     end
     function Inject()
