@@ -3985,7 +3985,6 @@ function library:Init(key)
     end
     return TabLibrary
 end
-return library
 
 -- [[ Config Manager ]] --
 
@@ -4123,3 +4122,4 @@ function library:DeleteConfig(name)
     end
     return false
 end
+return library
