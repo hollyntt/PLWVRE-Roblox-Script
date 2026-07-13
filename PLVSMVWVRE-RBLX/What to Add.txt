@@ -1,2 +1,0 @@
-- Add the Arrow ESP thingy (by Blissful#4992)
-- Replace the Radar ESP thingy (by Blissful#4992)
