@@ -67,7 +67,7 @@ local flyForce, flyConnection
 
 -- Sirius Sense ESP remains untouched
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-local ArrowESP, Radar
+local ArrowESP, Skeleton
 local ExecName = identifyexecutor()
 local SoundIDHM = 5794214857;
 local SoundIDK = 5764885315;
@@ -2534,9 +2534,6 @@ local function EndStuff()
         if type(ArrowESP) == "table" and ArrowESP.Unload then
             ArrowESP:Unload()
         end
-        if type(Radar) == "table" and Radar.Unload then
-            Radar:Unload()
-        end
         if type(Skeleton) == "table" and Skeleton.Unload then
             Skeleton:Unload()
         end
@@ -2609,11 +2606,8 @@ local function Launch()
     Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
     InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
     Sense.Load() Success_Notificate("Initialized Sense!")
-    pcall(function()
-        getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
-        getgenv().Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))() Success_Notificate("Initialized RadarESP!")
-        getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
-    end)
+    getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
+    getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
     Notificate(COLORS.WHITE, "Setting up Hooks...")
 
     player.CharacterAdded:Connect(function() if Action then setupFly() end end) Success_Notificate("Hooked Fly Setup!")
@@ -2933,49 +2927,6 @@ local function PLVSMVWVRE_Menu()
     TabOthers:NewTextbox('Get Target Username', '', 'Player Name', 'all', 'small', true, false, function(Value) toclipboard(Value) Notificate(COLORS.GREEN, "Copied "..Value.. "'s Username") end)
 
     TabOthers:NewSection('Visuals / ETC')
-    
-    -- Updated to leverage the preloaded Radar script URL safely
-    -- New section for Radar ESP
-    TabVisuals:NewSection('2D Radar')
-
-    TabVisuals:NewToggle('Radar Enabled', true, function(Value)
-        if getgenv().RadarSettings then
-            getgenv().RadarSettings.Enabled = Value
-        end
-    end)
-
-    TabVisuals:NewSlider('Radar Screen Position X', '', false, '', {min = 50, max = 1920, default = 200}, function(Value)
-        if getgenv().RadarSettings then
-            local currentY = getgenv().RadarSettings.Position.Y
-            getgenv().RadarSettings.Position = Vector2.new(Value, currentY)
-        end
-    end)
-
-    TabVisuals:NewSlider('Radar Screen Position Y', '', false, '', {min = 50, max = 1080, default = 200}, function(Value)
-        if getgenv().RadarSettings then
-            local currentX = getgenv().RadarSettings.Position.X
-            getgenv().RadarSettings.Position = Vector2.new(currentX, Value)
-        end
-    end)
-
-    TabVisuals:NewSlider('Radar Radius', '', false, '', {min = 50, max = 250, default = 100}, function(Value)
-        if getgenv().RadarSettings then
-            getgenv().RadarSettings.Radius = Value
-        end
-    end)
-
-    TabVisuals:NewSlider('Radar Scale (Zoom)', '', false, '', {min = 5, max = 50, default = 15}, function(Value)
-        if getgenv().RadarSettings then
-            getgenv().RadarSettings.Scale = Value / 10
-        end
-    end)
-
-    TabVisuals:NewToggle('Show Health Colors on Dot', true, function(Value)
-        if getgenv().RadarSettings then
-            getgenv().RadarSettings.ShowHealthColor = Value
-        end
-    end)
-
     TabVisuals:NewSection('Skeleton ESP')
 
     local UI_Skeleton_Enabled = TabVisuals:NewToggle('Enabled', false, function(Value)
@@ -3348,20 +3299,6 @@ local function PLVSMVWVRE_Menu()
         {Name = "Arrow_Transparency", Type = "Slider", Get = function() return getgenv().ArrowSettings and (getgenv().ArrowSettings.TriangleTransparency * 100) or 0 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleTransparency = val / 100 end if UI_Arrow_Transparency then UI_Arrow_Transparency:Value(val) end end},
         {Name = "Arrow_Color", Type = "Colorpicker", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleColor or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleColor = val end if UI_Arrow_Color then UI_Arrow_Color:Set(val) end end},
         {Name = "Arrow_AntiAliasing", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.AntiAliasing or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.AntiAliasing = val end if UI_Arrow_AntiAliasing then UI_Arrow_AntiAliasing:Set(val) end end},
-
-        {Name = "Radar_Enabled", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Enabled or false end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Enabled = val end if UI_Radar_Enabled then UI_Radar_Enabled:Set(val) end end},
-        {Name = "Radar_PosX", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Position.X or 200 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Position = Vector2.new(val, getgenv().RadarInfo.Position.Y) end if UI_Radar_PosX then UI_Radar_PosX:Value(val) end end},
-        {Name = "Radar_PosY", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Position.Y or 200 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Position = Vector2.new(getgenv().RadarInfo.Position.X, val) end if UI_Radar_PosY then UI_Radar_PosY:Value(val) end end},
-        {Name = "Radar_Radius", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Radius or 100 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Radius = val end if UI_Radar_Radius then UI_Radar_Radius:Value(val) end end},
-        {Name = "Radar_Scale", Type = "Slider", Get = function() return getgenv().RadarInfo and (getgenv().RadarInfo.Scale * 10) or 10 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Scale = val / 10 end if UI_Radar_Scale then UI_Radar_Scale:Value(val) end end},
-        {Name = "Radar_Back", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.RadarBack or Color3.fromRGB(10, 10, 10) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.RadarBack = val end if UI_Radar_Back then UI_Radar_Back:Set(val) end end},
-        {Name = "Radar_Border", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.RadarBorder or Color3.fromRGB(75, 75, 75) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.RadarBorder = val end if UI_Radar_Border then UI_Radar_Border:Set(val) end end},
-        {Name = "Radar_LocalPlayerDot", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.LocalPlayerDot or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.LocalPlayerDot = val end if UI_Radar_LocalPlayerDot then UI_Radar_LocalPlayerDot:Set(val) end end},
-        {Name = "Radar_PlayerDot", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.PlayerDot or Color3.fromRGB(60, 170, 255) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.PlayerDot = val end if UI_Radar_PlayerDot then UI_Radar_PlayerDot:Set(val) end end},
-        {Name = "Radar_Team", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Team or Color3.fromRGB(0, 255, 0) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Team = val end if UI_Radar_Team then UI_Radar_Team:Set(val) end end},
-        {Name = "Radar_Enemy", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Enemy or Color3.fromRGB(255, 0, 0) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Enemy = val end if UI_Radar_Enemy then UI_Radar_Enemy:Set(val) end end},
-        {Name = "Radar_HealthColor", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Health_Color or true end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Health_Color = val end if UI_Radar_HealthColor then UI_Radar_HealthColor:Set(val) end end},
-        {Name = "Radar_TeamCheck", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Team_Check or true end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Team_Check = val end if UI_Radar_TeamCheck then UI_Radar_TeamCheck:Set(val) end end},
     }
 
     local function RegisterESPSettings(teamStr)
