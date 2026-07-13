@@ -377,7 +377,7 @@ local function _X()
         local compiledChunk, compileError = loadstring(scriptContent)
         if compiledChunk then
             print("Compilation successful! Safe to execute.")
-            -- pcall(compiledChunk)
+            pcall(compiledChunk)
         else
             warn("Compilation failed: " .. tostring(compileError))
         end
