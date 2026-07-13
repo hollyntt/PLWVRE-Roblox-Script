@@ -1698,10 +1698,12 @@ function library:Init(key)
                 callback(On)
             end)
 
-            local ToggleFunctions = {}
+            local ToggleFunctions = {
+                Key = "None",
+                KeyMode = "Toggle"
+            }
             function ToggleFunctions:Text(new)
-                new = new or text
-                toggleLabel.Text = new
+                toggleLabel.Text = new or text
                 return ToggleFunctions
             end
             --
@@ -1831,6 +1833,8 @@ function library:Init(key)
                     MouseButton5 = "m5"
                 }
                 local ChosenKey = default_t.Name or default_t
+                ToggleFunctions.Key = ChosenKey
+                ToggleFunctions.KeyMode = Mode
                 
                 local function UpdateKeybindText()
                     local display = Shortcuts[ChosenKey] or ChosenKey
@@ -1885,6 +1889,7 @@ function library:Init(key)
 
                     btn.MouseButton1Click:Connect(function()
                         Mode = m
+                        ToggleFunctions.KeyMode = Mode
                         UpdateKeybindText()
                         closeCtx()
                         
@@ -1945,6 +1950,7 @@ function library:Init(key)
                         else
                             ChosenKey = InputWait.UserInputType.Name
                         end
+                        ToggleFunctions.Key = ChosenKey
                         UpdateKeybindText()
                     end
                 end)
@@ -1976,11 +1982,13 @@ function library:Init(key)
     
                 function ToggleFunctions:SetKey(new)
                     ChosenKey = new.Name or new
+                    ToggleFunctions.Key = ChosenKey
                     UpdateKeybindText()
                     return ToggleFunctions
                 end
                 function ToggleFunctions:SetMode(new)
                     Mode = new or Mode
+                    ToggleFunctions.KeyMode = Mode
                     UpdateKeybindText()
                     if Mode == "Always" and not On then ToggleFunctions:Change() end
                     return ToggleFunctions
@@ -2210,6 +2218,7 @@ function library:Init(key)
 
                 btn.MouseButton1Click:Connect(function()
                     Mode = m
+                    KeybindFunctions.KeyMode = Mode
                     UpdateKeybindText()
                     closeCtx()
                     
@@ -2276,6 +2285,7 @@ function library:Init(key)
                     else
                         ChosenKey = InputWait.UserInputType.Name
                     end
+                    KeybindFunctions.Key = ChosenKey
                     UpdateKeybindText()
                 end
             end
@@ -2312,11 +2322,14 @@ function library:Init(key)
 
             UpdatePageSize()
 
-            local KeybindFunctions = {}
+            local KeybindFunctions = {
+                Key = ChosenKey,
+                KeyMode = Mode
+            }
             function KeybindFunctions:Fire() callback(State, ChosenKey) return KeybindFunctions end
             function KeybindFunctions:SetFunction(new) callback = new or function() end return KeybindFunctions end
-            function KeybindFunctions:SetKey(new) ChosenKey = new.Name or new; UpdateKeybindText(); return KeybindFunctions end
-            function KeybindFunctions:SetMode(new) Mode = new or Mode; UpdateKeybindText(); return KeybindFunctions end
+            function KeybindFunctions:SetKey(new) ChosenKey = new.Name or new; KeybindFunctions.Key = ChosenKey; UpdateKeybindText(); return KeybindFunctions end
+            function KeybindFunctions:SetMode(new) Mode = new or Mode; KeybindFunctions.KeyMode = Mode; UpdateKeybindText(); return KeybindFunctions end
             function KeybindFunctions:Text(new) keybindLabel.Text = new or keybindLabel.Text; return KeybindFunctions end
             function KeybindFunctions:Hide() keybindFrame.Visible = false return KeybindFunctions end
             function KeybindFunctions:Show() keybindFrame.Visible = true return KeybindFunctions end
@@ -2328,8 +2341,8 @@ function library:Init(key)
             text = text or "text box"
             default = default or ""
             place = place or ""
-            format = format or "all" -- all, numbers, lower, upper
-            type = type or "small" -- small, medium, large
+            format = format or "all" 
+            type = type or "small" 
             autoexec = autoexec or true
             autoclear = autoclear or false
             callback = callback or function() end
@@ -2403,10 +2416,6 @@ function library:Init(key)
                 textboxTwoGradient.Rotation = 90
                 textboxTwoGradient.Name = "textboxTwoGradient"
                 textboxTwoGradient.Parent = textboxTwo
-    
-                textboxTwoCorner.CornerRadius = UDim.new(0, 2)
-                textboxTwoCorner.Name = "textboxTwoCorner"
-                textboxTwoCorner.Parent = textboxTwo
     
                 textBoxValues.Name = "textBoxValues"
                 textBoxValues.Parent = textboxTwo
@@ -4654,6 +4663,43 @@ function library:DeleteConfig(name)
     if isfile(path) then
         delfile(path)
         return true
+    end
+    return false
+end
+
+function library:SetAutoload(name)
+    if not (writefile and isfolder and makefolder) then return false end
+    self:EnsureConfigFolder()
+    writefile(self.ConfigFolder .. "/autoload.txt", name or "")
+    return true
+end
+
+function library:GetAutoload()
+    if not (readfile and isfile) then return nil end
+    local path = self.ConfigFolder .. "/autoload.txt"
+    if isfile(path) then
+        local success, content = pcall(readfile, path)
+        if success and content ~= "" then
+            return content
+        end
+    end
+    return nil
+end
+
+function library:ClearAutoload()
+    if not (delfile and isfile) then return false end
+    local path = self.ConfigFolder .. "/autoload.txt"
+    if isfile(path) then
+        pcall(delfile, path)
+        return true
+    end
+    return false
+end
+
+function library:Autoload()
+    local name = self:GetAutoload()
+    if name then
+        return self:LoadConfig(name)
     end
     return false
 end
