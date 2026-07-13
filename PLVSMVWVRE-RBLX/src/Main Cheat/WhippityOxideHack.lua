@@ -65,7 +65,9 @@ local PlaceId = game.PlaceId
 local JobId = game.JobId
 local flyForce, flyConnection
 
+-- Sirius Sense ESP remains untouched
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
+local ArrowESP, Skeleton
 local ExecName = identifyexecutor()
 local SoundIDHM = 5794214857;
 local SoundIDK = 5764885315;
@@ -241,7 +243,7 @@ getgenv().Library = {
         if Notif then
             Notif:Notify(text, time or 5, "information")
         else
-            print("[Mock Library Notify]:", text)
+            print("[uh hi]:", text)
         end
     end,
     SetWatermarkVisibility = function() end,
@@ -474,48 +476,48 @@ function ChatSpammer()
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n<3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYou're a silly boykisser!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\nPLVSMVWVRE.lol's Rebirth is happening!\n\n\n\n\n\n\n\n\n\n",
@@ -524,7 +526,7 @@ function ChatSpammer()
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
             "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n",
             "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n",
             "\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n\n\n\n\n\n\n\n\n\n\n\nkemonohooks\n\n"
@@ -2526,6 +2528,19 @@ local function EndStuff()
 
     getgenv().Library.Unloaded = true
     Sense.Unload()
+
+    pcall(function()
+        if getgenv().ArrowSettings and getgenv().ArrowSettings.Unload then
+            getgenv().ArrowSettings.Unload()
+        end
+    end)
+
+    pcall(function()
+        if getgenv().SkeletonSettings and getgenv().SkeletonSettings.Unload then
+            getgenv().SkeletonSettings.Unload()
+        end
+    end)
+
     workspace.Camera.FieldOfView = 70
 
     if TogglesOFF == false then
@@ -2593,7 +2608,8 @@ local function Launch()
     Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
     InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
     Sense.Load() Success_Notificate("Initialized Sense!")
-
+    getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
+    getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
     Notificate(COLORS.WHITE, "Setting up Hooks...")
 
     player.CharacterAdded:Connect(function() if Action then setupFly() end end) Success_Notificate("Hooked Fly Setup!")
@@ -2755,6 +2771,46 @@ local function PLVSMVWVRE_Menu()
     local UI_ESP_TextS = TabVisuals:NewSlider('Text Size', '', false, '', {min = 10, max = 24, default = 13}, function(Value) Sense.sharedSettings.textSize = Value end)
     local UI_ESP_MaxD = TabVisuals:NewSlider('Max Distance', '', false, '', {min = 50, max = 2000, default = 150}, function(Value) Sense.sharedSettings.maxDistance = Value end)
 
+    -- Dedicated Arrow ESP configuration block
+    TabVisuals:NewSection('Arrow ESP')
+    
+    TabVisuals:NewToggle('Arrow ESP Enabled', true, function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.Enabled = Value
+        end
+    end)
+
+    TabVisuals:NewSlider('Distance from Center', '', false, '', {min = 40, max = 250, default = 80}, function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.DistFromCenter = Value
+        end
+    end)
+
+    TabVisuals:NewSlider('Arrow Height', '', false, '', {min = 10, max = 50, default = 16}, function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.TriangleHeight = Value
+        end
+    end)
+
+    TabVisuals:NewSlider('Arrow Width', '', false, '', {min = 10, max = 50, default = 16}, function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.TriangleWidth = Value
+        end
+    end)
+
+    TabVisuals:NewToggle('Fill Arrows', true, function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.TriangleFilled = Value
+        end
+    end)
+
+    TabVisuals:NewColorpicker('Enemy Arrow Color', Color3.fromRGB(255, 0, 0), function(Value)
+        if getgenv().ArrowSettings then
+            getgenv().ArrowSettings.EnemyColor = Value
+        end
+    end)
+    TabVisuals:NewSection('Arrow ESP')
+
     -- // MOVEMENT TAB
     local FlyState = false
     TabMovement:NewSection('Main')
@@ -2873,7 +2929,50 @@ local function PLVSMVWVRE_Menu()
     TabOthers:NewTextbox('Get Target Username', '', 'Player Name', 'all', 'small', true, false, function(Value) toclipboard(Value) Notificate(COLORS.GREEN, "Copied "..Value.. "'s Username") end)
 
     TabOthers:NewSection('Visuals / ETC')
-    TabOthers:NewButton('Radar', function() loadstring(game:HttpGet("https://pastebin.com/raw/JD0jxp9Z", true))() end)
+    TabVisuals:NewSection('Skeleton ESP')
+
+    local UI_Skeleton_Enabled = TabVisuals:NewToggle('Enabled', false, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Enabled = Value
+        end
+    end)
+
+    local UI_Skeleton_Thickness = TabVisuals:NewSlider('Thickness', '', false, '', {min = 1, max = 5, default = 1}, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Thickness = Value
+        end
+    end)
+
+    local UI_Skeleton_Transparency = TabVisuals:NewSlider('Transparency', '', false, '', {min = 10, max = 100, default = 100}, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Transparency = Value / 100
+        end
+    end)
+
+    local UI_Skeleton_UseTeamColor = TabVisuals:NewToggle('Use Team Colors', true, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.UseTeamColor = Value
+        end
+    end)
+
+    local UI_Skeleton_Color = TabVisuals:NewColorpicker('Skeleton Color', Color3.fromRGB(255, 255, 255), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Color = Value
+        end
+    end)
+
+    local UI_Skeleton_TeamColor = TabVisuals:NewColorpicker('Team Color', Color3.fromRGB(0, 255, 0), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.TeamColor = Value
+        end
+    end)
+
+    local UI_Skeleton_EnemyColor = TabVisuals:NewColorpicker('Enemy Color', Color3.fromRGB(255, 0, 0), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.EnemyColor = Value
+        end
+    end)
+    
     TabOthers:NewButton('Rainbow Chat', function() loadstring(game:HttpGet("https://pastebin.com/raw/b3YS61yV", true))() end)
     TabOthers:NewButton('Roblox 2007 Mouse Cursor', function() loadstring(game:HttpGet("https://pastebin.com/raw/6uDb3He5", true))() end)
     TabOthers:NewButton('Rainbow Char', function()
@@ -3184,7 +3283,24 @@ local function PLVSMVWVRE_Menu()
         -- ESP Shared Settings
         {Name = "ESP_Origin", Type = "Dropdown", Get = function() return Sense.teamSettings.enemy.tracerOrigin end, Set = function(val) Sense.teamSettings.enemy.tracerOrigin = val; Sense.teamSettings.friendly.tracerOrigin = val; UI_ESP_Origin:Text(val) end},
         {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) UI_ESP_TextS:Value(val) end},
-        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}
+        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}, -- Added missing comma here
+        {Name = "Skeleton_Enabled", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Enabled or false end, Set = function(val) UI_Skeleton_Enabled:Set(val) end},
+        {Name = "Skeleton_Thickness", Type = "Slider", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Thickness or 1 end, Set = function(val) UI_Skeleton_Thickness:Value(val) end},
+        {Name = "Skeleton_Transparency", Type = "Slider", Get = function() return getgenv().SkeletonSettings and (getgenv().SkeletonSettings.Transparency * 100) or 100 end, Set = function(val) UI_Skeleton_Transparency:Value(val) end},
+        {Name = "Skeleton_UseTeamColor", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.UseTeamColor or true end, Set = function(val) UI_Skeleton_UseTeamColor:Set(val) end},
+        {Name = "Skeleton_Color", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Color or Color3.fromRGB(255, 255, 255) end, Set = function(val) UI_Skeleton_Color:Set(val) end},
+        {Name = "Skeleton_TeamColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.TeamColor or Color3.fromRGB(0, 255, 0) end, Set = function(val) UI_Skeleton_TeamColor:Set(val) end},
+        {Name = "Skeleton_EnemyColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.EnemyColor or Color3.fromRGB(255, 0, 0) end, Set = function(val) UI_Skeleton_EnemyColor:Set(val) end},
+
+        {Name = "Arrow_Enabled", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.Enabled or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.Enabled = val end if UI_Arrow_Enabled then UI_Arrow_Enabled:Set(val) end end},
+        {Name = "Arrow_Dist", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.DistFromCenter or 80 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.DistFromCenter = val end if UI_Arrow_Dist then UI_Arrow_Dist:Value(val) end end},
+        {Name = "Arrow_Height", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleHeight or 16 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleHeight = val end if UI_Arrow_Height then UI_Arrow_Height:Value(val) end end},
+        {Name = "Arrow_Width", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleWidth or 16 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleWidth = val end if UI_Arrow_Width then UI_Arrow_Width:Value(val) end end},
+        {Name = "Arrow_Filled", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleFilled or true end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleFilled = val end if UI_Arrow_Filled then UI_Arrow_Filled:Set(val) end end},
+        {Name = "Arrow_Thickness", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleThickness or 1 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleThickness = val end if UI_Arrow_Thickness then UI_Arrow_Thickness:Value(val) end end},
+        {Name = "Arrow_Transparency", Type = "Slider", Get = function() return getgenv().ArrowSettings and (getgenv().ArrowSettings.TriangleTransparency * 100) or 0 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleTransparency = val / 100 end if UI_Arrow_Transparency then UI_Arrow_Transparency:Value(val) end end},
+        {Name = "Arrow_Color", Type = "Colorpicker", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleColor or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleColor = val end if UI_Arrow_Color then UI_Arrow_Color:Set(val) end end},
+        {Name = "Arrow_AntiAliasing", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.AntiAliasing or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.AntiAliasing = val end if UI_Arrow_AntiAliasing then UI_Arrow_AntiAliasing:Set(val) end end},
     }
 
     local function RegisterESPSettings(teamStr)
