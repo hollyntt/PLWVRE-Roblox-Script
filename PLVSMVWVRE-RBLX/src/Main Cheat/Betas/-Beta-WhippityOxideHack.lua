@@ -13,20 +13,10 @@ local BetaBuild = true
 
 local function hookedPcall(func, ...)
     local threadId = tostring(coroutine.running()):match("0x%x+")
-    print(`🚀 pcall started in thread {threadId}`)
-    
+    print(`🚀 Launched!`)
     local startTime = os.clock()
     local success, result = originalPcall(func, ...)
     local duration = os.clock() - startTime
-    
-    if success then
-        print(`✅ pcall succeeded in {math.floor(duration*1000)}ms`)
-    else
-        print(`❌ pcall failed after {math.floor(duration*1000)}ms`)
-        print(`⚠️ Error: {result}`)
-        print("Call stack:\n"..debug.traceback())
-    end
-    
     return success, result
 end
 
