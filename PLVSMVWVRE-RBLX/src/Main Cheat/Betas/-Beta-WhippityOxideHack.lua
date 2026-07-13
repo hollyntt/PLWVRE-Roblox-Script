@@ -161,8 +161,8 @@ local Aimbot = {
     FOVColor = Color3.fromRGB(255, 255, 255), 
     FOVThickness = 0, 
     FOVVisible = false, 
-    FOVTransparency = 0, 
-    FOVSides = 0, 
+    FOVTransparency = 1, 
+    FOVSides = 32, 
 }
 local RCS_Sets = {
     Enabled = false, 
@@ -297,10 +297,22 @@ local function Success_Notificate(i)
 end
 
 repeat Camera = Workspace.CurrentCamera task.wait() until Camera
-local function GetScreenCenter() local ScreenSize = Camera.ViewportSize return Vector2.new(ScreenSize.X / 2, ScreenSize.Y / 2) end
-local FOVCircleOutline = Drawing.new("Circle")
-local FOVCircleInnerOutline = Drawing.new("Circle")
-local FOVCircle = Drawing.new("Circle")
+local function GetScreenCenter()
+    local currentCam = workspace.CurrentCamera or Workspace.CurrentCamera
+    if not currentCam then 
+        return Vector2.new(0, 0) 
+    end
+    local ScreenSize = currentCam.ViewportSize
+    return Vector2.new(ScreenSize.X / 2, ScreenSize.Y / 2)
+end
+local FOVCircleOutline, FOVCircleInnerOutline, FOVCircle
+
+local function InitializeDrawing()
+    if FOVCircle then return end -- Already loaded
+    FOVCircleOutline = Drawing.new("Circle")
+    FOVCircleInnerOutline = Drawing.new("Circle")
+    FOVCircle = Drawing.new("Circle")
+end
 
 
 local function Nametags()
@@ -1273,1356 +1285,1290 @@ function AntiAimFunction()
         end
     end
 
-local function CrosshairGen()
-    if Crosshair.Enabled then
-        UserInputService.MouseIconEnabled = false
-    else
-        UserInputService.MouseIconEnabled = true
-    end
+    local lastEnabled, lastSides, lastSize, lastColor, lastTransparency, lastRotation, lastThickness, lastGap
 
-    if not Crosshair.Enabled then
-        if screenGui then
-            screenGui:Destroy()
-            screenGui = nil
-        end
-        return
-    end
+    local CrosshairLines = {} -- Persists the active drawing objects
 
-    if not screenGui or not screenGui.Parent then
-        screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "CrosshairGui"
-        screenGui.ResetOnSpawn = false
-        screenGui.DisplayOrder = 1
-        screenGui.IgnoreGuiInset = true
-        screenGui.Parent = player:WaitForChild("PlayerGui")
-        
-        crosshairFrame = Instance.new("Frame")
-        crosshairFrame.Name = "CrosshairFrame"
-        crosshairFrame.BackgroundTransparency = 1
-        crosshairFrame.Size = UDim2.new(0, Crosshair.Size, 0, Crosshair.Size)
-        crosshairFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-        crosshairFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-        crosshairFrame.Parent = screenGui
-    end
-
-    local mousePos = UserInputService:GetMouseLocation()
-    crosshairFrame.Position = UDim2.new(0.5, Crosshair.x_Off, 0.5, -Crosshair.y_Off) + 
-                            UDim2.fromOffset(mousePos.X - (workspace.CurrentCamera.ViewportSize.X/2), 
-                                            mousePos.Y - (workspace.CurrentCamera.ViewportSize.Y/2))
-
-    for _, child in pairs(crosshairFrame:GetChildren()) do
-        if child:IsA("Frame") then
-            child:Destroy()
-        end
-    end
-
-    local angleIncrement = 360 / Crosshair.Sides
-    for i = 0, Crosshair.Sides - 1 do
-        local angle = i * angleIncrement
-        local offset = Vector2.new(
-            math.cos(math.rad(angle)) * Crosshair.Size / 2,
-            math.sin(math.rad(angle)) * Crosshair.Size / 2
-        )
-        
-        local line = Instance.new("Frame")
-        line.BackgroundColor3 = Crosshair.Color
-        line.BackgroundTransparency = Crosshair.Transparency
-        line.Size = UDim2.new(0, Crosshair.Thickness, 0, Crosshair.Size / 2 - Crosshair.Gap / 2)
-        line.AnchorPoint = Vector2.new(0.5, 0.5)
-        line.Position = UDim2.new(0.5, offset.X, 0.5, offset.Y)
-        line.Rotation = angle + Crosshair.Rotation
-        line.Parent = crosshairFrame
-    end
-end
-
-local function FB(Value)
-    if Value then
-        if YAHBNfyiuw then
-            YAHBNfyiuw:Disconnect()
-            YAHBNfyiuw = nil
+    local function CrosshairGen()
+        -- 1. Manage Mouse Icon Visibility
+        if lastEnabled ~= Crosshair.Enabled then
+            UserInputService.MouseIconEnabled = not Crosshair.Enabled
+            lastEnabled = Crosshair.Enabled
         end
 
-        YAHBNfyiuw = RunService.RenderStepped:Connect(function()
-            local players = Players:GetPlayers()
-
-            for i = #players, 2, -1 do
-                local j = math.random(i)
-                players[i], players[j] = players[j], players[i]
+        -- 2. Hide and cleanup lines if disabled
+        if not Crosshair.Enabled then
+            for _, line in ipairs(CrosshairLines) do
+                line.Visible = false
             end
-
-            for _, player_obj in ipairs(players) do
-                Players.LocalPlayer:RequestFriendship(player_obj)
-                Success_Notificate("Added " .. player_obj.Name)
-                wait(15)  
-            end
-        end)
-    else
-        if YAHBNfyiuw then
-            YAHBNfyiuw:Disconnect()
-            YAHBNfyiuw = nil
-        end
-    end
-end
-
-local function UpdateFOV()
-    local ScreenCenter = GetScreenCenter()
-    local NormalizedFOVRadius = Aimbot.FOVRadius * (math.max(Camera.ViewportSize.X, Camera.ViewportSize.Y) / 1000)
-
-    FOVCircleOutline.Visible = Aimbot.FOVVisible
-    FOVCircleOutline.Color = Color3.new(0, 0, 0) 
-    FOVCircleOutline.Thickness = Aimbot.FOVThickness + 1
-    FOVCircleOutline.Radius = NormalizedFOVRadius + 2
-    FOVCircleOutline.Filled = false
-    FOVCircleOutline.NumSides = Aimbot.FOVSides
-    FOVCircleOutline.Position = ScreenCenter
-    FOVCircleOutline.Transparency = Aimbot.FOVTransparency
-
-    FOVCircleInnerOutline.Visible = Aimbot.FOVVisible
-    FOVCircleInnerOutline.Color = Color3.new(0, 0, 0) 
-    FOVCircleInnerOutline.Thickness = Aimbot.FOVThickness + 1
-    FOVCircleInnerOutline.Radius = NormalizedFOVRadius - 2
-    FOVCircleInnerOutline.Filled = false
-    FOVCircleInnerOutline.NumSides = Aimbot.FOVSides
-    FOVCircleInnerOutline.Position = ScreenCenter
-    FOVCircleInnerOutline.Transparency = Aimbot.FOVTransparency
-
-    FOVCircle.Visible = Aimbot.FOVVisible
-    FOVCircle.Color = Aimbot.FOVColor
-    FOVCircle.Thickness = Aimbot.FOVThickness
-    FOVCircle.Radius = NormalizedFOVRadius
-    FOVCircle.Filled = false
-    FOVCircle.NumSides = Aimbot.FOVSides
-    FOVCircle.Position = ScreenCenter
-    FOVCircle.Transparency = Aimbot.FOVTransparency
-end
-
-local function LockOnGTA5()
-    local Camera_obj = workspace.CurrentCamera
-    local LocalPlayer = Players.LocalPlayer
-    
-    local Resolver = {
-        TargetHistory = {},
-        PredictionConfidence = 1.0,
-        LastUpdateTime = tick(),
-        MaxHistoryDuration = Aimbot.ResolverHistory,
-        VelocitySmoothing = Aimbot.VelocitySmoothing,
-        JitterThreshold = Aimbot.JitterThreshold,
-        MinConfidence = Aimbot.MinPredictionConfidence,
-        DesyncDetection = Aimbot.DesyncDetection,
-        MaxPredictionError = Aimbot.MaxPredictionError
-    }
-
-    local function UpdateResolverState(targetPlayer, hitbox, predictedPosition, actualPosition)
-        if not Aimbot.Resolver then return end
-        
-        local currentTime = tick()
-        local deltaTime = currentTime - Resolver.LastUpdateTime
-        Resolver.LastUpdateTime = currentTime
-        
-        if not Resolver.TargetHistory[targetPlayer] then
-            Resolver.TargetHistory[targetPlayer] = {
-                Positions = {},
-                Velocities = {},
-                Timestamps = {},
-                PredictionErrors = {},
-                LastActualPosition = actualPosition
-            }
-        end
-        
-        local targetData = Resolver.TargetHistory[targetPlayer]
-        
-        table.insert(targetData.Positions, predictedPosition)
-        table.insert(targetData.Velocities, hitbox.Velocity or Vector3.new(0,0,0))
-        table.insert(targetData.Timestamps, currentTime)
-        
-        while #targetData.Timestamps > 0 and 
-              (currentTime - targetData.Timestamps[1]) > Resolver.MaxHistoryDuration do
-            table.remove(targetData.Positions, 1)
-            table.remove(targetData.Velocities, 1)
-            table.remove(targetData.Timestamps, 1)
-            if #targetData.PredictionErrors > 0 then
-                table.remove(targetData.PredictionErrors, 1)
-            end
-        end
-        
-        if targetData.LastActualPosition then
-            local predictionError = (actualPosition - predictedPosition).Magnitude
-            table.insert(targetData.PredictionErrors, predictionError)
-            
-            local movementDistance = (actualPosition - targetData.LastActualPosition).Magnitude
-            
-            if movementDistance > 0.1 then 
-                local avgError = 0
-                if #targetData.PredictionErrors > 0 then
-                    local totalError = 0
-                    for _, err in ipairs(targetData.PredictionErrors) do
-                        totalError = totalError + err
-                    end
-                    avgError = totalError / #targetData.PredictionErrors
-                end
-                
-                local errorRatio = math.min(avgError / Resolver.MaxPredictionError, 1.0)
-                Resolver.PredictionConfidence = math.clamp(1 - errorRatio, Resolver.MinConfidence, 1.0)
-            end
-        end
-        
-        targetData.LastActualPosition = actualPosition
-        
-        if Resolver.DesyncDetection and #targetData.Velocities >= 3 then
-            local velocityChanges = 0
-            local lastVelocity = targetData.Velocities[1]
-            
-            for i = 2, #targetData.Velocities do
-                local currentVelocity = targetData.Velocities[i]
-                local change = (currentVelocity - lastVelocity).Magnitude
-                if change > Resolver.JitterThreshold then
-                    velocityChanges = velocityChanges + 1
-                end
-                lastVelocity = currentVelocity
-            end
-            
-            if velocityChanges / (#targetData.Velocities - 1) > 0.5 then
-                Resolver.PredictionConfidence = math.min(Resolver.PredictionConfidence, 0.3)
-            end
-        end
-    end
-
-    local function GetPredictedPosition(hitbox, distanceToTarget)
-        local basePosition = hitbox.Position
-        
-        if Aimbot.Prediction then
-            local velocity = hitbox.Velocity or Vector3.new(0,0,0)
-            local predictionOffset = velocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
-            basePosition = basePosition + predictionOffset
-        end
-        
-        if Aimbot.Resolver then
-            local targetPlayer = hitbox:FindFirstAncestorOfClass("Player")
-            local targetData = targetPlayer and Resolver.TargetHistory[targetPlayer]
-            
-            if targetData and #targetData.Velocities > 1 then
-                local avgVelocity = Vector3.new(0,0,0)
-                local totalWeight = 0
-                
-                for i = 1, #targetData.Velocities do
-                    local age = (Resolver.LastUpdateTime - targetData.Timestamps[i]) / Resolver.MaxHistoryDuration
-                    local weight = math.exp(-4 * age) 
-                    avgVelocity = avgVelocity + (targetData.Velocities[i] * weight)
-                    totalWeight = totalWeight + weight
-                end
-                
-                avgVelocity = avgVelocity / math.max(totalWeight, 0.001)
-                
-                local blendFactor = Resolver.VelocitySmoothing * (1 - Resolver.PredictionConfidence)
-                local finalVelocity = (hitbox.Velocity or Vector3.new(0,0,0)) * (1 - blendFactor) + avgVelocity * blendFactor
-                
-                local predictionOffset = finalVelocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
-                basePosition = hitbox.Position + predictionOffset
-            end
-        end
-        
-        return basePosition
-    end
-
-    local function ShootGun()
-        mouse1press() task.wait(Aimbot.AutoShoot_Delay) mouse1release()
-    end
-
-    local function GetScreenCenter_obj()
-        local ScreenSize = Camera_obj.ViewportSize
-        return Vector2.new(ScreenSize.X / 2, ScreenSize.Y / 2)
-    end
-
-    local function GetEffectiveFOVRadius()
-        local BaseFOVRadius = Aimbot.FOVRadius * (math.max(Camera_obj.ViewportSize.X, Camera_obj.ViewportSize.Y) / 1000)
-        return BaseFOVRadius
-    end
-
-    local function GetAvatarType(character)
-        local UpperTorso = character:FindFirstChild("UpperTorso")
-        return UpperTorso and "R15" or "R6"
-    end
-
-    local function GetBestHitbox(character)
-        local HitboxPriorities = {
-            R6 = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
-            R15 = {"Head", "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg"}
-        }
-    
-        local AvatarType = GetAvatarType(character)
-    
-        if Aimbot.Hitbox ~= "" then
-            local SelectedHitbox = character:FindFirstChild(Aimbot.Hitbox)
-            if SelectedHitbox then
-                return SelectedHitbox
-            end
-        end
-    
-        for _, HitboxName in ipairs(HitboxPriorities[AvatarType]) do
-            local Hitbox = character:FindFirstChild(HitboxName)
-            if Hitbox then
-                return Hitbox
-            end
-        end
-    
-        return character.PrimaryPart
-    end
-
-    if RCS_Sets.Enabled then
-        if ConnectionRCS then
-            ConnectionRCS:Disconnect()
-            ConnectionRCS = nil
-        end
-    
-        ConnectionRCS = RunService.RenderStepped:Connect(function()
-            if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
-                if RCS_Sets.RecoilControl > 0 then
-                    local RecoilIntensity = RCS_Sets.RecoilControl / RCS_Sets.RecoilDownAim
-                    local RecoilOffset = Vector3.new(
-                        (math.random() - 0.5) * RecoilIntensity,
-                        -RecoilIntensity,
-                        (math.random() - 0.5) * RecoilIntensity
-                    )
-                    
-                    local LookVector = Camera_obj.CFrame.LookVector
-                    local RightVector = Camera_obj.CFrame.RightVector
-                    local UpVector = Camera_obj.CFrame.UpVector
-                    local NewLookVector = (LookVector + RightVector * RecoilOffset.X + UpVector * RecoilOffset.Y).Unit
-                    local NewCFrame = CFrame.new(Camera_obj.CFrame.Position, Camera_obj.CFrame.Position + NewLookVector)
-                    
-                    local lerpAlpha = math.clamp(RCS_Sets.Speed * 0.02, 0.01, 0.5)
-                    Camera_obj.CFrame = Camera_obj.CFrame:Lerp(NewCFrame, lerpAlpha)
-                end
-            end
-        end)
-    else
-        if ConnectionRCS then
-            ConnectionRCS:Disconnect()
-            ConnectionRCS = nil
-        end
-    end
-
-    if Aimbot.Enabled then
-        if Connection then
-            Connection:Disconnect()
-            Connection = nil
-        end
-
-        Connection = RunService.RenderStepped:Connect(function()
-            local ClosestTarget, ClosestMagnitude = nil, math.huge
-            local ScreenCenter_v = GetScreenCenter_obj()
-
-            for _, Player_v in ipairs(Players:GetPlayers()) do
-                if Player_v ~= LocalPlayer and Player_v.Character then
-                    local Character = Player_v.Character
-
-                    if Aimbot.TeamCheck then
-                        local LocalPlayerTeam = LocalPlayer.Team
-                        local TargetTeam = Player_v.Team
-                        if LocalPlayerTeam and TargetTeam and LocalPlayerTeam == TargetTeam then
-                            continue
-                        end
-                    end
-
-                    local Humanoid_v = Character:FindFirstChildOfClass("Humanoid")
-                    if Aimbot.CheckAlive and (not Humanoid_v or Humanoid_v.Health <= 0) then
-                        continue
-                    end
-
-                    if Aimbot.CheckForcefield then
-                        local Forcefield = Character:FindFirstChildOfClass("ForceField")
-                        if Forcefield then
-                            continue
-                        end
-                    end
-
-                    local Hitbox = GetBestHitbox(Character)
-                    if Hitbox then
-                        local TargetPosition = Hitbox.Position
-                        local Origin = Camera_obj.CFrame.Position
-                        local DistanceToTarget = (TargetPosition - Origin).Magnitude
-                        if Aimbot.Distance > 0 and DistanceToTarget > Aimbot.Distance then
-                            continue
-                        end
-
-                        local IsVisible = true
-                        if Aimbot.CheckVisibility then
-                            local Direction = (TargetPosition - Origin).Unit
-                            local RaycastParams_v = RaycastParams.new()
-                            RaycastParams_v.FilterDescendantsInstances = {LocalPlayer.Character, Camera_obj}
-                            RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
-                            RaycastParams_v.IgnoreWater = true
-                            local RaycastResult = workspace:Raycast(Origin, Direction * DistanceToTarget, RaycastParams_v)
-                            if RaycastResult then
-                                local HitPart = RaycastResult.Instance
-                                local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
-                                IsVisible = (HitCharacter == Character)
-                            end
-                        end
-
-                        if IsVisible then
-                            local ScreenPosition, OnScreen = Camera_obj:WorldToScreenPoint(Hitbox.Position)
-                            if OnScreen then
-                                local EffectiveFOVRadius = GetEffectiveFOVRadius()
-                                local DistanceFromCenter = (Vector2.new(ScreenPosition.X, ScreenPosition.Y) - ScreenCenter_v).Magnitude
-                                if (not Aimbot.FOVCheck or DistanceFromCenter <= EffectiveFOVRadius) and DistanceFromCenter < ClosestMagnitude then
-                                    ClosestMagnitude = DistanceFromCenter
-                                    ClosestTarget = Player_v
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-
-            if ClosestTarget and ClosestTarget.Character then
-                local Character = ClosestTarget.Character
-                local Hitbox = GetBestHitbox(Character)
-
-                if Hitbox then
-                    local DistanceToTarget = (Hitbox.Position - Camera_obj.CFrame.Position).Magnitude
-                    local TargetPosition = GetPredictedPosition(Hitbox, DistanceToTarget)
-
-                    UpdateResolverState(ClosestTarget, Hitbox, TargetPosition, Hitbox.Position)
-
-                    local CameraPosition = Camera_obj.CFrame.Position
-                    local TargetCFrame = CFrame.new(CameraPosition, TargetPosition)
-                    
-                    local effectiveSmoothing = Aimbot.Smoothing * (0.5 + Resolver.PredictionConfidence * 0.5)
-                    if effectiveSmoothing > 0 then
-                        Camera_obj.CFrame = Camera_obj.CFrame:Lerp(TargetCFrame, effectiveSmoothing)
-                    else
-                        Camera_obj.CFrame = TargetCFrame
-                    end
-
-                    if Aimbot.AutoShoot then
-                        ShootGun()
-                    end
-                end
-            end
-        end)
-    else
-        if Connection then
-            Connection:Disconnect()
-            Connection = nil
-        end
-    end
-end
-
-local function getFPS()
-    local frameTime = Stats.Workspace.Heartbeat:GetValue()
-    if frameTime > 0 then
-        return math.floor(frameTime)
-    else
-        return 0
-    end
-end
-
-local function getPING()
-    local networkStats = Stats.Network
-    local ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
-    
-    if ping > 0 then
-        return math.floor(ping)
-    else
-        return 0
-    end
-end
-
-local function setupFly()
-    char = player.Character or player.CharacterAdded:Wait()
-    rootPart = char:WaitForChild("HumanoidRootPart")
-    Humanoid = char:WaitForChild("Humanoid")
-
-    Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-    Humanoid.PlatformStand = true
-
-    flyForce = Instance.new("BodyVelocity")
-    flyForce.Velocity = Vector3.new(0, 0, 0)
-    flyForce.MaxForce = Vector3.new(40000, 40000, 40000)  
-    flyForce.P = 1250  
-    flyForce.Parent = rootPart
-
-    flyConnection = RunService.Heartbeat:Connect(function()
-        if not Action then
-            flyConnection:Disconnect()
             return
         end
 
-        local direction = Vector3.new(0, 0, 0)
-        local moving = false
-        local cameraCF = Camera.CFrame
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-            direction = direction + cameraCF.LookVector
-            moving = true
+        -- 3. Dynamically scale lines to match current settings
+        while #CrosshairLines < Crosshair.Sides do
+            table.insert(CrosshairLines, Drawing.new("Line"))
         end
-        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-            direction = direction - cameraCF.LookVector
-            moving = true
-        end
-        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-            direction = direction - cameraCF.RightVector
-            moving = true
-        end
-        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-            direction = direction + cameraCF.RightVector
-            moving = true
-        end
-        if UserInputService:IsKeyDown(Enum.KeyCode.E) then
-            direction = direction + Vector3.new(0, 1, 0)
-            moving = true
-        end
-        if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
-            direction = direction - Vector3.new(0, 1, 0)
-            moving = true
+        while #CrosshairLines > Crosshair.Sides do
+            local oldLine = table.remove(CrosshairLines)
+            pcall(function() oldLine:Destroy() end)
         end
 
-        local cameraLook = cameraCF.LookVector
-        rootPart.CFrame = CFrame.new(rootPart.Position, rootPart.Position + cameraLook)
+        -- 4. Calculate coordinates based on absolute mouse position
+        local mousePos = UserInputService:GetMouseLocation()
+        local center = Vector2.new(mousePos.X + Crosshair.x_Off, mousePos.Y + Crosshair.y_Off)
 
-        if moving then
-            if direction.Magnitude > 0 then
-                direction = direction.Unit
-            end
-            flyForce.Velocity = direction * flySpeed
-        else
-            flyForce.Velocity = Vector3.new(0, 0, 0)
-            rootPart.Velocity = Vector3.new(0, 0, 0)
-            rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+        -- 5. Render lines in an absolute pixel overlay space
+        local angleIncrement = 360 / Crosshair.Sides
+        for i, line in ipairs(CrosshairLines) do
+            local radAngle = math.rad((i - 1) * angleIncrement + Crosshair.Rotation)
+            local dir = Vector2.new(math.cos(radAngle), math.sin(radAngle))
+
+            line.Visible = true
+            line.From = center + dir * Crosshair.Gap -- Starts exactly at 0 (center) if Gap is 0
+            line.To = center + dir * (Crosshair.Gap + Crosshair.Size) -- Extends by the actual Length (Size)
+            line.Color = Crosshair.Color
+            line.Thickness = Crosshair.Thickness
+            line.Transparency = 1 - Crosshair.Transparency 
         end
-    end)
-end
-
-local function FlyActivate(Value)
-    if Value then
-        Action = true
-        setupFly()
-    else
-        Action = false
-        if char and Humanoid then
-            Humanoid.PlatformStand = false
-            Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-        end
-        if flyForce then flyForce:Destroy() end
-        if alignTorque then alignTorque:Destroy() end
-    end
-end
-
-local function serverhop()
-    if not httprequest then
-        return getgenv().Library:Notify("Incompatible Feature.", 3) 
     end
 
-    local servers = {}
-    local req = httprequest({
-        Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", PlaceId)
-    })
-
-    if req.Success then
-        local body = req.Body
-
-        for serverId in body:gmatch('"id":"([%w-]+)"') do
-            local playing = body:match('"playing":(%d+),"maxPlayers":%d+,"id":"' .. serverId .. '"')
-            local maxPlayers = body:match('"maxPlayers":(%d+),"id":"' .. serverId .. '"')
-
-            if playing and maxPlayers and tonumber(playing) < tonumber(maxPlayers) and serverId ~= JobId then
-                table.insert(servers, serverId)
-            end
-        end
-
-        if #servers > 0 then
-            ts:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], p)
-        else
-            getgenv().Library:Notify("Couldn't find a server.", 3) 
-        end
-    else
-        getgenv().Library:Notify("Failed to fetch server list.", 3) 
-    end
-end
-
-local function rejoin()
-    local placeId = game.PlaceId 
-    ts:Teleport(placeId, p)
-end
-
-local function AntiFallDmg(Value)
-    if Value == true then
-        if fd then
-            fd:Disconnect()
-            fd = nil
-        end
-        fd = RunService.RenderStepped:Connect(function()
-            local fallDamageScriptInStarter = starterCharacterScripts:FindFirstChild("FallDamageScript") or starterCharacterScripts:FindFirstChild("FallDamage")
-            local character = player.Character or player.CharacterAdded:Wait()
-            local fallDamageScript = character:FindFirstChild("FallDamageScript") or starterCharacterScripts:FindFirstChild("FallDamage")
-
-            if fallDamageScriptInStarter then
-                fallDamageScriptInStarter:Destroy()
-                print("FallDamage Script removed from StarterCharacterScripts.")
+    local function FB(Value)
+        if Value then
+            if YAHBNfyiuw then
+                YAHBNfyiuw:Disconnect()
+                YAHBNfyiuw = nil
             end
 
-            if fallDamageScript then
-                fallDamageScript:Destroy()
-                print("FallDamage Script removed from player's character.")
-            end
+            YAHBNfyiuw = RunService.RenderStepped:Connect(function()
+                local players = Players:GetPlayers()
 
-            wait(3) 
-        end)
-    else
-        if fd then
-            fd:Disconnect()
-            fd = nil
-        end
-    end
-end
-
-local function HitDetection(Value)
-    local lp = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() and Players.LocalPlayer
-    local Camera_obj = workspace.CurrentCamera
-
-    local function Update()
-        local leaderstats = lp:FindFirstChild("leaderstats")
-        if leaderstats then
-            local kills = leaderstats:FindFirstChild("Kills") or leaderstats:FindFirstChild("KOs") or leaderstats:FindFirstChild("Knockouts")
-            if kills then
-                KillCount = kills.Value
-            end
-        end
-    end
-    function AddOVRKill()
-        OVERKillCount = OVERKillCount + 1
-    end
-
-    local connections = {}
-
-    local function DisconnectPlayer(player_obj)
-        if connections[player_obj] then
-            for _, connection in pairs(connections[player_obj]) do
-                connection:Disconnect()
-            end
-            connections[player_obj] = nil
-        end
-    end
-
-    local function OnHealthChanged(player_obj, Humanoid_obj, oldHealth)
-        local creator = Humanoid_obj:FindFirstChild("creator")
-        if creator and creator.Value == lp then
-            local character = player_obj.Character
-            local hitboxName = nil 
-            if character then
-                local potentialHitboxes = {}
-    
-                for _, part in pairs(character:GetDescendants()) do
-                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                        table.insert(potentialHitboxes, part)
-                    end
+                for i = #players, 2, -1 do
+                    local j = math.random(i)
+                    players[i], players[j] = players[j], players[i]
                 end
-    
-                local Origin = Camera_obj.CFrame.Position
-                local RaycastParams_v = RaycastParams.new()
-                RaycastParams_v.FilterDescendantsInstances = {lp.Character, Camera_obj} 
-                RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
-    
-                for _, hitbox in ipairs(potentialHitboxes) do
-                    local Direction = (hitbox.Position - Origin).Unit * 1000 
-                    local RaycastResult = workspace:Raycast(Origin, Direction, RaycastParams_v)
-    
-                    if RaycastResult then
-                        local HitPart = RaycastResult.Instance
-                        local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
-                        if HitCharacter == character then
-                            hitboxName = hitbox.Name 
-                            break
-                        end
-                    end
+
+                for _, player_obj in ipairs(players) do
+                    Players.LocalPlayer:RequestFriendship(player_obj)
+                    Success_Notificate("Added " .. player_obj.Name)
+                    wait(15)  
                 end
-            end
-    
-            local remainingHealth = Humanoid_obj.Health
-            local damageDealt = oldHealth - remainingHealth
-    
-            if hitboxName then
-                if remainingHealth == 0 then
-                    PlayKillSound()
-                    Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (DECEASED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
-                elseif remainingHealth < 0 then
-                    PlayKillSound()
-                    Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (OBLITERATED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
-                    AddOVRKill()
-                else
-                    PlayHitmarkerSound()
-                    Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (INJURED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
-                end
-            end
-        end
-    end
-
-    function PlayHitmarkerSound()
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://"..SoundIDHM
-        sound.Volume = 1 -- Set volume (0 to 1)
-        sound.Pitch = 1
-        sound.Looped = false -- Set to true if you want the sound to loop
-        sound.Parent = workspace -- Parent the sound to the workspace
-        
-        -- Play the sound
-        sound:Play()
-        
-        -- Optional: Add an event to detect when the sound ends
-        sound.Ended:Connect(function() sound:Destroy() end)
-    end
-
-    function PlayKillSound()
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://"..SoundIDK
-        sound.Volume = 1 -- Set volume (0 to 1)
-        sound.Pitch = 1
-        sound.Looped = false -- Set to true if you want the sound to loop
-        sound.Parent = workspace -- Parent the sound to the workspace
-        
-        -- Play the sound
-        sound:Play()
-        
-        -- Optional: Add an event to detect when the sound ends
-        sound.Ended:Connect(function() sound:Destroy() end)
-    end
-
-    local function ConnectPlayer(player_obj)
-        DisconnectPlayer(player_obj)
-
-        connections[player_obj] = {}
-
-        local function OnCharacterAdded(character)
-            local Humanoid_obj = character:WaitForChild("Humanoid")
-            local oldHealth = Humanoid_obj.Health
-
-            local healthChangedConnection = Humanoid_obj.HealthChanged:Connect(function(newHealth)
-                if newHealth < oldHealth then
-                    OnHealthChanged(player_obj, Humanoid_obj, oldHealth)
-                end
-                oldHealth = newHealth
             end)
-
-            table.insert(connections[player_obj], healthChangedConnection)
-        end
-
-        if player_obj.Character then
-            OnCharacterAdded(player_obj.Character)
-        end
-
-        local characterAddedConnection = player_obj.CharacterAdded:Connect(OnCharacterAdded)
-        table.insert(connections[player_obj], characterAddedConnection)
-    end
-
-    local function OnPlayerRemoving(player_obj)
-        DisconnectPlayer(player_obj)
-    end
-
-    if Value then
-        for _, player_obj in ipairs(Players:GetPlayers()) do
-            if player_obj ~= lp then
-                ConnectPlayer(player_obj)
+        else
+            if YAHBNfyiuw then
+                YAHBNfyiuw:Disconnect()
+                YAHBNfyiuw = nil
             end
         end
+    end
 
-        Players.PlayerAdded:Connect(function(player_obj)
-            if player_obj ~= lp then
-                ConnectPlayer(player_obj)
+    local function UpdateFOV()
+        local currentCam = workspace.CurrentCamera or Workspace.CurrentCamera
+        if not currentCam then return end
+        
+        local ScreenCenter = GetScreenCenter()
+        local ScreenSize = currentCam.ViewportSize
+
+        -- Fallback safety for Radius
+        local radiusSetting = (Aimbot.FOVRadius and Aimbot.FOVRadius > 0) and Aimbot.FOVRadius or 100
+        local NormalizedFOVRadius = radiusSetting * (math.max(ScreenSize.X, ScreenSize.Y) / 1000)
+
+        -- Safe fallbacks to prevent invisible rendering on load
+        local thickness = (Aimbot.FOVThickness and Aimbot.FOVThickness > 0) and Aimbot.FOVThickness or 1.5
+        local transparency = Aimbot.FOVTransparency or 1 
+        local sides = (Aimbot.FOVSides and Aimbot.FOVSides >= 4) and Aimbot.FOVSides or 32
+
+        FOVCircleOutline.Visible = Aimbot.FOVVisible
+        FOVCircleOutline.Color = Color3.new(0, 0, 0) 
+        FOVCircleOutline.Thickness = thickness + 1
+        FOVCircleOutline.Radius = NormalizedFOVRadius + 2
+        FOVCircleOutline.Filled = false
+        FOVCircleOutline.NumSides = sides
+        FOVCircleOutline.Position = ScreenCenter
+        FOVCircleOutline.Transparency = transparency
+
+        FOVCircleInnerOutline.Visible = Aimbot.FOVVisible
+        FOVCircleInnerOutline.Color = Color3.new(0, 0, 0) 
+        FOVCircleInnerOutline.Thickness = thickness + 1
+        FOVCircleInnerOutline.Radius = NormalizedFOVRadius - 2
+        FOVCircleInnerOutline.Filled = false
+        FOVCircleInnerOutline.NumSides = sides
+        FOVCircleInnerOutline.Position = ScreenCenter
+        FOVCircleInnerOutline.Transparency = transparency
+
+        FOVCircle.Visible = Aimbot.FOVVisible
+        FOVCircle.Color = Aimbot.FOVColor
+        FOVCircle.Thickness = thickness
+        FOVCircle.Radius = NormalizedFOVRadius
+        FOVCircle.Filled = false
+        FOVCircle.NumSides = sides
+        FOVCircle.Position = ScreenCenter
+        FOVCircle.Transparency = transparency
+    end
+
+    local lastAimbotState = nil -- Prevents the loop from constantly rebinding
+    local function LockOnGTA5()
+        if Aimbot.Enabled == lastAimbotState then return end
+        lastAimbotState = Aimbot.Enabled
+
+        local Camera_obj = workspace.CurrentCamera
+        local LocalPlayer = Players.LocalPlayer
+        
+        -- (The rest of your inner helper functions remain here...)
+        local Resolver = {
+            TargetHistory = {},
+            PredictionConfidence = 1.0,
+            LastUpdateTime = tick(),
+            MaxHistoryDuration = Aimbot.ResolverHistory,
+            VelocitySmoothing = Aimbot.VelocitySmoothing,
+            JitterThreshold = Aimbot.JitterThreshold,
+            MinConfidence = Aimbot.MinPredictionConfidence,
+            DesyncDetection = Aimbot.DesyncDetection,
+            MaxPredictionError = Aimbot.MaxPredictionError
+        }
+
+        local function UpdateResolverState(targetPlayer, hitbox, predictedPosition, actualPosition)
+            if not Aimbot.Resolver then return end
+            local currentTime = tick()
+            local deltaTime = currentTime - Resolver.LastUpdateTime
+            Resolver.LastUpdateTime = currentTime
+            if not Resolver.TargetHistory[targetPlayer] then
+                Resolver.TargetHistory[targetPlayer] = {
+                    Positions = {}, Velocities = {}, Timestamps = {}, PredictionErrors = {}, LastActualPosition = actualPosition
+                }
             end
-        end)
-
-        Players.PlayerRemoving:Connect(OnPlayerRemoving)
-        RunService.Heartbeat:Connect(Update)
-    else
-        for player_obj in pairs(connections) do
-            DisconnectPlayer(player_obj)
-        end
-    end
-end
-
-local function TriggerBot(Value)
-    local lp = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() and Players.LocalPlayer
-    local mouse_obj = lp:GetMouse()
-    local Camera_obj = workspace.CurrentCamera
-
-    local Prediction_Enabled = Aimbot.Prediction 
-    local Prediction_Offset = Aimbot.Prediction_Offset 
-
-    if con then
-        con:Disconnect()
-        con = nil
-    end
-
-    if Value == true then
-        con = RunService.Heartbeat:Connect(function()
-            for _, player_obj in ipairs(Players:GetPlayers()) do
-                if player_obj ~= lp and player_obj.Character then
-                    if Aimbot.TeamCheck then
-                        local LocalPlayerTeam = lp.Team
-                        local TargetTeam = player_obj.Team
-
-                        if LocalPlayerTeam and TargetTeam and LocalPlayerTeam == TargetTeam then
-                            continue 
-                        end
+            local targetData = Resolver.TargetHistory[targetPlayer]
+            table.insert(targetData.Positions, predictedPosition)
+            table.insert(targetData.Velocities, hitbox.Velocity or Vector3.new(0,0,0))
+            table.insert(targetData.Timestamps, currentTime)
+            while #targetData.Timestamps > 0 and (currentTime - targetData.Timestamps[1]) > Resolver.MaxHistoryDuration do
+                table.remove(targetData.Positions, 1)
+                table.remove(targetData.Velocities, 1)
+                table.remove(targetData.Timestamps, 1)
+                if #targetData.PredictionErrors > 0 then table.remove(targetData.PredictionErrors, 1) end
+            end
+            if targetData.LastActualPosition then
+                local predictionError = (actualPosition - predictedPosition).Magnitude
+                table.insert(targetData.PredictionErrors, predictionError)
+                local movementDistance = (actualPosition - targetData.LastActualPosition).Magnitude
+                if movementDistance > 0.1 then 
+                    local avgError = 0
+                    if #targetData.PredictionErrors > 0 then
+                        local totalError = 0
+                        for _, err in ipairs(targetData.PredictionErrors) do totalError = totalError + err end
+                        avgError = totalError / #targetData.PredictionErrors
                     end
+                    local errorRatio = math.min(avgError / Resolver.MaxPredictionError, 1.0)
+                    Resolver.PredictionConfidence = math.clamp(1 - errorRatio, Resolver.MinConfidence, 1.0)
+                end
+            end
+            targetData.LastActualPosition = actualPosition
+            if Resolver.DesyncDetection and #targetData.Velocities >= 3 then
+                local velocityChanges = 0
+                local lastVelocity = targetData.Velocities[1]
+                for i = 2, #targetData.Velocities do
+                    local currentVelocity = targetData.Velocities[i]
+                    local change = (currentVelocity - lastVelocity).Magnitude
+                    if change > Resolver.JitterThreshold then velocityChanges = velocityChanges + 1 end
+                    lastVelocity = currentVelocity
+                end
+                if velocityChanges / (#targetData.Velocities - 1) > 0.5 then
+                    Resolver.PredictionConfidence = math.min(Resolver.PredictionConfidence, 0.3)
+                end
+            end
+        end
 
-                    local Character = player_obj.Character
+        local function GetPredictedPosition(hitbox, distanceToTarget)
+            local basePosition = hitbox.Position
+            if Aimbot.Prediction then
+                local velocity = hitbox.Velocity or Vector3.new(0,0,0)
+                local predictionOffset = velocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
+                basePosition = basePosition + predictionOffset
+            end
+            if Aimbot.Resolver then
+                local targetPlayer = hitbox:FindFirstAncestorOfClass("Player")
+                local targetData = targetPlayer and Resolver.TargetHistory[targetPlayer]
+                if targetData and #targetData.Velocities > 1 then
+                    local avgVelocity = Vector3.new(0,0,0)
+                    local totalWeight = 0
+                    for i = 1, #targetData.Velocities do
+                        local age = (Resolver.LastUpdateTime - targetData.Timestamps[i]) / Resolver.MaxHistoryDuration
+                        local weight = math.exp(-4 * age) 
+                        avgVelocity = avgVelocity + (targetData.Velocities[i] * weight)
+                        totalWeight = totalWeight + weight
+                    end
+                    avgVelocity = avgVelocity / math.max(totalWeight, 0.001)
+                    local blendFactor = Resolver.VelocitySmoothing * (1 - Resolver.PredictionConfidence)
+                    local finalVelocity = (hitbox.Velocity or Vector3.new(0,0,0)) * (1 - blendFactor) + avgVelocity * blendFactor
+                    local predictionOffset = finalVelocity * Aimbot.Prediction_Offset * (distanceToTarget / math.max(Aimbot.Distance, 1))
+                    basePosition = hitbox.Position + predictionOffset
+                end
+            end
+            return basePosition
+        end
 
-                    local hitboxNames = {
-                        "Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg",
-                        "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm",
-                        "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg",
-                        "LeftLowerLeg", "RightLowerLeg"
-                    }
+        local function ShootGun()
+            mouse1press() task.wait(Aimbot.AutoShoot_Delay) mouse1release()
+        end
 
-                    for _, hitboxName in ipairs(hitboxNames) do
-                        local r6ToR15Mapping = {
-                            ["Torso"] = "UpperTorso", "LowerTorso",
-                            ["Left Arm"] = "LeftUpperArm","LeftLowerArm",
-                            ["Right Arm"] = "RightUpperArm","RightLowerArm",
-                            ["Left Leg"] = "LeftUpperLeg","LeftLowerLeg",
-                            ["Right Leg"] = "RightUpperLeg","RightLowerLeg",
-                        }
-                        local mappedHitboxName = r6ToR15Mapping[hitboxName] or hitboxName
+        local function GetScreenCenter_obj()
+            local ScreenSize = Camera_obj.ViewportSize
+            return Vector2.new(ScreenSize.X / 2, ScreenSize.Y / 2)
+        end
 
-                        local Hitbox = Character:FindFirstChild(mappedHitboxName)
-                        if not Hitbox then
-                            Hitbox = Character:FindFirstChild("HumanoidRootPart")
+        local function GetEffectiveFOVRadius()
+            return Aimbot.FOVRadius * (math.max(Camera_obj.ViewportSize.X, Camera_obj.ViewportSize.Y) / 1000)
+        end
+
+        local function GetAvatarType(character)
+            local UpperTorso = character:FindFirstChild("UpperTorso")
+            return UpperTorso and "R15" or "R6"
+        end
+
+        local function GetBestHitbox(character)
+            local HitboxPriorities = {
+                R6 = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+                R15 = {"Head", "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg"}
+            }
+            local AvatarType = GetAvatarType(character)
+            if Aimbot.Hitbox ~= "" then
+                local SelectedHitbox = character:FindFirstChild(Aimbot.Hitbox)
+                if SelectedHitbox then return SelectedHitbox end
+            end
+            for _, HitboxName in ipairs(HitboxPriorities[AvatarType]) do
+                local Hitbox = character:FindFirstChild(HitboxName)
+                if Hitbox then return Hitbox end
+            end
+            return character.PrimaryPart
+        end
+
+        if RCS_Sets.Enabled then
+            if ConnectionRCS then ConnectionRCS:Disconnect() ConnectionRCS = nil end
+            ConnectionRCS = RunService.RenderStepped:Connect(function()
+                if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                    if RCS_Sets.RecoilControl > 0 then
+                        local RecoilIntensity = RCS_Sets.RecoilControl / RCS_Sets.RecoilDownAim
+                        local RecoilOffset = Vector3.new(
+                            (math.random() - 0.5) * RecoilIntensity,
+                            -RecoilIntensity,
+                            (math.random() - 0.5) * RecoilIntensity
+                        )
+                        local LookVector = Camera_obj.CFrame.LookVector
+                        local RightVector = Camera_obj.CFrame.RightVector
+                        local UpVector = Camera_obj.CFrame.UpVector
+                        local NewLookVector = (LookVector + RightVector * RecoilOffset.X + UpVector * RecoilOffset.Y).Unit
+                        local NewCFrame = CFrame.new(Camera_obj.CFrame.Position, Camera_obj.CFrame.Position + NewLookVector)
+                        local lerpAlpha = math.clamp(RCS_Sets.Speed * 0.02, 0.01, 0.5)
+                        Camera_obj.CFrame = Camera_obj.CFrame:Lerp(NewCFrame, lerpAlpha)
+                    end
+                end
+            end)
+        else
+            if ConnectionRCS then ConnectionRCS:Disconnect() ConnectionRCS = nil end
+        end
+
+        -- Setup the RenderStepped connection once
+        if Aimbot.Enabled then
+            if Connection then Connection:Disconnect() Connection = nil end
+            Connection = RunService.RenderStepped:Connect(function()
+                local ClosestTarget, ClosestMagnitude = nil, math.huge
+                local ScreenCenter_v = GetScreenCenter_obj()
+
+                for _, Player_v in ipairs(Players:GetPlayers()) do
+                    if Player_v ~= LocalPlayer and Player_v.Character then
+                        local Character = Player_v.Character
+                        if Aimbot.TeamCheck then
+                            local LocalPlayerTeam = LocalPlayer.Team
+                            local TargetTeam = Player_v.Team
+                            if LocalPlayerTeam and TargetTeam and LocalPlayerTeam == TargetTeam then continue end
                         end
-
+                        local Humanoid_v = Character:FindFirstChildOfClass("Humanoid")
+                        if Aimbot.CheckAlive and (not Humanoid_v or Humanoid_v.Health <= 0) then continue end
+                        if Aimbot.CheckForcefield then
+                            local Forcefield = Character:FindFirstChildOfClass("ForceField")
+                            if Forcefield then continue end
+                        end
+                        local Hitbox = GetBestHitbox(Character)
                         if Hitbox then
                             local TargetPosition = Hitbox.Position
-                            if Prediction_Enabled then
-                                local Velocity = Hitbox.Velocity
-                                TargetPosition = TargetPosition + Velocity * Prediction_Offset
-                            end
-
+                            local Origin = Camera_obj.CFrame.Position
+                            local DistanceToTarget = (TargetPosition - Origin).Magnitude
+                            if Aimbot.Distance > 0 and DistanceToTarget > Aimbot.Distance then continue end
+                            local IsVisible = true
                             if Aimbot.CheckVisibility then
-                                local Origin = Camera_obj.CFrame.Position
-                                local Direction = (TargetPosition - Origin).Unit * (TargetPosition - Origin).Magnitude
+                                local Direction = (TargetPosition - Origin).Unit
                                 local RaycastParams_v = RaycastParams.new()
-                                RaycastParams_v.FilterDescendantsInstances = {lp.Character, Camera_obj} 
+                                RaycastParams_v.FilterDescendantsInstances = {LocalPlayer.Character, Camera_obj}
                                 RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
-
-                                local RaycastResult = workspace:Raycast(Origin, Direction, RaycastParams_v)
+                                RaycastParams_v.IgnoreWater = true
+                                local RaycastResult = workspace:Raycast(Origin, Direction * DistanceToTarget, RaycastParams_v)
                                 if RaycastResult then
                                     local HitPart = RaycastResult.Instance
                                     local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
-                                    if HitCharacter ~= Character then
-                                        continue
-                                    end
+                                    IsVisible = (HitCharacter == Character)
                                 end
                             end
-
-                            local ScreenPosition, OnScreen = Camera_obj:WorldToScreenPoint(TargetPosition)
-                            if OnScreen then
-                                local MousePosition = Vector2.new(mouse_obj.X, mouse_obj.Y)
-                                local DistanceToMouse = (MousePosition - Vector2.new(ScreenPosition.X, ScreenPosition.Y)).Magnitude
-                                if DistanceToMouse < Aimbot.Triggerbot_Sensitivity then 
-                                    local Humanoid_obj = Character:FindFirstChildOfClass("Humanoid")
-                                    if Aimbot.CheckAlive and (not Humanoid_obj or Humanoid_obj.Health <= 0) then continue end
-
-                                    mouse1press() task.wait(0.1) mouse1release()
-
-                                    return 
+                            if IsVisible then
+                                local ScreenPosition, OnScreen = Camera_obj:WorldToScreenPoint(Hitbox.Position)
+                                if OnScreen then
+                                    local EffectiveFOVRadius = GetEffectiveFOVRadius()
+                                    local DistanceFromCenter = (Vector2.new(ScreenPosition.X, ScreenPosition.Y) - ScreenCenter_v).Magnitude
+                                    if (not Aimbot.FOVCheck or DistanceFromCenter <= EffectiveFOVRadius) and DistanceFromCenter < ClosestMagnitude then
+                                        ClosestMagnitude = DistanceFromCenter
+                                        ClosestTarget = Player_v
+                                    end
                                 end
                             end
                         end
                     end
                 end
+
+                if ClosestTarget and ClosestTarget.Character then
+                    local Character = ClosestTarget.Character
+                    local Hitbox = GetBestHitbox(Character)
+                    if Hitbox then
+                        local DistanceToTarget = (Hitbox.Position - Camera_obj.CFrame.Position).Magnitude
+                        local TargetPosition = GetPredictedPosition(Hitbox, DistanceToTarget)
+                        UpdateResolverState(ClosestTarget, Hitbox, TargetPosition, Hitbox.Position)
+                        local CameraPosition = Camera_obj.CFrame.Position
+                        local TargetCFrame = CFrame.new(CameraPosition, TargetPosition)
+                        local effectiveSmoothing = Aimbot.Smoothing * (0.5 + Resolver.PredictionConfidence * 0.5)
+                        if effectiveSmoothing > 0 then
+                            Camera_obj.CFrame = Camera_obj.CFrame:Lerp(TargetCFrame, effectiveSmoothing)
+                        else
+                            Camera_obj.CFrame = TargetCFrame
+                        end
+                        if Aimbot.AutoShoot then ShootGun() end
+                    end
+                end
+            end)
+        else
+            if Connection then Connection:Disconnect() Connection = nil end
+        end
+    end
+
+    local function getFPS()
+        local frameTime = Stats.Workspace.Heartbeat:GetValue()
+        if frameTime > 0 then
+            return math.floor(frameTime)
+        else
+            return 0
+        end
+    end
+
+    local function getPING()
+        local networkStats = Stats.Network
+        local ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
+        
+        if ping > 0 then
+            return math.floor(ping)
+        else
+            return 0
+        end
+    end
+
+    local function setupFly()
+        char = player.Character or player.CharacterAdded:Wait()
+        rootPart = char:WaitForChild("HumanoidRootPart")
+        Humanoid = char:WaitForChild("Humanoid")
+
+        Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+        Humanoid.PlatformStand = true
+
+        flyForce = Instance.new("BodyVelocity")
+        flyForce.Velocity = Vector3.new(0, 0, 0)
+        flyForce.MaxForce = Vector3.new(40000, 40000, 40000)  
+        flyForce.P = 1250  
+        flyForce.Parent = rootPart
+
+        flyConnection = RunService.Heartbeat:Connect(function()
+            if not Action then
+                flyConnection:Disconnect()
+                return
+            end
+
+            local direction = Vector3.new(0, 0, 0)
+            local moving = false
+            local cameraCF = Camera.CFrame
+
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                direction = direction + cameraCF.LookVector
+                moving = true
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                direction = direction - cameraCF.LookVector
+                moving = true
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                direction = direction - cameraCF.RightVector
+                moving = true
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                direction = direction + cameraCF.RightVector
+                moving = true
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.E) then
+                direction = direction + Vector3.new(0, 1, 0)
+                moving = true
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
+                direction = direction - Vector3.new(0, 1, 0)
+                moving = true
+            end
+
+            local cameraLook = cameraCF.LookVector
+            rootPart.CFrame = CFrame.new(rootPart.Position, rootPart.Position + cameraLook)
+
+            if moving then
+                if direction.Magnitude > 0 then
+                    direction = direction.Unit
+                end
+                flyForce.Velocity = direction * flySpeed
+            else
+                flyForce.Velocity = Vector3.new(0, 0, 0)
+                rootPart.Velocity = Vector3.new(0, 0, 0)
+                rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
             end
         end)
-    else
+    end
+
+    local function FlyActivate(Value)
+        if Value then
+            Action = true
+            setupFly()
+        else
+            Action = false
+            if char and Humanoid then
+                Humanoid.PlatformStand = false
+                Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+            end
+            if flyForce then flyForce:Destroy() end
+            if alignTorque then alignTorque:Destroy() end
+        end
+    end
+
+    local function serverhop()
+        if not httprequest then
+            return getgenv().Library:Notify("Incompatible Feature.", 3) 
+        end
+
+        local servers = {}
+        local req = httprequest({
+            Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", PlaceId)
+        })
+
+        if req.Success then
+            local body = req.Body
+
+            for serverId in body:gmatch('"id":"([%w-]+)"') do
+                local playing = body:match('"playing":(%d+),"maxPlayers":%d+,"id":"' .. serverId .. '"')
+                local maxPlayers = body:match('"maxPlayers":(%d+),"id":"' .. serverId .. '"')
+
+                if playing and maxPlayers and tonumber(playing) < tonumber(maxPlayers) and serverId ~= JobId then
+                    table.insert(servers, serverId)
+                end
+            end
+
+            if #servers > 0 then
+                ts:TeleportToPlaceInstance(PlaceId, servers[math.random(1, #servers)], p)
+            else
+                getgenv().Library:Notify("Couldn't find a server.", 3) 
+            end
+        else
+            getgenv().Library:Notify("Failed to fetch server list.", 3) 
+        end
+    end
+
+    local function rejoin()
+        local placeId = game.PlaceId 
+        ts:Teleport(placeId, p)
+    end
+
+    local function AntiFallDmg(Value)
+        if Value == true then
+            if fd then
+                fd:Disconnect()
+                fd = nil
+            end
+            fd = RunService.RenderStepped:Connect(function()
+                local fallDamageScriptInStarter = starterCharacterScripts:FindFirstChild("FallDamageScript") or starterCharacterScripts:FindFirstChild("FallDamage")
+                local character = player.Character or player.CharacterAdded:Wait()
+                local fallDamageScript = character:FindFirstChild("FallDamageScript") or starterCharacterScripts:FindFirstChild("FallDamage")
+
+                if fallDamageScriptInStarter then
+                    fallDamageScriptInStarter:Destroy()
+                    print("FallDamage Script removed from StarterCharacterScripts.")
+                end
+
+                if fallDamageScript then
+                    fallDamageScript:Destroy()
+                    print("FallDamage Script removed from player's character.")
+                end
+
+                wait(3) 
+            end)
+        else
+            if fd then
+                fd:Disconnect()
+                fd = nil
+            end
+        end
+    end
+
+    local function HitDetection(Value)
+        local lp = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() and Players.LocalPlayer
+        local Camera_obj = workspace.CurrentCamera
+
+        local function Update()
+            local leaderstats = lp:FindFirstChild("leaderstats")
+            if leaderstats then
+                local kills = leaderstats:FindFirstChild("Kills") or leaderstats:FindFirstChild("KOs") or leaderstats:FindFirstChild("Knockouts")
+                if kills then
+                    KillCount = kills.Value
+                end
+            end
+        end
+        function AddOVRKill()
+            OVERKillCount = OVERKillCount + 1
+        end
+
+        local connections = {}
+
+        local function DisconnectPlayer(player_obj)
+            if connections[player_obj] then
+                for _, connection in pairs(connections[player_obj]) do
+                    connection:Disconnect()
+                end
+                connections[player_obj] = nil
+            end
+        end
+
+        local function OnHealthChanged(player_obj, Humanoid_obj, oldHealth)
+            local creator = Humanoid_obj:FindFirstChild("creator")
+            if creator and creator.Value == lp then
+                local character = player_obj.Character
+                local hitboxName = nil 
+                if character then
+                    local potentialHitboxes = {}
+        
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                            table.insert(potentialHitboxes, part)
+                        end
+                    end
+        
+                    local Origin = Camera_obj.CFrame.Position
+                    local RaycastParams_v = RaycastParams.new()
+                    RaycastParams_v.FilterDescendantsInstances = {lp.Character, Camera_obj} 
+                    RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
+        
+                    for _, hitbox in ipairs(potentialHitboxes) do
+                        local Direction = (hitbox.Position - Origin).Unit * 1000 
+                        local RaycastResult = workspace:Raycast(Origin, Direction, RaycastParams_v)
+        
+                        if RaycastResult then
+                            local HitPart = RaycastResult.Instance
+                            local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
+                            if HitCharacter == character then
+                                hitboxName = hitbox.Name 
+                                break
+                            end
+                        end
+                    end
+                end
+        
+                local remainingHealth = Humanoid_obj.Health
+                local damageDealt = oldHealth - remainingHealth
+        
+                if hitboxName then
+                    if remainingHealth == 0 then
+                        PlayKillSound()
+                        Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (DECEASED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
+                    elseif remainingHealth < 0 then
+                        PlayKillSound()
+                        Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (OBLITERATED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
+                        AddOVRKill()
+                    else
+                        PlayHitmarkerSound()
+                        Notificate(string.format("Tapped %s on %s | %.1f HP (-%.1f DMG) (INJURED)", player_obj.Name, hitboxName, remainingHealth, damageDealt))
+                    end
+                end
+            end
+        end
+
+        function PlayHitmarkerSound()
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://"..SoundIDHM
+            sound.Volume = 1 -- Set volume (0 to 1)
+            sound.Pitch = 1
+            sound.Looped = false -- Set to true if you want the sound to loop
+            sound.Parent = workspace -- Parent the sound to the workspace
+            
+            -- Play the sound
+            sound:Play()
+            
+            -- Optional: Add an event to detect when the sound ends
+            sound.Ended:Connect(function() sound:Destroy() end)
+        end
+
+        function PlayKillSound()
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://"..SoundIDK
+            sound.Volume = 1 -- Set volume (0 to 1)
+            sound.Pitch = 1
+            sound.Looped = false -- Set to true if you want the sound to loop
+            sound.Parent = workspace -- Parent the sound to the workspace
+            
+            -- Play the sound
+            sound:Play()
+            
+            -- Optional: Add an event to detect when the sound ends
+            sound.Ended:Connect(function() sound:Destroy() end)
+        end
+
+        local function ConnectPlayer(player_obj)
+            DisconnectPlayer(player_obj)
+
+            connections[player_obj] = {}
+
+            local function OnCharacterAdded(character)
+                local Humanoid_obj = character:WaitForChild("Humanoid")
+                local oldHealth = Humanoid_obj.Health
+
+                local healthChangedConnection = Humanoid_obj.HealthChanged:Connect(function(newHealth)
+                    if newHealth < oldHealth then
+                        OnHealthChanged(player_obj, Humanoid_obj, oldHealth)
+                    end
+                    oldHealth = newHealth
+                end)
+
+                table.insert(connections[player_obj], healthChangedConnection)
+            end
+
+            if player_obj.Character then
+                OnCharacterAdded(player_obj.Character)
+            end
+
+            local characterAddedConnection = player_obj.CharacterAdded:Connect(OnCharacterAdded)
+            table.insert(connections[player_obj], characterAddedConnection)
+        end
+
+        local function OnPlayerRemoving(player_obj)
+            DisconnectPlayer(player_obj)
+        end
+
+        if Value then
+            for _, player_obj in ipairs(Players:GetPlayers()) do
+                if player_obj ~= lp then
+                    ConnectPlayer(player_obj)
+                end
+            end
+
+            Players.PlayerAdded:Connect(function(player_obj)
+                if player_obj ~= lp then
+                    ConnectPlayer(player_obj)
+                end
+            end)
+
+            Players.PlayerRemoving:Connect(OnPlayerRemoving)
+            RunService.Heartbeat:Connect(Update)
+        else
+            for player_obj in pairs(connections) do
+                DisconnectPlayer(player_obj)
+            end
+        end
+    end
+
+    local function TriggerBot(Value)
+        local lp = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait() and Players.LocalPlayer
+        local mouse_obj = lp:GetMouse()
+        local Camera_obj = workspace.CurrentCamera
+
+        local Prediction_Enabled = Aimbot.Prediction 
+        local Prediction_Offset = Aimbot.Prediction_Offset 
+
         if con then
             con:Disconnect()
             con = nil
         end
-    end
-end
 
-local function disableCanCollide(i)
-    if i then
-        if antifling then
-            antifling:Disconnect()
-            antifling = nil
-        end
-        antifling = RunService.Stepped:Connect(function()
-            for _, player_obj in ipairs(Players:GetPlayers()) do
-                if player_obj ~= speaker and player_obj.Character then
-                    for _, part in ipairs(player_obj.Character:GetDescendants()) do
-                        if part:IsA("BasePart") and part.CanCollide then
-                            part.CanCollide = false
+        if Value == true then
+            con = RunService.Heartbeat:Connect(function()
+                for _, player_obj in ipairs(Players:GetPlayers()) do
+                    if player_obj ~= lp and player_obj.Character then
+                        if Aimbot.TeamCheck then
+                            local LocalPlayerTeam = lp.Team
+                            local TargetTeam = player_obj.Team
+
+                            if LocalPlayerTeam and TargetTeam and LocalPlayerTeam == TargetTeam then
+                                continue 
+                            end
+                        end
+
+                        local Character = player_obj.Character
+
+                        local hitboxNames = {
+                            "Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg",
+                            "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm",
+                            "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg",
+                            "LeftLowerLeg", "RightLowerLeg"
+                        }
+
+                        for _, hitboxName in ipairs(hitboxNames) do
+                            local r6ToR15Mapping = {
+                                ["Torso"] = "UpperTorso", "LowerTorso",
+                                ["Left Arm"] = "LeftUpperArm","LeftLowerArm",
+                                ["Right Arm"] = "RightUpperArm","RightLowerArm",
+                                ["Left Leg"] = "LeftUpperLeg","LeftLowerLeg",
+                                ["Right Leg"] = "RightUpperLeg","RightLowerLeg",
+                            }
+                            local mappedHitboxName = r6ToR15Mapping[hitboxName] or hitboxName
+
+                            local Hitbox = Character:FindFirstChild(mappedHitboxName)
+                            if not Hitbox then
+                                Hitbox = Character:FindFirstChild("HumanoidRootPart")
+                            end
+
+                            if Hitbox then
+                                local TargetPosition = Hitbox.Position
+                                if Prediction_Enabled then
+                                    local Velocity = Hitbox.Velocity
+                                    TargetPosition = TargetPosition + Velocity * Prediction_Offset
+                                end
+
+                                if Aimbot.CheckVisibility then
+                                    local Origin = Camera_obj.CFrame.Position
+                                    local Direction = (TargetPosition - Origin).Unit * (TargetPosition - Origin).Magnitude
+                                    local RaycastParams_v = RaycastParams.new()
+                                    RaycastParams_v.FilterDescendantsInstances = {lp.Character, Camera_obj} 
+                                    RaycastParams_v.FilterType = Enum.RaycastFilterType.Blacklist
+
+                                    local RaycastResult = workspace:Raycast(Origin, Direction, RaycastParams_v)
+                                    if RaycastResult then
+                                        local HitPart = RaycastResult.Instance
+                                        local HitCharacter = HitPart:FindFirstAncestorOfClass("Model")
+                                        if HitCharacter ~= Character then
+                                            continue
+                                        end
+                                    end
+                                end
+
+                                local ScreenPosition, OnScreen = Camera_obj:WorldToScreenPoint(TargetPosition)
+                                if OnScreen then
+                                    local MousePosition = Vector2.new(mouse_obj.X, mouse_obj.Y)
+                                    local DistanceToMouse = (MousePosition - Vector2.new(ScreenPosition.X, ScreenPosition.Y)).Magnitude
+                                    if DistanceToMouse < Aimbot.Triggerbot_Sensitivity then 
+                                        local Humanoid_obj = Character:FindFirstChildOfClass("Humanoid")
+                                        if Aimbot.CheckAlive and (not Humanoid_obj or Humanoid_obj.Health <= 0) then continue end
+
+                                        mouse1press() task.wait(0.1) mouse1release()
+
+                                        return 
+                                    end
+                                end
+                            end
                         end
                     end
                 end
-            end
-        end)
-    else
-        if antifling then
-            antifling:Disconnect()
-            antifling = nil
-        end
-    end
-end
-
-local function InitiateLagDetection()
-    local Players_obj = game:GetService("Players")
-    local RunService_obj = game:GetService("RunService")
-    local Stats_obj = game:GetService("Stats")
-    
-    local pingUpdateInterval = 1 
-    local lastPingCheck = 0
-    local maxPing = 200 
-    local minFPS = 60 
-    
-    local lagSpikeThreshold = 3 
-    local currentLagCount = 0
-    
-    local function formatPing(ping)
-        return math.floor(ping) .. "ms"
-    end
-    
-    local function formatFPS(fps)
-        return math.floor(fps) .. " FPS"
-    end
-    
-    local function checkForLagSpike()
-        local currentTime = os.clock()
-        local networkStats = Stats_obj.Network
-        local ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
-        local fps = 1 / RunService_obj.RenderStepped:Wait()
-        
-        if currentTime - lastPingCheck >= pingUpdateInterval then
-            ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
-            lastPingCheck = currentTime
-        end
-        
-        local isLagging = false
-        
-        if ping > maxPing then
-            isLagging = true
-        end
-        
-        if fps < minFPS then
-            Warning_Notificate("Low FPS detected: " .. formatFPS(fps))
-            isLagging = true
-        end
-        
-        if isLagging then
-            currentLagCount = currentLagCount + 1
-            if currentLagCount >= lagSpikeThreshold then
-                Warning_Notificate("LAG SPIKE DETECTED! " .. formatPing(ping))
-            end
+            end)
         else
-            currentLagCount = math.max(0, currentLagCount - 1)
-        end
-        
-        return ping, fps
-    end
-    
-    local function monitorPerformance()
-        while true do
-            checkForLagSpike()
-            wait(0.5) 
+            if con then
+                con:Disconnect()
+                con = nil
+            end
         end
     end
-    
-    coroutine.wrap(monitorPerformance)()
-end
 
-local function FlingtargetPlayerName(targetPlayerName)
-    local Targets = {targetPlayerName} 
-    local Player_obj = Players.LocalPlayer
-    local AllBool = false
-    
-    local GetPlayer = function(Name)
-        Name = Name:lower()
-        if Name == "all" or Name == "others" then
-            AllBool = true
-            return
-        elseif Name == "random" then
-            local GetPlayers = Players:GetPlayers()
-            if table.find(GetPlayers,Player_obj) then table.remove(GetPlayers,table.find(GetPlayers,Player_obj)) end
-            return GetPlayers[math.random(#GetPlayers)]
-        elseif Name ~= "random" and Name ~= "all" and Name ~= "others" then
-            for _,x in next, Players:GetPlayers() do
-                if x ~= Player_obj then
-                    if x.Name:lower():match("^"..Name) then
-                        return x;
-                    elseif x.DisplayName:lower():match("^"..Name) then
-                        return x;
+    local function disableCanCollide(i)
+        if i then
+            if antifling then
+                antifling:Disconnect()
+                antifling = nil
+            end
+            antifling = RunService.Stepped:Connect(function()
+                for _, player_obj in ipairs(Players:GetPlayers()) do
+                    if player_obj ~= speaker and player_obj.Character then
+                        for _, part in ipairs(player_obj.Character:GetDescendants()) do
+                            if part:IsA("BasePart") and part.CanCollide then
+                                part.CanCollide = false
+                            end
+                        end
                     end
                 end
-            end
+            end)
         else
-            return
+            if antifling then
+                antifling:Disconnect()
+                antifling = nil
+            end
         end
     end
-    
-    local SkidFling = function(TargetPlayer)
-        local Character = Player_obj.Character
-        local RootPart_obj = Humanoid and Humanoid.RootPart
-    
-        local TCharacter = TargetPlayer.Character
-        local THumanoid
-        local TRootPart
-        local THead
-        local Accessory
-        local Handle
-    
-        if TCharacter:FindFirstChildOfClass("Humanoid") then
-            THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
+
+    local function InitiateLagDetection()
+        local Players_obj = game:GetService("Players")
+        local RunService_obj = game:GetService("RunService")
+        local Stats_obj = game:GetService("Stats")
+        
+        local pingUpdateInterval = 1 
+        local lastPingCheck = 0
+        local maxPing = 200 
+        local minFPS = 60 
+        
+        local lagSpikeThreshold = 3 
+        local currentLagCount = 0
+        
+        local function formatPing(ping)
+            return math.floor(ping) .. "ms"
         end
-        if THumanoid and THumanoid.RootPart then
-            TRootPart = THumanoid.RootPart
+        
+        local function formatFPS(fps)
+            return math.floor(fps) .. " FPS"
         end
-        if TCharacter:FindFirstChild("Head") then
-            THead = TCharacter.Head
-        end
-        if TCharacter:FindFirstChildOfClass("Accessory") then
-            Accessory = TCharacter:FindFirstChildOfClass("Accessory")
-        end
-        if Accessory and Accessory:FindFirstChild("Handle") then
-            Handle = Accessory.Handle
-        end
-    
-        if Character and Humanoid and RootPart_obj then
-            if RootPart_obj.Velocity.Magnitude < 50 then
-                getgenv().OldPos = RootPart_obj.CFrame
+        
+        local function checkForLagSpike()
+            local currentTime = os.clock()
+            local networkStats = Stats_obj.Network
+            local ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
+            local fps = 1 / RunService_obj.RenderStepped:Wait()
+            
+            if currentTime - lastPingCheck >= pingUpdateInterval then
+                ping = networkStats.ServerStatsItem["Data Ping"]:GetValue()
+                lastPingCheck = currentTime
             end
-            if THumanoid and THumanoid.Sit and not AllBool then
-                return getgenv().Library:Notify(targetPlayerName .. " is sitting.", 5) 
+            
+            local isLagging = false
+            
+            if ping > maxPing then
+                isLagging = true
             end
-            if THead then
-                workspace.CurrentCamera.CameraSubject = THead
-            elseif not THead and Handle then
-                workspace.CurrentCamera.CameraSubject = Handle
-            elseif THumanoid and TRootPart then
-                workspace.CurrentCamera.CameraSubject = THumanoid
+            
+            if fps < minFPS then
+                Warning_Notificate("Low FPS detected: " .. formatFPS(fps))
+                isLagging = true
             end
-            if not TCharacter:FindFirstChildWhichIsA("BasePart") then
+            
+            if isLagging then
+                currentLagCount = currentLagCount + 1
+                if currentLagCount >= lagSpikeThreshold then
+                    Warning_Notificate("LAG SPIKE DETECTED! " .. formatPing(ping))
+                end
+            else
+                currentLagCount = math.max(0, currentLagCount - 1)
+            end
+            
+            return ping, fps
+        end
+        
+        local function monitorPerformance()
+            while true do
+                checkForLagSpike()
+                wait(0.5) 
+            end
+        end
+        
+        coroutine.wrap(monitorPerformance)()
+    end
+
+    local function FlingtargetPlayerName(targetPlayerName)
+        local Targets = {targetPlayerName} 
+        local Player_obj = Players.LocalPlayer
+        local AllBool = false
+        
+        local GetPlayer = function(Name)
+            Name = Name:lower()
+            if Name == "all" or Name == "others" then
+                AllBool = true
+                return
+            elseif Name == "random" then
+                local GetPlayers = Players:GetPlayers()
+                if table.find(GetPlayers,Player_obj) then table.remove(GetPlayers,table.find(GetPlayers,Player_obj)) end
+                return GetPlayers[math.random(#GetPlayers)]
+            elseif Name ~= "random" and Name ~= "all" and Name ~= "others" then
+                for _,x in next, Players:GetPlayers() do
+                    if x ~= Player_obj then
+                        if x.Name:lower():match("^"..Name) then
+                            return x;
+                        elseif x.DisplayName:lower():match("^"..Name) then
+                            return x;
+                        end
+                    end
+                end
+            else
                 return
             end
-            
-            local FPos = function(BasePart, Pos, Ang)
-                RootPart_obj.CFrame = CFrame.new(BasePart.Position) * Pos * Ang
-                Character:SetPrimaryPartCFrame(CFrame.new(BasePart.Position) * Pos * Ang)
-                RootPart_obj.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
-                RootPart_obj.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
+        end
+        
+        local SkidFling = function(TargetPlayer)
+            local Character = Player_obj.Character
+            local RootPart_obj = Humanoid and Humanoid.RootPart
+        
+            local TCharacter = TargetPlayer.Character
+            local THumanoid
+            local TRootPart
+            local THead
+            local Accessory
+            local Handle
+        
+            if TCharacter:FindFirstChildOfClass("Humanoid") then
+                THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
             end
-            
-            local SFBasePart = function(BasePart)
-                local TimeToWait = 2
-                local Time = tick()
-                local Angle = 0
-    
-                repeat
-                    if RootPart_obj and THumanoid then
-                        if BasePart.Velocity.Magnitude < 50 then
-                            Angle = Angle + 100
-    
-                            FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle),0 ,0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
-                            task.wait()
+            if THumanoid and THumanoid.RootPart then
+                TRootPart = THumanoid.RootPart
+            end
+            if TCharacter:FindFirstChild("Head") then
+                THead = TCharacter.Head
+            end
+            if TCharacter:FindFirstChildOfClass("Accessory") then
+                Accessory = TCharacter:FindFirstChildOfClass("Accessory")
+            end
+            if Accessory and Accessory:FindFirstChild("Handle") then
+                Handle = Accessory.Handle
+            end
+        
+            if Character and Humanoid and RootPart_obj then
+                if RootPart_obj.Velocity.Magnitude < 50 then
+                    getgenv().OldPos = RootPart_obj.CFrame
+                end
+                if THumanoid and THumanoid.Sit and not AllBool then
+                    return getgenv().Library:Notify(targetPlayerName .. " is sitting.", 5) 
+                end
+                if THead then
+                    workspace.CurrentCamera.CameraSubject = THead
+                elseif not THead and Handle then
+                    workspace.CurrentCamera.CameraSubject = Handle
+                elseif THumanoid and TRootPart then
+                    workspace.CurrentCamera.CameraSubject = THumanoid
+                end
+                if not TCharacter:FindFirstChildWhichIsA("BasePart") then
+                    return
+                end
+                
+                local FPos = function(BasePart, Pos, Ang)
+                    RootPart_obj.CFrame = CFrame.new(BasePart.Position) * Pos * Ang
+                    Character:SetPrimaryPartCFrame(CFrame.new(BasePart.Position) * Pos * Ang)
+                    RootPart_obj.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
+                    RootPart_obj.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
+                end
+                
+                local SFBasePart = function(BasePart)
+                    local TimeToWait = 2
+                    local Time = tick()
+                    local Angle = 0
+        
+                    repeat
+                        if RootPart_obj and THumanoid then
+                            if BasePart.Velocity.Magnitude < 50 then
+                                Angle = Angle + 100
+        
+                                FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle),0 ,0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
+                                task.wait()
+                            else
+                                FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+                                task.wait()
+                                
+                                FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
+                                task.wait()
+        
+                                FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+                                task.wait()
+                            end
                         else
-                            FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                            task.wait()
-                            
-                            FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
-                            task.wait()
-    
-                            FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                            task.wait()
+                            break
                         end
+                    until BasePart.Velocity.Magnitude > 500 or BasePart.Parent ~= TargetPlayer.Character or TargetPlayer.Parent ~= Players or not TargetPlayer.Character == TCharacter or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
+                end
+                
+                workspace.FallenPartsDestroyHeight = 0/0
+                
+                local BV = Instance.new("BodyVelocity")
+                BV.Name = "EpixVel"
+                BV.Parent = RootPart_obj
+                BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
+                BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+                
+                Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                
+                if TRootPart and THead then
+                    if (TRootPart.CFrame.p - THead.CFrame.p).Magnitude > 5 then
+                        SFBasePart(THead)
                     else
-                        break
+                        SFBasePart(TRootPart)
                     end
-                until BasePart.Velocity.Magnitude > 500 or BasePart.Parent ~= TargetPlayer.Character or TargetPlayer.Parent ~= Players or not TargetPlayer.Character == TCharacter or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
-            end
-            
-            workspace.FallenPartsDestroyHeight = 0/0
-            
-            local BV = Instance.new("BodyVelocity")
-            BV.Name = "EpixVel"
-            BV.Parent = RootPart_obj
-            BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
-            BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
-            
-            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-            
-            if TRootPart and THead then
-                if (TRootPart.CFrame.p - THead.CFrame.p).Magnitude > 5 then
-                    SFBasePart(THead)
-                else
+                elseif TRootPart and not THead then
                     SFBasePart(TRootPart)
+                elseif not TRootPart and THead then
+                    SFBasePart(THead)
+                elseif not TRootPart and not THead and Accessory and Handle then
+                    SFBasePart(Handle)
+                else
+                    return getgenv().Library:Notify(targetPlayerName .. " is literally disabled from everywhere lol.", 5) 
                 end
-            elseif TRootPart and not THead then
-                SFBasePart(TRootPart)
-            elseif not TRootPart and THead then
-                SFBasePart(THead)
-            elseif not TRootPart and not THead and Accessory and Handle then
-                SFBasePart(Handle)
+                
+                BV:Destroy()
+                Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                workspace.CurrentCamera.CameraSubject = Humanoid
+                
+                repeat
+                    RootPart_obj.CFrame = getgenv().OldPos * CFrame.new(0, .5, 0)
+                    Character:SetPrimaryPartCFrame(getgenv().OldPos * CFrame.new(0, .5, 0))
+                    Humanoid:ChangeState("GettingUp")
+                    table.foreach(Character:GetChildren(), function(_, x)
+                        if x:IsA("BasePart") then
+                            x.Velocity, x.RotVelocity = Vector3.new(), Vector3.new()
+                        end
+                    end)
+                    task.wait()
+                until (RootPart_obj.Position - getgenv().OldPos.p).Magnitude < 25
+                workspace.FallenPartsDestroyHeight = getgenv().FPDH
             else
-                return getgenv().Library:Notify(targetPlayerName .. " is literally disabled from everywhere lol.", 5) 
+                return getgenv().Library:Notify("My fault bruh.", 5) 
             end
-            
-            BV:Destroy()
-            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-            workspace.CurrentCamera.CameraSubject = Humanoid
-            
-            repeat
-                RootPart_obj.CFrame = getgenv().OldPos * CFrame.new(0, .5, 0)
-                Character:SetPrimaryPartCFrame(getgenv().OldPos * CFrame.new(0, .5, 0))
-                Humanoid:ChangeState("GettingUp")
-                table.foreach(Character:GetChildren(), function(_, x)
-                    if x:IsA("BasePart") then
-                        x.Velocity, x.RotVelocity = Vector3.new(), Vector3.new()
+        end
+        
+        if not Welcome then end
+        getgenv().Welcome = true
+        if Targets[1] then for _,x in next, Targets do GetPlayer(x) end else return end
+        
+        if AllBool then
+            for _,x in next, Players:GetPlayers() do
+                SkidFling(x)
+            end
+        end
+        
+        for _,x in next, Targets do
+            if GetPlayer(x) and GetPlayer(x) ~= Player_obj then
+                if GetPlayer(x).UserId ~= 1414978355 then
+                    local TPlayer = GetPlayer(x)
+                    if TPlayer then
+                        SkidFling(TPlayer)
                     end
-                end)
-                task.wait()
-            until (RootPart_obj.Position - getgenv().OldPos.p).Magnitude < 25
-            workspace.FallenPartsDestroyHeight = getgenv().FPDH
-        else
-            return getgenv().Library:Notify("My fault bruh.", 5) 
-        end
-    end
-    
-    if not Welcome then end
-    getgenv().Welcome = true
-    if Targets[1] then for _,x in next, Targets do GetPlayer(x) end else return end
-    
-    if AllBool then
-        for _,x in next, Players:GetPlayers() do
-            SkidFling(x)
-        end
-    end
-    
-    for _,x in next, Targets do
-        if GetPlayer(x) and GetPlayer(x) ~= Player_obj then
-            if GetPlayer(x).UserId ~= 1414978355 then
-                local TPlayer = GetPlayer(x)
-                if TPlayer then
-                    SkidFling(TPlayer)
+                else
+                    getgenv().Library:Notify(targetPlayerName .. " is chill bruh.", 5) 
                 end
-            else
-                getgenv().Library:Notify(targetPlayerName .. " is chill bruh.", 5) 
-            end
-        elseif not GetPlayer(x) and not AllBool then
-            getgenv().Library:Notify(targetPlayerName .. " does not have a valid username.", 5) 
-        end
-    end
-end
-
-local function Reset_two()
-    player.Character.Humanoid.Health = -5
-    getgenv().Library:Notify("Wtf!", 2) 
-end
-
-local function Reset()
-    PreviousPosition = player.Character.HumanoidRootPart.CFrame
-    player.Character.Humanoid.Health = 0
-    if player.Character:FindFirstChild("Head") then player.Character.Head:Destroy() end
-    player.CharacterAdded:Wait()
-    player.Character:WaitForChild("HumanoidRootPart")
-    player.Character.HumanoidRootPart.CFrame = PreviousPosition
-    Success_Notificate("Resetted")
-end
-
-local function FlingerAll()
-    FlingtargetPlayerName("All")
-    Success_Notificate("Successfully flung people!")
-    Reset()
-end
-
-function OnUpdate()
-    LockOnGTA5()
-    UpdateFOV()
-    CrosshairGen()
-    AntiAimFunction()
-    UpdateVisuals()
-    ChatSpammer()
-end
-
-local function Teleport(targetPlayerName)
-    local player_obj = game.Players.LocalPlayer
-    local character = player_obj.Character or player_obj.CharacterAdded:Wait()
-    local hrp = character:WaitForChild("HumanoidRootPart")  
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-
-    if targetPlayer then
-        local targetCharacter = targetPlayer.Character or targetPlayer.CharacterAdded:Wait()
-        local targetHrp = targetCharacter:WaitForChild("HumanoidRootPart")  
-        hrp.CFrame = targetHrp.CFrame
-    else
-        getgenv().Library:Notify("Player not found.", 2)
-    end
-end
-
-local function GetHitboxPart(character, hitboxName)
-    if not hitboxName or type(hitboxName) ~= "string" then
-        return nil
-    end
-
-    local r6ToR15Mapping = {
-        ["Torso"] = "UpperTorso",
-        ["Left Arm"] = "LeftUpperArm",
-        ["Right Arm"] = "RightUpperArm",
-        ["Left Leg"] = "LeftUpperLeg",
-        ["Right Leg"] = "RightUpperLeg",
-    }
-
-    local mappedHitboxName = r6ToR15Mapping[hitboxName] or hitboxName
-    local hitboxPart = character:FindFirstChild(mappedHitboxName)
-    if not hitboxPart then
-        hitboxPart = character:FindFirstChild("HumanoidRootPart")
-    end
-
-    return hitboxPart
-end
-
-local function EndStuff()
-    local TogglesOFF = false
-
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://3101925827" 
-    sound.Volume = 1 
-    sound.Pitch = 0.5
-    sound.Looped = false 
-    sound.Parent = workspace 
-
-    getgenv().Library.Unloaded = true
-    Sense.Unload()
-
-    pcall(function()
-        if getgenv().ArrowSettings and getgenv().ArrowSettings.Unload then
-            getgenv().ArrowSettings.Unload()
-        end
-    end)
-
-    pcall(function()
-        if getgenv().SkeletonSettings and getgenv().SkeletonSettings.Unload then
-            getgenv().SkeletonSettings.Unload()
-        end
-    end)
-
-    workspace.Camera.FieldOfView = 70
-
-    if TogglesOFF == false then
-        Aimbot.Enabled = false
-        TriggerBot(false)
-        Crosshair.Enabled = false
-        Aimbot.FOVVisible = false
-        HitDetection(false)
-        AntiAim.Activated = false
-        FlyActivate(false)
-        ChatSpammerrr.Activated = false
-        Anticheat(false)
-        Orbiter(false)
-        Anticheat_Settings.REPORT = false
-        disableCanCollide(false)
-        TogglesOFF = true
-
-        if TogglesOFF == true then
-            print("⏺️ All Runtime Toggles are now Unloaded")
-        end
-    end
-
-    for _, v in pairs(game:GetService("CoreGui"):GetChildren()) do
-        if v.Name == "screen" or v.Name == "watermark" or v.Name == "Notifications" then
-            v:Destroy()
-        end
-    end
-
-    Reset_two()
-    print('✅ Unloaded!')
-    sound:Play()
-    sound.Ended:Connect(function() sound:Destroy() end)
-end
-
-local function Launch()
-    local function containsBlacklistedWord(message)
-        local lowerMessage = string.lower(message)
-        for _, word in ipairs(blacklisted) do
-            if string.find(lowerMessage, string.lower(word)) then
-                return true
+            elseif not GetPlayer(x) and not AllBool then
+                getgenv().Library:Notify(targetPlayerName .. " does not have a valid username.", 5) 
             end
         end
-        return false
     end
-    
-    local function onPlayerAdded_v(player_v)
-        player_v.Chatted:Connect(function(message)
-            local shouldSend = logChat(player_v, message)
-            if not shouldSend then
-                return false
+
+    local function Reset_two()
+        player.Character.Humanoid.Health = -5
+        getgenv().Library:Notify("Wtf!", 2) 
+    end
+
+    local function Reset()
+        PreviousPosition = player.Character.HumanoidRootPart.CFrame
+        player.Character.Humanoid.Health = 0
+        if player.Character:FindFirstChild("Head") then player.Character.Head:Destroy() end
+        player.CharacterAdded:Wait()
+        player.Character:WaitForChild("HumanoidRootPart")
+        player.Character.HumanoidRootPart.CFrame = PreviousPosition
+        Success_Notificate("Resetted")
+    end
+
+    local function FlingerAll()
+        FlingtargetPlayerName("All")
+        Success_Notificate("Successfully flung people!")
+        Reset()
+    end
+
+    function OnUpdate()
+        LockOnGTA5()
+        UpdateFOV()
+        CrosshairGen()
+        AntiAimFunction()
+        UpdateVisuals()
+        ChatSpammer()
+    end
+
+    local function Teleport(targetPlayerName)
+        local player_obj = game.Players.LocalPlayer
+        local character = player_obj.Character or player_obj.CharacterAdded:Wait()
+        local hrp = character:WaitForChild("HumanoidRootPart")  
+        local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+
+        if targetPlayer then
+            local targetCharacter = targetPlayer.Character or targetPlayer.CharacterAdded:Wait()
+            local targetHrp = targetCharacter:WaitForChild("HumanoidRootPart")  
+            hrp.CFrame = targetHrp.CFrame
+        else
+            getgenv().Library:Notify("Player not found.", 2)
+        end
+    end
+
+    local function GetHitboxPart(character, hitboxName)
+        if not hitboxName or type(hitboxName) ~= "string" then
+            return nil
+        end
+
+        local r6ToR15Mapping = {
+            ["Torso"] = "UpperTorso",
+            ["Left Arm"] = "LeftUpperArm",
+            ["Right Arm"] = "RightUpperArm",
+            ["Left Leg"] = "LeftUpperLeg",
+            ["Right Leg"] = "RightUpperLeg",
+        }
+
+        local mappedHitboxName = r6ToR15Mapping[hitboxName] or hitboxName
+        local hitboxPart = character:FindFirstChild(mappedHitboxName)
+        if not hitboxPart then
+            hitboxPart = character:FindFirstChild("HumanoidRootPart")
+        end
+
+        return hitboxPart
+    end
+
+    local function EndStuff()
+        local TogglesOFF = false
+
+        if CrosshairLines then
+            for _, line in ipairs(CrosshairLines) do
+                pcall(function() line:Destroy() end)
+            end
+            CrosshairLines = {}
+        end
+
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://3101925827" 
+        sound.Volume = 1 
+        sound.Pitch = 0.5
+        sound.Looped = false 
+        sound.Parent = workspace 
+
+        getgenv().Library.Unloaded = true
+        Sense.Unload()
+
+        pcall(function()
+            if getgenv().ArrowSettings and getgenv().ArrowSettings.Unload then
+                getgenv().ArrowSettings.Unload()
             end
         end)
+
+        pcall(function()
+            if getgenv().SkeletonSettings and getgenv().SkeletonSettings.Unload then
+                getgenv().SkeletonSettings.Unload()
+            end
+        end)
+
+        workspace.Camera.FieldOfView = 70
+
+        if TogglesOFF == false then
+            Aimbot.Enabled = false
+            TriggerBot(false)
+            Crosshair.Enabled = false
+            Aimbot.FOVVisible = false
+            HitDetection(false)
+            AntiAim.Activated = false
+            FlyActivate(false)
+            ChatSpammerrr.Activated = false
+            Anticheat(false)
+            Orbiter(false)
+            Anticheat_Settings.REPORT = false
+            disableCanCollide(false)
+            TogglesOFF = true
+
+            if TogglesOFF == true then
+                print("⏺️ All Runtime Toggles are now Unloaded")
+            end
+        end
+
+        for _, v in pairs(game:GetService("CoreGui"):GetChildren()) do
+            if v.Name == "screen" or v.Name == "watermark" or v.Name == "Notifications" then
+                v:Destroy()
+            end
+        end
+
+        Reset_two()
+        print('✅ Unloaded!')
+        sound:Play()
+        sound.Ended:Connect(function() sound:Destroy() end)
     end
-    
-    getgenv().Library:Notify(art.."\n[NOTE] PLVSMVWVRE.lol - Official Finished Release since 2023", 6)
 
-    Console() Success_Notificate("Console Hooked.")
+    local function Launch()
+        InitializeDrawing() 
 
-    Notificate(COLORS.WHITE, "Initializing Updaters...")
+        local function containsBlacklistedWord(message)
+            local lowerMessage = string.lower(message)
+            for _, word in ipairs(blacklisted) do
+                if string.find(lowerMessage, string.lower(word)) then
+                    return true
+                end
+            end
+            return false
+        end
+        
+        local function onPlayerAdded_v(player_v)
+            player_v.Chatted:Connect(function(message)
+                local shouldSend = logChat(player_v, message)
+                if not shouldSend then
+                    return false
+                end
+            end)
+        end
+        
+        getgenv().Library:Notify(art.."\n[NOTE] PLVSMVWVRE.lol - Official Finished Release since 2023", 6)
 
-    EventConnections.OnUpdate = RunService.Heartbeat:Connect(OnUpdate) Success_Notificate("Initialized OnUpdate!")
+        Console() Success_Notificate("Console Hooked.")
 
-    Anti_ESEXr() Success_Notificate("Initialized Anti_ESEXr!")
-    ACBypassers() Success_Notificate("Initialized ACBypassers!")
-    Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
-    InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
-    Sense.Load() Success_Notificate("Initialized Sense!")
-    getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
-    getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
-    Notificate(COLORS.WHITE, "Setting up Hooks...")
+        Notificate(COLORS.WHITE, "Initializing Updaters...")
 
-    player.CharacterAdded:Connect(function() if Action then setupFly() end end) Success_Notificate("Hooked Fly Setup!")
-    game.Players.PlayerAdded:Connect(onPlayerJoined) Success_Notificate("Hooked onPlayerJoined!")
-    game.Players.PlayerRemoving:Connect(onPlayerLeft) Success_Notificate("Hooked onPlayerLeft!")
-    Nametags() Success_Notificate("Hooked Nametags!")
-    
-    print('✅ Initiated!')
-    Success_Notificate("Initiated!")
-    sound.Ended:Connect(function() sound:Destroy() end)
-end
+        EventConnections.OnUpdate = RunService.Heartbeat:Connect(OnUpdate) Success_Notificate("Initialized OnUpdate!")
 
-local cheatname = BetaBuild and "PLVSMVWVRE.lol [BETA]" or "PLVSMVWVRE.lol"
+        Anti_ESEXr() Success_Notificate("Initialized Anti_ESEXr!")
+        ACBypassers() Success_Notificate("Initialized ACBypassers!")
+        Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
+        InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
+        Sense.Load() Success_Notificate("Initialized Sense!")
+        getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
+        getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
+        Notificate(COLORS.WHITE, "Setting up Hooks...")
+
+        player.CharacterAdded:Connect(function() if Action then setupFly() end end) Success_Notificate("Hooked Fly Setup!")
+        game.Players.PlayerAdded:Connect(onPlayerJoined) Success_Notificate("Hooked onPlayerJoined!")
+        game.Players.PlayerRemoving:Connect(onPlayerLeft) Success_Notificate("Hooked onPlayerLeft!")
+        Nametags() Success_Notificate("Hooked Nametags!")
+        
+        print('✅ Initiated!')
+        Success_Notificate("Initiated!")
+        sound.Ended:Connect(function() sound:Destroy() end)
+    end
+
+    local cheatname = BetaBuild and "PLVSMVWVRE.lol [BETA]" or "PLVSMVWVRE.lol"
 
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 -- |                                             MENU                                                |
@@ -2696,10 +2642,11 @@ local function PLVSMVWVRE_Menu()
     
     TabMain:NewSection('Misc')
     local UI_Aim_Hitbox = TabMain:NewSelector('Universial Hitbox', 'Head', { 'Head', 'Torso', 'Left Arm', 'Right Arm', 'Left Leg', 'Right Leg', "UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm", "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg", "RightLowerLeg", 'HumanoidRootPart' }, function(Value) Aimbot.Hitbox = Value end)
-    local UI_Aim_FOVVis = TabMain:NewToggle('FOV', true, function(Value) Aimbot.FOVVisible = Value; end)
+    local UI_Aim_FOVVis = TabMain:NewToggle('FOV', false, function(Value) Aimbot.FOVVisible = Value; end)
     local UI_Aim_FOVRad = TabMain:NewSlider('Radius', '', false, '', {min = 40, max = 1234, default = 100}, function(Value) Aimbot.FOVRadius = Value end)
     local UI_Aim_FOVSides = TabMain:NewSlider('Sides', '', false, '', {min = 4, max = 100, default = 12}, function(Value) Aimbot.FOVSides = Value end)
-    local UI_Aim_FOVThick = TabMain:NewSlider('Thickness', '', false, '', {min = 0, max = 100, default = 0}, function(Value) Aimbot.FOVThickness = Value end)
+    local UI_Aim_FOVThick = TabMain:NewSlider('Thickness', '', false, '', {min = 1, max = 10, default = 2}, function(Value) Aimbot.FOVThickness = Value end)
+    local UI_Aim_FOVTrans = TabMain:NewSlider('FOV Opacity', '', false, '', {min = 0, max = 100, default = 100}, function(Value) Aimbot.FOVTransparency = Value / 100 end)
     local UI_Aim_FOVC = TabMain:NewColorpicker('FOV Color', Color3.new(255, 255, 255), function(Value) Aimbot.FOVColor = Value end)
     
     local TriggerBotState = false
@@ -3025,11 +2972,9 @@ local function PLVSMVWVRE_Menu()
     TabOthers:NewSection('Crosshair')
     local UI_Cross_On = TabOthers:NewToggle('Crosshair', false, function(Value) Crosshair.Enabled = Value end)
     local UI_Cross_Sides = TabOthers:NewSlider('Sides', '', false, '', {min = 2, max = 4, default = 4}, function(Value) Crosshair.Sides = Value end)
-    local UI_Cross_Gap = TabOthers:NewSlider('Gap', '', false, '', {min = 10, max = 20, default = 15}, function(Value) Crosshair.Size = Value end)
-    local UI_Cross_Rot = TabOthers:NewSlider('Rotation', '', false, '', {min = 0, max = 90, default = 85}, function(Value) Crosshair.Rotation = Value end)
+    local UI_Cross_Gap = TabOthers:NewSlider('Gap', '', false, '', {min = 0, max = 50, default = 4}, function(Value) Crosshair.Gap = Value end)    local UI_Cross_Rot = TabOthers:NewSlider('Rotation', '', false, '', {min = 0, max = 90, default = 85}, function(Value) Crosshair.Rotation = Value end)
     local UI_Cross_Thick = TabOthers:NewSlider('Thickness', '', false, '', {min = 1, max = 5, default = 2}, function(Value) Crosshair.Thickness = Value end)
-    local UI_Cross_Len = TabOthers:NewSlider('Length', '', false, '', {min = 25, max = 35, default = 32}, function(Value) Crosshair.Gap = Value end)
-    local UI_Cross_X = TabOthers:NewSlider('Offset (x)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.x_Off = Value end)
+    local UI_Cross_Len = TabOthers:NewSlider('Length', '', false, '', {min = 1, max = 50, default = 15}, function(Value) Crosshair.Size = Value end)    local UI_Cross_X = TabOthers:NewSlider('Offset (x)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.x_Off = Value end)
     local UI_Cross_Y = TabOthers:NewSlider('Offset (y)', '', false, '', {min = -100, max = 100, default = 0}, function(Value) Crosshair.y_Off = Value end)
     local UI_Cross_C = TabOthers:NewColorpicker('Color', Color3.new(255, 255, 255), function(Value) Crosshair.Color = Value end)
 
@@ -3209,6 +3154,7 @@ local function PLVSMVWVRE_Menu()
         {Name = "Aim_FOVRad", Type = "Slider", Get = function() return Aimbot.FOVRadius end, Set = function(val) Aimbot.FOVRadius = val; UI_Aim_FOVRad:Value(val) end},
         {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) Aimbot.FOVSides = val; UI_Aim_FOVSides:Value(val) end},
         {Name = "Aim_FOVThick", Type = "Slider", Get = function() return Aimbot.FOVThickness end, Set = function(val) Aimbot.FOVThickness = val; UI_Aim_FOVThick:Value(val) end},
+        {Name = "Aim_FOVTrans", Type = "Slider", Get = function() return Aimbot.FOVTransparency * 100 end, Set = function(val) Aimbot.FOVTransparency = val / 100; if UI_Aim_FOVTrans then UI_Aim_FOVTrans:Value(val) end end},
         {Name = "Aim_FOVC", Type = "Colorpicker", Get = function() return Aimbot.FOVColor end, Set = function(val) Aimbot.FOVColor = val; UI_Aim_FOVC:Set(val) end},
         
         {Name = "Aim_TBot", Type = "Toggle", Get = function() return TriggerBotState end, Set = function(val) TriggerBotState = val; TriggerBot(val); UI_Aim_TBot:Set(val) end},
@@ -3294,11 +3240,9 @@ local function PLVSMVWVRE_Menu()
         {Name = "Oth_SndK", Type = "Textbox", Get = function() return SoundIDK end, Set = function(val) SoundIDK = val end},
         {Name = "Cross_On", Type = "Toggle", Get = function() return Crosshair.Enabled end, Set = function(val) Crosshair.Enabled = val; UI_Cross_On:Set(val) end},
         {Name = "Cross_Sides", Type = "Slider", Get = function() return Crosshair.Sides end, Set = function(val) Crosshair.Sides = val; UI_Cross_Sides:Value(val) end},
-        {Name = "Cross_Gap", Type = "Slider", Get = function() return Crosshair.Size end, Set = function(val) Crosshair.Size = val; UI_Cross_Gap:Value(val) end},
-        {Name = "Cross_Rot", Type = "Slider", Get = function() return Crosshair.Rotation end, Set = function(val) Crosshair.Rotation = val; UI_Cross_Rot:Value(val) end},
+        {Name = "Cross_Gap", Type = "Slider", Get = function() return Crosshair.Gap end, Set = function(val) Crosshair.Gap = val; UI_Cross_Gap:Value(val) end},        {Name = "Cross_Rot", Type = "Slider", Get = function() return Crosshair.Rotation end, Set = function(val) Crosshair.Rotation = val; UI_Cross_Rot:Value(val) end},
         {Name = "Cross_Thick", Type = "Slider", Get = function() return Crosshair.Thickness end, Set = function(val) Crosshair.Thickness = val; UI_Cross_Thick:Value(val) end},
-        {Name = "Cross_Len", Type = "Slider", Get = function() return Crosshair.Gap end, Set = function(val) Crosshair.Gap = val; UI_Cross_Len:Value(val) end},
-        {Name = "Cross_X", Type = "Slider", Get = function() return Crosshair.x_Off end, Set = function(val) Crosshair.x_Off = val; UI_Cross_X:Value(val) end},
+        {Name = "Cross_Len", Type = "Slider", Get = function() return Crosshair.Size end, Set = function(val) Crosshair.Size = val; UI_Cross_Len:Value(val) end},        {Name = "Cross_X", Type = "Slider", Get = function() return Crosshair.x_Off end, Set = function(val) Crosshair.x_Off = val; UI_Cross_X:Value(val) end},
         {Name = "Cross_Y", Type = "Slider", Get = function() return Crosshair.y_Off end, Set = function(val) Crosshair.y_Off = val; UI_Cross_Y:Value(val) end},
         {Name = "Cross_C", Type = "Colorpicker", Get = function() return Crosshair.Color end, Set = function(val) Crosshair.Color = val; UI_Cross_C:Set(val) end},
         {Name = "Plate_C", Type = "Colorpicker", Get = function() return NAMETAG_CONFIG.NAMEPLATE_COLOR end, Set = function(val) NAMETAG_CONFIG.NAMEPLATE_COLOR = val; UI_Plate_C:Set(val) end},
