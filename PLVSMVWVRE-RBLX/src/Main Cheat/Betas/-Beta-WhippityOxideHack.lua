@@ -2632,7 +2632,6 @@ function AntiAimFunction()
         
         print('✅ Initiated!')
         Success_Notificate("Initiated!")
-        sound.Ended:Connect(function() sound:Destroy() end)
     end
 
     local cheatname = BetaBuild and "PLVSMVWVRE.lol [BETA]" or "PLVSMVWVRE.lol"
