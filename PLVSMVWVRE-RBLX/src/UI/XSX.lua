@@ -1822,8 +1822,15 @@ function library:Init(key)
                 keybindStraint.Parent = keybind
                 keybindStraint.MinSize = Vector2.new(30, 22)
     
-                local Shortcuts = { Return = "enter" }
-                local ChosenKey = default_t.Name
+                local Shortcuts = { 
+                    Return = "enter",
+                    MouseButton1 = "m1",
+                    MouseButton2 = "m2",
+                    MouseButton3 = "m3",
+                    MouseButton4 = "m4",
+                    MouseButton5 = "m5"
+                }
+                local ChosenKey = default_t.Name or default_t
                 
                 local function UpdateKeybindText()
                     local display = Shortcuts[ChosenKey] or ChosenKey
@@ -1909,12 +1916,35 @@ function library:Init(key)
                     end
                 end)
     
+                local function IsBindTriggered(input)
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        return input.KeyCode.Name == ChosenKey
+                    else
+                        return input.UserInputType.Name == ChosenKey
+                    end
+                end
+
                 keybind.MouseButton1Click:Connect(function()
                     if Mode == "Always" then return end
                     keybindButtonLabel.Text = ". . ."
-                    local InputWait = UserInputService.InputBegan:wait()
-                    if UserInputService.WindowFocused and InputWait.KeyCode.Name ~= "Unknown" then
-                        ChosenKey = InputWait.KeyCode.Name
+                    
+                    local InputWait
+                    local connection
+                    connection = UserInputService.InputBegan:Connect(function(input)
+                        if input.KeyCode ~= Enum.KeyCode.Unknown or input.UserInputType.Name:find("MouseButton") then
+                            InputWait = input
+                        end
+                    end)
+                    
+                    repeat task.wait() until InputWait
+                    connection:Disconnect()
+
+                    if UserInputService.WindowFocused then
+                        if InputWait.UserInputType == Enum.UserInputType.Keyboard then
+                            ChosenKey = InputWait.KeyCode.Name
+                        else
+                            ChosenKey = InputWait.UserInputType.Name
+                        end
                         UpdateKeybindText()
                     end
                 end)
@@ -1923,7 +1953,7 @@ function library:Init(key)
                     UserInputService.InputBegan:Connect(function(c, p)
                         if not p then
                             if Mode == "Always" then return end
-                            if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                            if IsBindTriggered(c) and not UserInputService:GetFocusedTextBox() then
                                 if Mode == "Toggle" then
                                     ToggleFunctions:Change()
                                 elseif Mode == "Hold" then
@@ -1935,7 +1965,7 @@ function library:Init(key)
                     UserInputService.InputEnded:Connect(function(c, p)
                         if not p then
                             if Mode == "Always" then return end
-                            if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                            if IsBindTriggered(c) and not UserInputService:GetFocusedTextBox() then
                                 if Mode == "Hold" then
                                     if On then ToggleFunctions:Change() end
                                 end
@@ -2115,7 +2145,14 @@ function library:Init(key)
             keybindStraint.Parent = keybind
             keybindStraint.MinSize = Vector2.new(30, 22)
 
-            local Shortcuts = { Return = "enter" }
+            local Shortcuts = { 
+                Return = "enter",
+                MouseButton1 = "m1",
+                MouseButton2 = "m2",
+                MouseButton3 = "m3",
+                MouseButton4 = "m4",
+                MouseButton5 = "m5"
+            }
             local ChosenKey = default.Name or default
             local Mode = "Toggle"
             local State = false
@@ -2210,12 +2247,35 @@ function library:Init(key)
             keybind.InputBegan:Connect(handleRightClick)
             keybindButton.InputBegan:Connect(handleRightClick)
 
+            local function IsBindTriggered(input)
+                if input.UserInputType == Enum.UserInputType.Keyboard then
+                    return input.KeyCode.Name == ChosenKey
+                else
+                    return input.UserInputType.Name == ChosenKey
+                end
+            end
+
             local function ListenForKey()
                 if Mode == "Always" then return end
                 keybindButtonLabel.Text = ". . ."
-                local InputWait = UserInputService.InputBegan:wait()
-                if UserInputService.WindowFocused and InputWait.KeyCode.Name ~= "Unknown" then
-                    ChosenKey = InputWait.KeyCode.Name
+                
+                local InputWait
+                local connection
+                connection = UserInputService.InputBegan:Connect(function(input)
+                    if input.KeyCode ~= Enum.KeyCode.Unknown or input.UserInputType.Name:find("MouseButton") then
+                        InputWait = input
+                    end
+                end)
+                
+                repeat task.wait() until InputWait
+                connection:Disconnect()
+
+                if UserInputService.WindowFocused then
+                    if InputWait.UserInputType == Enum.UserInputType.Keyboard then
+                        ChosenKey = InputWait.KeyCode.Name
+                    else
+                        ChosenKey = InputWait.UserInputType.Name
+                    end
                     UpdateKeybindText()
                 end
             end
@@ -2226,7 +2286,7 @@ function library:Init(key)
                 UserInputService.InputBegan:Connect(function(c, p)
                     if not p then
                         if Mode == "Always" then return end
-                        if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                        if IsBindTriggered(c) and not UserInputService:GetFocusedTextBox() then
                             if Mode == "Toggle" then
                                 State = not State
                                 callback(State, ChosenKey)
@@ -2240,7 +2300,7 @@ function library:Init(key)
                 UserInputService.InputEnded:Connect(function(c, p)
                     if not p then
                         if Mode == "Always" then return end
-                        if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                        if IsBindTriggered(c) and not UserInputService:GetFocusedTextBox() then
                             if Mode == "Hold" then
                                 State = false
                                 callback(State, ChosenKey)
@@ -2430,7 +2490,7 @@ function library:Init(key)
                     NewTextboxSize = TextService:GetTextSize(textBoxValues.Text, textBoxValues.TextSize, textBoxValues.Font, Vector2.new(math.huge,math.huge))
                     if NewTextboxSize.X < (396 - ForcedMaxSize.X) - 10 then
                         TweenService:Create(textBoxValues, TweenTable["TextBox"], {Size = UDim2.new(0, NewTextboxSize.X + 8, 0, 20)}):Play()
-                        TweenService:Create(textboxTwo, TweenTable["TextBox"], {Size = UDim2.new(0, NewTextboxSize.X + 8, 0, 20)}):Play()
+                        TweenService:Create(textboxTwo, TweenTable["TextBox"], {Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)}):Play()
                         TweenService:Create(textbox, TweenTable["TextBox"], {Size = UDim2.new(0, NewTextboxSize.X + 10, 0, 22)}):Play()
                     else
                         TweenService:Create(textBoxValues, TweenTable["TextBox"], {Size = UDim2.new(0, (396 - ForcedMaxSize.X) - 12, 0, 20)}):Play()
@@ -3319,6 +3379,355 @@ function library:Init(key)
             return SelectorFunctions
         end
         --
+        function Components:NewMultiSelector(text, default, list, callback)
+            text = text or "multi-selector"
+            default = default or {}
+            list = list or {}
+            callback = callback or function() end
+
+            local selected = {}
+            for _, v in pairs(default) do
+                selected[v] = true
+            end
+
+            local selectorFrame = Instance.new("Frame")
+            local selectorLabel = Instance.new("TextLabel")
+            local selectorLabelPadding = Instance.new("UIPadding")
+            local selectorFrameLayout = Instance.new("UIListLayout")
+            local selector = Instance.new("TextButton")
+            local selectorCorner = Instance.new("UICorner")
+            local selectorLayout = Instance.new("UIListLayout")
+            local selectorPadding = Instance.new("UIPadding")
+            local selectorTwo = Instance.new("Frame")
+            local selectorText = Instance.new("TextLabel")
+            local textBoxValuesPadding = Instance.new("UIPadding")
+            local Frame = Instance.new("Frame")
+            local selectorTwoLayout = Instance.new("UIListLayout")
+            local selectorTwoGradient = Instance.new("UIGradient")
+            local selectorTwoCorner = Instance.new("UICorner")
+            local selectorPadding_2 = Instance.new("UIPadding")
+            local selectorContainer = Instance.new("Frame")
+            local selectorTwoLayout_2 = Instance.new("UIListLayout")
+            
+            selectorFrame.Name = "selectorFrame"
+            selectorFrame.Parent = page
+            selectorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            selectorFrame.BackgroundTransparency = 1.000
+            selectorFrame.ClipsDescendants = true
+            selectorFrame.Position = UDim2.new(0.00499999989, 0, 0.0895953774, 0)
+            selectorFrame.Size = UDim2.new(0, 396, 0, 46)
+
+            selectorLabel.Name = "selectorLabel"
+            selectorLabel.Parent = selectorFrame
+            selectorLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            selectorLabel.BackgroundTransparency = 1.000
+            selectorLabel.Size = UDim2.new(0, 396, 0, 24)
+            selectorLabel.Font = Enum.Font.Code
+            selectorLabel.Text = text
+            selectorLabel.TextColor3 = Color3.fromRGB(190, 190, 190)
+            selectorLabel.TextSize = 14.000
+            selectorLabel.TextWrapped = true
+            selectorLabel.TextXAlignment = Enum.TextXAlignment.Left
+            selectorLabel.RichText = true
+            
+            selectorLabelPadding.Name = "selectorLabelPadding"
+            selectorLabelPadding.Parent = selectorLabel
+            selectorLabelPadding.PaddingBottom = UDim.new(0, 6)
+            selectorLabelPadding.PaddingLeft = UDim.new(0, 2)
+            selectorLabelPadding.PaddingRight = UDim.new(0, 6)
+            selectorLabelPadding.PaddingTop = UDim.new(0, 6)
+            
+            selectorFrameLayout.Name = "selectorFrameLayout"
+            selectorFrameLayout.Parent = selectorFrame
+            selectorFrameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            selectorFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            
+            selector.Name = "selector"
+            selector.Parent = selectorFrame
+            selector.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            selector.ClipsDescendants = true
+            selector.Position = UDim2.new(0, 0, 0.0926640928, 0)
+            selector.Size = UDim2.new(0, 396, 0, 21)
+            selector.AutoButtonColor = false
+            selector.Font = Enum.Font.SourceSans
+            selector.Text = ""
+            selector.TextColor3 = Color3.fromRGB(0, 0, 0)
+            selector.TextSize = 14.000
+            
+            selectorCorner.CornerRadius = UDim.new(0, 2)
+            selectorCorner.Name = "selectorCorner"
+            selectorCorner.Parent = selector
+            
+            selectorLayout.Name = "selectorLayout"
+            selectorLayout.Parent = selector
+            selectorLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            selectorLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            
+            selectorPadding.Name = "selectorPadding"
+            selectorPadding.Parent = selector
+            selectorPadding.PaddingTop = UDim.new(0, 1)
+            
+            selectorTwo.Name = "selectorTwo"
+            selectorTwo.Parent = selector
+            selectorTwo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            selectorTwo.ClipsDescendants = true
+            selectorTwo.Position = UDim2.new(0.00252525252, 0, 0, 0)
+            selectorTwo.Size = UDim2.new(0, 394, 0, 20)
+            
+            selectorText.Name = "selectorText"
+            selectorText.Parent = selectorTwo
+            selectorText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            selectorText.BackgroundTransparency = 1.000
+            selectorText.Size = UDim2.new(0, 394, 0, 20)
+            selectorText.Font = Enum.Font.Code
+            selectorText.LineHeight = 1.150
+            selectorText.TextColor3 = Color3.fromRGB(160, 160, 160)
+            selectorText.TextSize = 14.000
+            selectorText.TextXAlignment = Enum.TextXAlignment.Left
+            selectorText.Text = ". . ."
+            
+            textBoxValuesPadding.Name = "textBoxValuesPadding"
+            textBoxValuesPadding.Parent = selectorText
+            textBoxValuesPadding.PaddingBottom = UDim.new(0, 6)
+            textBoxValuesPadding.PaddingLeft = UDim.new(0, 6)
+            textBoxValuesPadding.PaddingRight = UDim.new(0, 6)
+            textBoxValuesPadding.PaddingTop = UDim.new(0, 6)
+            
+            Frame.Parent = selectorText
+            Frame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            Frame.BorderSizePixel = 0
+            Frame.Position = UDim2.new(-0.008, 0, 1.78, 0)
+            Frame.Size = UDim2.new(0, 388, 0, 1)
+            
+            selectorTwoLayout.Name = "selectorTwoLayout"
+            selectorTwoLayout.Parent = selectorTwo
+            selectorTwoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            selectorTwoLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            
+            selectorTwoGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(34, 34, 34)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(28, 28, 28))}
+            selectorTwoGradient.Rotation = 90
+            selectorTwoGradient.Name = "selectorTwoGradient"
+            selectorTwoGradient.Parent = selectorTwo
+            
+            selectorTwoCorner.CornerRadius = UDim.new(0, 2)
+            selectorTwoCorner.Name = "selectorTwoCorner"
+            selectorTwoCorner.Parent = selectorTwo
+            
+            selectorPadding_2.Name = "selectorPadding"
+            selectorPadding_2.Parent = selectorTwo
+            selectorPadding_2.PaddingTop = UDim.new(0, 1)
+            
+            selectorContainer.Name = "selectorContainer"
+            selectorContainer.Parent = selectorTwo
+            selectorContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            selectorContainer.BackgroundTransparency = 1.000
+            selectorContainer.Size = UDim2.new(0, 394, 0, 20)
+        
+            selectorTwoLayout_2.Name = "selectorTwoLayout"
+            selectorTwoLayout_2.Parent = selectorContainer
+            selectorTwoLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            selectorTwoLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+
+            CreateTween("selector", 0.08)
+
+            selectorContainer.ChildAdded:Connect(UpdatePageSize)
+            selectorContainer.ChildAdded:Connect(UpdatePageSize)
+
+            UpdatePageSize()
+
+            local function updateDisplayText()
+                local t = {}
+                for item, state in pairs(selected) do
+                    if state then
+                        table.insert(t, item)
+                    end
+                end
+                table.sort(t)
+                if #t > 0 then
+                    selectorText.Text = table.concat(t, ", ")
+                else
+                    selectorText.Text = ". . ."
+                end
+            end
+
+            local Amount = #list
+            local Val = (Amount * 20)
+            local function checkSizes()
+                Amount = #list
+                Val = (Amount * 20) + 20
+            end
+
+            for i,v in ipairs(list) do
+                local optionButton = Instance.new("TextButton")
+
+                optionButton.Name = "optionButton"
+                optionButton.Parent = selectorContainer
+                optionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                optionButton.BackgroundTransparency = 1.000
+                optionButton.Size = UDim2.new(0, 394, 0, 20)
+                optionButton.AutoButtonColor = false
+                optionButton.Font = Enum.Font.Code
+                optionButton.Text = v
+                optionButton.TextColor3 = Color3.fromRGB(160, 160, 160)
+                optionButton.TextSize = 14.000
+                
+                if selected[v] then
+                    optionButton.TextColor3 = Color3.fromRGB(159, 115, 255)
+                end
+
+                optionButton.MouseButton1Click:Connect(function()
+                    selected[v] = not selected[v]
+                    if selected[v] then
+                        TweenService:Create(optionButton, TweenTable["selector"], {TextColor3 = Color3.fromRGB(159, 115, 255)}):Play()
+                    else
+                        TweenService:Create(optionButton, TweenTable["selector"], {TextColor3 = Color3.fromRGB(160, 160, 160)}):Play()
+                    end
+                    updateDisplayText()
+                    
+                    local res = {}
+                    for item, state in pairs(selected) do
+                        if state then table.insert(res, item) end
+                    end
+                    callback(res)
+                end)
+
+                selectorContainer.Size = UDim2.new(0, 394, 0, Val)
+                selectorTwo.Size = UDim2.new(0, 394, 0, Val)
+                selector.Size = UDim2.new(0, 396, 0, Val + 2)
+                selectorFrame.Size = UDim2.new(0, 396, 0, Val + 26)
+
+                UpdatePageSize()
+                checkSizes()
+            end
+
+            updateDisplayText()
+
+            local MultiSelectorFunctions = {}
+            local AddAmount = 0
+            function MultiSelectorFunctions:AddOption(new)
+                new = new or "option"
+                table.insert(list, new)
+
+                local optionButton = Instance.new("TextButton")
+                AddAmount = AddAmount + 20
+
+                optionButton.Name = "optionButton"
+                optionButton.Parent = selectorContainer
+                optionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                optionButton.BackgroundTransparency = 1.000
+                optionButton.Size = UDim2.new(0, 394, 0, 20)
+                optionButton.AutoButtonColor = false
+                optionButton.Font = Enum.Font.Code
+                optionButton.Text = new
+                optionButton.TextColor3 = Color3.fromRGB(160, 160, 160)
+                optionButton.TextSize = 14.000
+                
+                if selected[new] then
+                    optionButton.TextColor3 = Color3.fromRGB(159, 115, 255)
+                end
+
+                optionButton.MouseButton1Click:Connect(function()
+                    selected[new] = not selected[new]
+                    if selected[new] then
+                        TweenService:Create(optionButton, TweenTable["selector"], {TextColor3 = Color3.fromRGB(159, 115, 255)}):Play()
+                    else
+                        TweenService:Create(optionButton, TweenTable["selector"], {TextColor3 = Color3.fromRGB(160, 160, 160)}):Play()
+                    end
+                    updateDisplayText()
+                    
+                    local res = {}
+                    for item, state in pairs(selected) do
+                        if state then table.insert(res, item) end
+                    end
+                    callback(res)
+                end)
+
+                checkSizes()
+                selectorContainer.Size = UDim2.new(0, 394, 0, Val + AddAmount)
+                selectorTwo.Size = UDim2.new(0, 394, 0, Val + AddAmount)
+                selector.Size = UDim2.new(0, 396, 0, (Val + AddAmount) + 2)
+                selectorFrame.Size = UDim2.new(0, 396, 0, (Val + AddAmount) + 26)
+
+                UpdatePageSize()
+                checkSizes()
+                return MultiSelectorFunctions
+            end
+
+            local RemoveAmount = 0
+            function MultiSelectorFunctions:RemoveOption(option)
+                local idx = table.find(list, option)
+                if idx then table.remove(list, idx) end
+                selected[option] = nil
+
+                RemoveAmount = RemoveAmount + 20
+                AddAmount = AddAmount - 20
+
+                for i,v in pairs(selectorContainer:GetDescendants()) do
+                    if v:IsA("TextButton") then
+                        if v.Text == option then
+                            v:Destroy()
+                            selectorContainer.Size = UDim2.new(0, 394, 0, Val - RemoveAmount)
+                            selectorTwo.Size = UDim2.new(0, 394, 0, Val - RemoveAmount)
+                            selector.Size = UDim2.new(0, 396, 0, (Val - RemoveAmount) + 2)
+                            selectorFrame.Size = UDim2.new(0, 396, 0, (Val + 6) - 20)
+                        end
+                    end
+                end
+
+                updateDisplayText()
+                UpdatePageSize()
+                checkSizes()
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:Set(newSelectionTable)
+                selected = {}
+                for _, item in ipairs(newSelectionTable) do
+                    selected[item] = true
+                end
+                
+                for _, optBtn in ipairs(selectorContainer:GetChildren()) do
+                    if optBtn:IsA("TextButton") then
+                        if selected[optBtn.Text] then
+                            optBtn.TextColor3 = Color3.fromRGB(159, 115, 255)
+                        else
+                            optBtn.TextColor3 = Color3.fromRGB(160, 160, 160)
+                        end
+                    end
+                end
+                updateDisplayText()
+                callback(newSelectionTable)
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:SetFunction(new)
+                callback = new or function() end
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:Text(new)
+                selectorLabel.Text = new or selectorLabel.Text
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:Hide()
+                selectorFrame.Visible = false
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:Show()
+                selectorFrame.Visible = true
+                return MultiSelectorFunctions
+            end
+
+            function MultiSelectorFunctions:Remove()
+                selectorFrame:Destroy()
+                return MultiSelectorFunctions
+            end
+
+            return MultiSelectorFunctions
+        end
+        --
         function Components:NewSlider(text, suffix, compare, compareSign, values, callback)
             text = text or "slider"
             suffix = suffix or ""
@@ -3927,11 +4336,11 @@ function library:Init(key)
             end)
 
             colorpickerFrame.MouseEnter:Connect(function()
-                TweenService:Create(colorpickerLabel, TweenTable["hover"], {TextColor3 = Color3.fromRGB(210, 210, 210)}):Play()
+                TweenService:Create(colorpickerLabel, TweenTable["colorpickerFrame"], {TextColor3 = Color3.fromRGB(210, 210, 210)}):Play()
             end)
 
             colorpickerFrame.MouseLeave:Connect(function()
-                TweenService:Create(colorpickerLabel, TweenTable["hover"], {TextColor3 = Color3.fromRGB(190, 190, 190)}):Play()
+                TweenService:Create(colorpickerLabel, TweenTable["colorpickerFrame"], {TextColor3 = Color3.fromRGB(190, 190, 190)}):Play()
             end)
 
             local expanded = false
