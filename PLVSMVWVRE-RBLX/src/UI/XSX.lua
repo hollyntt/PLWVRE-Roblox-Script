@@ -84,8 +84,8 @@ local library = {
     title = title or "PLVSMVWVRE " .. tostring(math.random(1,366)),
     fps = 0,
     rank = "private",
-    Flags = {}, -- Add this!
-    ConfigFolder = "PLVSMVWVRE V2" -- Add this! (Default folder name)
+    Flags = {},
+    ConfigFolder = "PLVSMVWVRE V2"
 }
 
 coroutine.wrap(function()
@@ -205,7 +205,7 @@ function library:Watermark(text)
         end
     end
 
-    tetx = text or "xsx v2"
+    tetx = text or "PLVSMVWVRE v2"
 
     local watermark = Instance.new("ScreenGui")
     local watermarkPadding = Instance.new("UIPadding")
@@ -329,7 +329,7 @@ function library:Watermark(text)
 
     local WatermarkFunctions = {}
     function WatermarkFunctions:AddWatermark(text)
-        tetx = text or "xsx v2"
+        tetx = text or "PLVSMVWVRE v2"
 
         local edge = Instance.new("Frame")
         local edgeCorner = Instance.new("UICorner")
@@ -703,9 +703,9 @@ function library:Introduction()
     local bar = Instance.new("Frame")
     local barCorner = Instance.new("UICorner")
     local barLayout = Instance.new("UIListLayout")
-    local xsxLogo = Instance.new("ImageLabel")
+    local PLVSMVWVRELogo = Instance.new("ImageLabel")
     local hashLogo = Instance.new("ImageLabel")
-    local xsx = Instance.new("TextLabel")
+    local PLVSMVWVRE = Instance.new("TextLabel")
     local text = Instance.new("TextLabel")
     local pageLayout = Instance.new("UIListLayout")
     
@@ -761,17 +761,17 @@ function library:Introduction()
     barLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     barLayout.SortOrder = Enum.SortOrder.LayoutOrder
     
-    xsxLogo.Name = "xsxLogo"
-    xsxLogo.Parent = background
-    xsxLogo.AnchorPoint = Vector2.new(0.5, 0.5)
-    xsxLogo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    xsxLogo.BackgroundTransparency = 1.000
-    xsxLogo.Position = UDim2.new(0.5, 0, 0.5, 0)
-    xsxLogo.Size = UDim2.new(0, 448, 0, 150)
-    xsxLogo.Visible = true
-    xsxLogo.Image = "http://www.roblox.com/asset/?id=9365068051"
-    xsxLogo.ImageColor3 = Color3.fromRGB(159, 115, 255)
-    xsxLogo.ImageTransparency = 1
+    PLVSMVWVRELogo.Name = "PLVSMVWVRELogo"
+    PLVSMVWVRELogo.Parent = background
+    PLVSMVWVRELogo.AnchorPoint = Vector2.new(0.5, 0.5)
+    PLVSMVWVRELogo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    PLVSMVWVRELogo.BackgroundTransparency = 1.000
+    PLVSMVWVRELogo.Position = UDim2.new(0.5, 0, 0.5, 0)
+    PLVSMVWVRELogo.Size = UDim2.new(0, 448, 0, 150)
+    PLVSMVWVRELogo.Visible = true
+    PLVSMVWVRELogo.Image = "http://www.roblox.com/asset/?id=9365068051"
+    PLVSMVWVRELogo.ImageColor3 = Color3.fromRGB(159, 115, 255)
+    PLVSMVWVRELogo.ImageTransparency = 1
     
     hashLogo.Name = "hashLogo"
     hashLogo.Parent = background
@@ -785,16 +785,16 @@ function library:Introduction()
     hashLogo.ImageColor3 = Color3.fromRGB(159, 115, 255)
     hashLogo.ImageTransparency = 1
     
-    xsx.Name = "xsx"
-    xsx.Parent = background
-    xsx.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    xsx.BackgroundTransparency = 1.000
-    xsx.Size = UDim2.new(0, 80, 0, 21)
-    xsx.Font = Enum.Font.Code
-    xsx.Text = "powered by xsx"
-    xsx.TextColor3 = Color3.fromRGB(124, 124, 124)
-    xsx.TextSize = 10.000
-    xsx.TextTransparency = 1
+    PLVSMVWVRE.Name = "PLVSMVWVRE"
+    PLVSMVWVRE.Parent = background
+    PLVSMVWVRE.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    PLVSMVWVRE.BackgroundTransparency = 1.000
+    PLVSMVWVRE.Size = UDim2.new(0, 80, 0, 21)
+    PLVSMVWVRE.Font = Enum.Font.Code
+    PLVSMVWVRE.Text = "powered by PLVSMVWVRE"
+    PLVSMVWVRE.TextColor3 = Color3.fromRGB(124, 124, 124)
+    PLVSMVWVRE.TextSize = 10.000
+    PLVSMVWVRE.TextTransparency = 1
     
     text.Name = "text"
     text.Parent = background
@@ -815,12 +815,12 @@ function library:Introduction()
     pageLayout.SortOrder = Enum.SortOrder.LayoutOrder
     pageLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
-    CreateTween("xsxRotation", 0)
+    CreateTween("PLVSMVWVRERotation", 0)
     local MinusAmount = -16
     coroutine.wrap(function()
         while wait() do
             MinusAmount = MinusAmount + 0.4
-            TweenService:Create(xsxLogo, TweenTable["xsxRotation"], {Rotation = xsxLogo.Rotation - MinusAmount}):Play()
+            TweenService:Create(PLVSMVWVRELogo, TweenTable["PLVSMVWVRERotation"], {Rotation = PLVSMVWVRELogo.Rotation - MinusAmount}):Play()
         end
     end)()
 
@@ -829,12 +829,12 @@ function library:Introduction()
     wait(.2)
     TweenService:Create(bar, TweenTable["introduction"], {Size = UDim2.new(0, 298, 0, 1)}):Play()
     wait(.2)
-    TweenService:Create(xsx, TweenTable["introduction"], {TextTransparency = 0}):Play()
+    TweenService:Create(PLVSMVWVRE, TweenTable["introduction"], {TextTransparency = 0}):Play()
     TweenService:Create(text, TweenTable["introduction"], {TextTransparency = 0}):Play()
     wait(.3)
-    TweenService:Create(xsxLogo, TweenTable["introduction"], {ImageTransparency = 0}):Play()
+    TweenService:Create(PLVSMVWVRELogo, TweenTable["introduction"], {ImageTransparency = 0}):Play()
     wait(2)
-    TweenService:Create(xsxLogo, TweenTable["introduction"], {ImageTransparency = 1}):Play()
+    TweenService:Create(PLVSMVWVRELogo, TweenTable["introduction"], {ImageTransparency = 1}):Play()
     wait(.2)
     TweenService:Create(hashLogo, TweenTable["introduction"], {ImageTransparency = 0}):Play()
     wait(2)
@@ -842,7 +842,7 @@ function library:Introduction()
     wait(.1)
     TweenService:Create(text, TweenTable["introduction"], {TextTransparency = 1}):Play()
     wait(.1)
-    TweenService:Create(xsx, TweenTable["introduction"], {TextTransparency = 1}):Play()
+    TweenService:Create(PLVSMVWVRE, TweenTable["introduction"], {TextTransparency = 1}):Play()
     wait(.1)
     TweenService:Create(bar, TweenTable["introduction"], {Size = UDim2.new(0, 0, 0, 1)}):Play()
     wait(.1)
@@ -1752,6 +1752,7 @@ function library:Init(key)
             function ToggleFunctions:AddKeybind(default_t)
                 callback_t = callback
                 default_t = default_t or Enum.KeyCode.P
+                local Mode = "Toggle"
                 
                 local keybind = Instance.new("TextButton")
                 local keybindCorner = Instance.new("UICorner")
@@ -1821,20 +1822,23 @@ function library:Init(key)
                 keybindStraint.Parent = keybind
                 keybindStraint.MinSize = Vector2.new(30, 22)
     
-                local Shortcuts = {
-                    Return = "enter"
-                }
-    
-                keybindButtonLabel.Text = Shortcuts[default_t.Name] or default_t.Name
+                local Shortcuts = { Return = "enter" }
+                local ChosenKey = default_t.Name
+                
+                local function UpdateKeybindText()
+                    local display = Shortcuts[ChosenKey] or ChosenKey
+                    if Mode == "Always" then
+                        keybindButtonLabel.Text = "[Always]"
+                    else
+                        keybindButtonLabel.Text = display .. " [" .. Mode .. "]"
+                    end
+                end
+
+                keybindButtonLabel.Text = (Shortcuts[ChosenKey] or ChosenKey) .. " [Toggle]"
                 CreateTween("keybind", 0.08)
                 
-                local NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
-                keybindButtonLabel.Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)
-                keybindBackground.Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)
-                keybind.Size = UDim2.new(0, NewKeybindSize.X + 8, 0, 22)
-                
-                function ResizeKeybind()
-                    NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
+                local function ResizeKeybind()
+                    local NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
                     TweenService:Create(keybindButtonLabel, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)}):Play()
                     TweenService:Create(keybindBackground, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)}):Play()
                     TweenService:Create(keybind, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 8, 0, 22)}):Play()
@@ -1843,63 +1847,128 @@ function library:Init(key)
                 ResizeKeybind()
                 UpdatePageSize()
     
-                local ChosenKey = default_t.Name
+                -- [[ CONTEXT MENU UI ]]
+                local ctxMenu = Instance.new("Frame")
+                ctxMenu.Name = "CtxMenu"
+                ctxMenu.Parent = screen
+                ctxMenu.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+                ctxMenu.Size = UDim2.new(0, 80, 0, 60)
+                ctxMenu.Visible = false
+                ctxMenu.ZIndex = 100
+
+                local ctxCorner = Instance.new("UICorner", ctxMenu)
+                ctxCorner.CornerRadius = UDim.new(0, 4)
+                local ctxStroke = Instance.new("UIStroke", ctxMenu)
+                ctxStroke.Color = Color3.fromRGB(60, 60, 60)
+                ctxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                local ctxLayout = Instance.new("UIListLayout", ctxMenu)
+                ctxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+                local function closeCtx() ctxMenu.Visible = false end
+
+                for _, m in ipairs({"Toggle", "Hold", "Always"}) do
+                    local btn = Instance.new("TextButton", ctxMenu)
+                    btn.Size = UDim2.new(1, 0, 0, 20)
+                    btn.BackgroundTransparency = 1
+                    btn.Text = m
+                    btn.TextColor3 = Color3.fromRGB(190, 190, 190)
+                    btn.Font = Enum.Font.Code
+                    btn.TextSize = 13
+                    btn.ZIndex = 101
+
+                    btn.MouseButton1Click:Connect(function()
+                        Mode = m
+                        UpdateKeybindText()
+                        closeCtx()
+                        
+                        if Mode == "Always" then
+                            if not On then ToggleFunctions:Change() end
+                        elseif Mode == "Toggle" or Mode == "Hold" then
+                            if Mode == "Hold" and On then ToggleFunctions:Change() end
+                        end
+                    end)
+                    btn.MouseEnter:Connect(function() TweenService:Create(btn, TweenTable["keybind"], {TextColor3 = Color3.fromRGB(159, 115, 255)}):Play() end)
+                    btn.MouseLeave:Connect(function() TweenService:Create(btn, TweenTable["keybind"], {TextColor3 = Color3.fromRGB(190, 190, 190)}):Play() end)
+                end
+
+                UserInputService.InputBegan:Connect(function(input)
+                    if ctxMenu.Visible and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.MouseButton2) then
+                        local mx, my = Mouse.X, Mouse.Y
+                        local px, py = ctxMenu.AbsolutePosition.X, ctxMenu.AbsolutePosition.Y
+                        local sx, sy = ctxMenu.AbsoluteSize.X, ctxMenu.AbsoluteSize.Y
+                        if mx < px or mx > px + sx or my < py or my > py + sy then closeCtx() end
+                    end
+                end)
+
+                keybind.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+                        local py = Mouse.Y
+                        if py + 60 > workspace.CurrentCamera.ViewportSize.Y then py = py - 60 end
+                        ctxMenu.Position = UDim2.new(0, Mouse.X, 0, py)
+                        ctxMenu.Visible = true
+                    end
+                end)
     
                 keybind.MouseButton1Click:Connect(function()
+                    if Mode == "Always" then return end
                     keybindButtonLabel.Text = ". . ."
                     local InputWait = UserInputService.InputBegan:wait()
                     if UserInputService.WindowFocused and InputWait.KeyCode.Name ~= "Unknown" then
-                        local Result = Shortcuts[InputWait.KeyCode.Name] or InputWait.KeyCode.Name
-                        keybindButtonLabel.Text = Result
                         ChosenKey = InputWait.KeyCode.Name
+                        UpdateKeybindText()
                     end
                 end)
     
                 if UserInputService.WindowFocused then
                     UserInputService.InputBegan:Connect(function(c, p)
                         if not p then
+                            if Mode == "Always" then return end
                             if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
-                                On = not On
-                                local SizeOn = On and UDim2.new(0, 12, 0, 12) or UDim2.new(0, 0, 0, 0)
-                                local Transparency = On and 0 or 1
-                                TweenService:Create(toggleDesign, TweenTable["toggle_form"], {Size = SizeOn}):Play()
-                                TweenService:Create(toggleDesign, TweenTable["toggle_form"], {BackgroundTransparency = Transparency}):Play()
-                                callback_t(On)
-                                return
+                                if Mode == "Toggle" then
+                                    ToggleFunctions:Change()
+                                elseif Mode == "Hold" then
+                                    if not On then ToggleFunctions:Change() end
+                                end
+                            end
+                        end
+                    end)
+                    UserInputService.InputEnded:Connect(function(c, p)
+                        if not p then
+                            if Mode == "Always" then return end
+                            if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                                if Mode == "Hold" then
+                                    if On then ToggleFunctions:Change() end
+                                end
                             end
                         end
                     end)
                 end
     
-                local ExtraKeybindFunctions = {}
-                function ExtraKeybindFunctions:SetKey(new)
-                    new = new or ChosenKey.Name
-                    ChosenKey = new.Name
-                    keybindButtonLabel.Text = new.Name
-                    return ExtraKeybindFunctions
+                function ToggleFunctions:SetKey(new)
+                    ChosenKey = new.Name or new
+                    UpdateKeybindText()
+                    return ToggleFunctions
                 end
-                --
-                function ExtraKeybindFunctions:Fire()
+                function ToggleFunctions:SetMode(new)
+                    Mode = new or Mode
+                    UpdateKeybindText()
+                    if Mode == "Always" and not On then ToggleFunctions:Change() end
+                    return ToggleFunctions
+                end
+                function ToggleFunctions:FireKey()
                     callback_t(ChosenKey)
-                    return ExtraKeybindFunctions
+                    return ToggleFunctions
                 end
-                --
-                function ExtraKeybindFunctions:SetFunction(new)
-                    new = new or function() end
-                    callback_t = new
-                    return ExtraKeybindFunctions 
+                function ToggleFunctions:HideKey()
+                    keybind.Visible = false
+                    return ToggleFunctions
                 end
-                --
-                function ExtraKeybindFunctions:Hide()
-                    keybindFrame.Visible = false
-                    return ExtraKeybindFunctions
+                function ToggleFunctions:ShowKey()
+                    keybind.Visible = true
+                    return ToggleFunctions
                 end
-                --
-                function ExtraKeybindFunctions:Show()
-                    keybindFrame.Visible = true
-                    return ExtraKeybindFunctions
-                end
-                return ExtraKeybindFunctions and ToggleFunctions
+                
+                return ToggleFunctions
             end
 
             if default then
@@ -2046,54 +2115,136 @@ function library:Init(key)
             keybindStraint.Parent = keybind
             keybindStraint.MinSize = Vector2.new(30, 22)
 
-            local Shortcuts = {
-                Return = "enter"
-            }
+            local Shortcuts = { Return = "enter" }
+            local ChosenKey = default.Name or default
+            local Mode = "Toggle"
+            local State = false
 
-            keybindButtonLabel.Text = Shortcuts[default.Name] or default.Name
+            local function UpdateKeybindText()
+                local display = Shortcuts[ChosenKey] or ChosenKey
+                if Mode == "Always" then
+                    keybindButtonLabel.Text = "[Always]"
+                else
+                    keybindButtonLabel.Text = display .. " [" .. Mode .. "]"
+                end
+            end
+
+            keybindButtonLabel.Text = (Shortcuts[ChosenKey] or ChosenKey) .. " [Toggle]"
             CreateTween("keybind", 0.08)
             
-            local NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
-            keybindButtonLabel.Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)
-            keybindBackground.Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)
-            keybind.Size = UDim2.new(0, NewKeybindSize.X + 8, 0, 22)
-            
-            function ResizeKeybind()
-                NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
+            local function ResizeKeybind()
+                local NewKeybindSize = TextService:GetTextSize(keybindButtonLabel.Text, keybindButtonLabel.TextSize, keybindButtonLabel.Font, Vector2.new(math.huge,math.huge))
                 TweenService:Create(keybindButtonLabel, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)}):Play()
                 TweenService:Create(keybindBackground, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 6, 0, 20)}):Play()
                 TweenService:Create(keybind, TweenTable["keybind"], {Size = UDim2.new(0, NewKeybindSize.X + 8, 0, 22)}):Play()
             end
             keybindButtonLabel:GetPropertyChangedSignal("Text"):Connect(ResizeKeybind)
             ResizeKeybind()
+            UpdatePageSize()
 
-            local ChosenKey = default
-            keybindButton.MouseButton1Click:Connect(function()
-                keybindButtonLabel.Text = "..."
-                local InputWait = UserInputService.InputBegan:wait()
-                if UserInputService.WindowFocused and InputWait.KeyCode.Name ~= "Unknown" then
-                    local Result = Shortcuts[InputWait.KeyCode.Name] or InputWait.KeyCode.Name
-                    keybindButtonLabel.Text = Result
-                    ChosenKey = InputWait.KeyCode.Name
+            -- [[ CONTEXT MENU UI ]]
+            local ctxMenu = Instance.new("Frame")
+            ctxMenu.Name = "CtxMenu"
+            ctxMenu.Parent = page.Parent.Parent.Parent -- screen
+            ctxMenu.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+            ctxMenu.Size = UDim2.new(0, 80, 0, 60)
+            ctxMenu.Visible = false
+            ctxMenu.ZIndex = 100
+
+            local ctxCorner = Instance.new("UICorner", ctxMenu)
+            ctxCorner.CornerRadius = UDim.new(0, 4)
+            local ctxStroke = Instance.new("UIStroke", ctxMenu)
+            ctxStroke.Color = Color3.fromRGB(60, 60, 60)
+            ctxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            local ctxLayout = Instance.new("UIListLayout", ctxMenu)
+            ctxLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+            local function closeCtx() ctxMenu.Visible = false end
+
+            for _, m in ipairs({"Toggle", "Hold", "Always"}) do
+                local btn = Instance.new("TextButton", ctxMenu)
+                btn.Size = UDim2.new(1, 0, 0, 20)
+                btn.BackgroundTransparency = 1
+                btn.Text = m
+                btn.TextColor3 = Color3.fromRGB(190, 190, 190)
+                btn.Font = Enum.Font.Code
+                btn.TextSize = 13
+                btn.ZIndex = 101
+
+                btn.MouseButton1Click:Connect(function()
+                    Mode = m
+                    UpdateKeybindText()
+                    closeCtx()
+                    
+                    if Mode == "Always" then
+                        State = true
+                        callback(State, ChosenKey)
+                    elseif Mode == "Toggle" or Mode == "Hold" then
+                        if Mode == "Hold" and State then
+                            State = false
+                            callback(State, ChosenKey)
+                        end
+                    end
+                end)
+                btn.MouseEnter:Connect(function() TweenService:Create(btn, TweenTable["keybind"], {TextColor3 = Color3.fromRGB(159, 115, 255)}):Play() end)
+                btn.MouseLeave:Connect(function() TweenService:Create(btn, TweenTable["keybind"], {TextColor3 = Color3.fromRGB(190, 190, 190)}):Play() end)
+            end
+
+            UserInputService.InputBegan:Connect(function(input)
+                if ctxMenu.Visible and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.MouseButton2) then
+                    local mx, my = Mouse.X, Mouse.Y
+                    local px, py = ctxMenu.AbsolutePosition.X, ctxMenu.AbsolutePosition.Y
+                    local sx, sy = ctxMenu.AbsoluteSize.X, ctxMenu.AbsoluteSize.Y
+                    if mx < px or mx > px + sx or my < py or my > py + sy then closeCtx() end
                 end
             end)
 
-            keybind.MouseButton1Click:Connect(function()
+            local function handleRightClick(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton2 then
+                    local py = Mouse.Y
+                    if py + 60 > workspace.CurrentCamera.ViewportSize.Y then py = py - 60 end
+                    ctxMenu.Position = UDim2.new(0, Mouse.X, 0, py)
+                    ctxMenu.Visible = true
+                end
+            end
+            keybind.InputBegan:Connect(handleRightClick)
+            keybindButton.InputBegan:Connect(handleRightClick)
+
+            local function ListenForKey()
+                if Mode == "Always" then return end
                 keybindButtonLabel.Text = ". . ."
                 local InputWait = UserInputService.InputBegan:wait()
                 if UserInputService.WindowFocused and InputWait.KeyCode.Name ~= "Unknown" then
-                    local Result = Shortcuts[InputWait.KeyCode.Name] or InputWait.KeyCode.Name
-                    keybindButtonLabel.Text = Result
                     ChosenKey = InputWait.KeyCode.Name
+                    UpdateKeybindText()
                 end
-            end)
+            end
+            keybind.MouseButton1Click:Connect(ListenForKey)
+            keybindButton.MouseButton1Click:Connect(ListenForKey)
 
             if UserInputService.WindowFocused then
                 UserInputService.InputBegan:Connect(function(c, p)
                     if not p then
+                        if Mode == "Always" then return end
                         if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
-                            callback(ChosenKey)
-                            return
+                            if Mode == "Toggle" then
+                                State = not State
+                                callback(State, ChosenKey)
+                            elseif Mode == "Hold" then
+                                State = true
+                                callback(State, ChosenKey)
+                            end
+                        end
+                    end
+                end)
+                UserInputService.InputEnded:Connect(function(c, p)
+                    if not p then
+                        if Mode == "Always" then return end
+                        if c.KeyCode.Name == ChosenKey and not UserInputService:GetFocusedTextBox() then
+                            if Mode == "Hold" then
+                                State = false
+                                callback(State, ChosenKey)
+                            end
                         end
                     end
                 end)
@@ -2102,39 +2253,14 @@ function library:Init(key)
             UpdatePageSize()
 
             local KeybindFunctions = {}
-            function KeybindFunctions:Fire()
-                callback(ChosenKey)
-                return KeybindFunctions
-            end
-            --
-            function KeybindFunctions:SetFunction(new)
-                new = new or function() end
-                callback = new
-                return KeybindFunctions 
-            end
-            --
-            function KeybindFunctions:SetKey(new)
-                new = new or ChosenKey.Name
-                ChosenKey = new.Name
-                keybindButtonLabel.Text = new.Name
-                return KeybindFunctions
-            end
-            --
-            function KeybindFunctions:Text(new)
-                new = new or keybindLabel.Text
-                keybindLabel.Text = new
-                return KeybindFunctions
-            end
-            --
-            function KeybindFunctions:Hide()
-                keybindFrame.Visible = false
-                return KeybindFunctions
-            end
-            --
-            function KeybindFunctions:Show()
-                keybindFrame.Visible = true
-                return KeybindFunctions
-            end
+            function KeybindFunctions:Fire() callback(State, ChosenKey) return KeybindFunctions end
+            function KeybindFunctions:SetFunction(new) callback = new or function() end return KeybindFunctions end
+            function KeybindFunctions:SetKey(new) ChosenKey = new.Name or new; UpdateKeybindText(); return KeybindFunctions end
+            function KeybindFunctions:SetMode(new) Mode = new or Mode; UpdateKeybindText(); return KeybindFunctions end
+            function KeybindFunctions:Text(new) keybindLabel.Text = new or keybindLabel.Text; return KeybindFunctions end
+            function KeybindFunctions:Hide() keybindFrame.Visible = false return KeybindFunctions end
+            function KeybindFunctions:Show() keybindFrame.Visible = true return KeybindFunctions end
+            
             return KeybindFunctions
         end
         --
@@ -3999,7 +4125,7 @@ end
 function library:EnsureConfigFolder()
     if not (isfolder and makefolder) then return end
 
-    -- Create each segment of the path in order (e.g. "xsx" then "xsx/configs"),
+    -- Create each segment of the path in order (e.g. "PLVSMVWVRE" then "PLVSMVWVRE/configs"),
     -- since makefolder on UNC-style executors (Potassium included) isn't
     -- guaranteed to create nested/missing parent directories in one call.
     local built = ""
