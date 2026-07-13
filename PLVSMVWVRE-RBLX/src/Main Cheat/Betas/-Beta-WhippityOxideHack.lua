@@ -2537,6 +2537,9 @@ local function EndStuff()
         if type(Radar) == "table" and Radar.Unload then
             Radar:Unload()
         end
+        if type(Skeleton) == "table" and Skeleton.Unload then
+            Skeleton:Unload()
+        end
     end)
 
     workspace.Camera.FieldOfView = 70
@@ -2606,9 +2609,11 @@ local function Launch()
     Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
     InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
     Sense.Load() Success_Notificate("Initialized Sense!")
-    getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
-    getgenv().Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))() Success_Notificate("Initialized RadarESP!")
-
+    pcall(function()
+        getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
+        getgenv().Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))() Success_Notificate("Initialized RadarESP!")
+        getgenv().SkeletonESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Skeleton.lua'))() Success_Notificate("Initialized SkeletonESP!")
+    end)
     Notificate(COLORS.WHITE, "Setting up Hooks...")
 
     player.CharacterAdded:Connect(function() if Action then setupFly() end end) Success_Notificate("Hooked Fly Setup!")
@@ -2970,6 +2975,50 @@ local function PLVSMVWVRE_Menu()
             getgenv().RadarSettings.ShowHealthColor = Value
         end
     end)
+
+    TabVisuals:NewSection('Skeleton ESP')
+
+    local UI_Skeleton_Enabled = TabVisuals:NewToggle('Enabled', false, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Enabled = Value
+        end
+    end)
+
+    local UI_Skeleton_Thickness = TabVisuals:NewSlider('Thickness', '', false, '', {min = 1, max = 5, default = 1}, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Thickness = Value
+        end
+    end)
+
+    local UI_Skeleton_Transparency = TabVisuals:NewSlider('Transparency', '', false, '', {min = 10, max = 100, default = 100}, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Transparency = Value / 100
+        end
+    end)
+
+    local UI_Skeleton_UseTeamColor = TabVisuals:NewToggle('Use Team Colors', true, function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.UseTeamColor = Value
+        end
+    end)
+
+    local UI_Skeleton_Color = TabVisuals:NewColorpicker('Skeleton Color', Color3.fromRGB(255, 255, 255), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.Color = Value
+        end
+    end)
+
+    local UI_Skeleton_TeamColor = TabVisuals:NewColorpicker('Team Color', Color3.fromRGB(0, 255, 0), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.TeamColor = Value
+        end
+    end)
+
+    local UI_Skeleton_EnemyColor = TabVisuals:NewColorpicker('Enemy Color', Color3.fromRGB(255, 0, 0), function(Value)
+        if getgenv().SkeletonSettings then
+            getgenv().SkeletonSettings.EnemyColor = Value
+        end
+    end)
     
     TabOthers:NewButton('Rainbow Chat', function() loadstring(game:HttpGet("https://pastebin.com/raw/b3YS61yV", true))() end)
     TabOthers:NewButton('Roblox 2007 Mouse Cursor', function() loadstring(game:HttpGet("https://pastebin.com/raw/6uDb3He5", true))() end)
@@ -3282,6 +3331,37 @@ local function PLVSMVWVRE_Menu()
         {Name = "ESP_Origin", Type = "Dropdown", Get = function() return Sense.teamSettings.enemy.tracerOrigin end, Set = function(val) Sense.teamSettings.enemy.tracerOrigin = val; Sense.teamSettings.friendly.tracerOrigin = val; UI_ESP_Origin:Text(val) end},
         {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) UI_ESP_TextS:Value(val) end},
         {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}
+        {Name = "Skeleton_Enabled", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Enabled or false end, Set = function(val) UI_Skeleton_Enabled:Set(val) end},
+        {Name = "Skeleton_Thickness", Type = "Slider", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Thickness or 1 end, Set = function(val) UI_Skeleton_Thickness:Value(val) end},
+        {Name = "Skeleton_Transparency", Type = "Slider", Get = function() return getgenv().SkeletonSettings and (getgenv().SkeletonSettings.Transparency * 100) or 100 end, Set = function(val) UI_Skeleton_Transparency:Value(val) end},
+        {Name = "Skeleton_UseTeamColor", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.UseTeamColor or true end, Set = function(val) UI_Skeleton_UseTeamColor:Set(val) end},
+        {Name = "Skeleton_Color", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Color or Color3.fromRGB(255, 255, 255) end, Set = function(val) UI_Skeleton_Color:Set(val) end},
+        {Name = "Skeleton_TeamColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.TeamColor or Color3.fromRGB(0, 255, 0) end, Set = function(val) UI_Skeleton_TeamColor:Set(val) end},
+        {Name = "Skeleton_EnemyColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.EnemyColor or Color3.fromRGB(255, 0, 0) end, Set = function(val) UI_Skeleton_EnemyColor:Set(val) end},
+
+        {Name = "Arrow_Enabled", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.Enabled or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.Enabled = val end if UI_Arrow_Enabled then UI_Arrow_Enabled:Set(val) end end},
+        {Name = "Arrow_Dist", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.DistFromCenter or 80 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.DistFromCenter = val end if UI_Arrow_Dist then UI_Arrow_Dist:Value(val) end end},
+        {Name = "Arrow_Height", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleHeight or 16 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleHeight = val end if UI_Arrow_Height then UI_Arrow_Height:Value(val) end end},
+        {Name = "Arrow_Width", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleWidth or 16 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleWidth = val end if UI_Arrow_Width then UI_Arrow_Width:Value(val) end end},
+        {Name = "Arrow_Filled", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleFilled or true end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleFilled = val end if UI_Arrow_Filled then UI_Arrow_Filled:Set(val) end end},
+        {Name = "Arrow_Thickness", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleThickness or 1 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleThickness = val end if UI_Arrow_Thickness then UI_Arrow_Thickness:Value(val) end end},
+        {Name = "Arrow_Transparency", Type = "Slider", Get = function() return getgenv().ArrowSettings and (getgenv().ArrowSettings.TriangleTransparency * 100) or 0 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleTransparency = val / 100 end if UI_Arrow_Transparency then UI_Arrow_Transparency:Value(val) end end},
+        {Name = "Arrow_Color", Type = "Colorpicker", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.TriangleColor or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.TriangleColor = val end if UI_Arrow_Color then UI_Arrow_Color:Set(val) end end},
+        {Name = "Arrow_AntiAliasing", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.AntiAliasing or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.AntiAliasing = val end if UI_Arrow_AntiAliasing then UI_Arrow_AntiAliasing:Set(val) end end},
+
+        {Name = "Radar_Enabled", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Enabled or false end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Enabled = val end if UI_Radar_Enabled then UI_Radar_Enabled:Set(val) end end},
+        {Name = "Radar_PosX", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Position.X or 200 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Position = Vector2.new(val, getgenv().RadarInfo.Position.Y) end if UI_Radar_PosX then UI_Radar_PosX:Value(val) end end},
+        {Name = "Radar_PosY", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Position.Y or 200 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Position = Vector2.new(getgenv().RadarInfo.Position.X, val) end if UI_Radar_PosY then UI_Radar_PosY:Value(val) end end},
+        {Name = "Radar_Radius", Type = "Slider", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Radius or 100 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Radius = val end if UI_Radar_Radius then UI_Radar_Radius:Value(val) end end},
+        {Name = "Radar_Scale", Type = "Slider", Get = function() return getgenv().RadarInfo and (getgenv().RadarInfo.Scale * 10) or 10 end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Scale = val / 10 end if UI_Radar_Scale then UI_Radar_Scale:Value(val) end end},
+        {Name = "Radar_Back", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.RadarBack or Color3.fromRGB(10, 10, 10) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.RadarBack = val end if UI_Radar_Back then UI_Radar_Back:Set(val) end end},
+        {Name = "Radar_Border", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.RadarBorder or Color3.fromRGB(75, 75, 75) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.RadarBorder = val end if UI_Radar_Border then UI_Radar_Border:Set(val) end end},
+        {Name = "Radar_LocalPlayerDot", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.LocalPlayerDot or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.LocalPlayerDot = val end if UI_Radar_LocalPlayerDot then UI_Radar_LocalPlayerDot:Set(val) end end},
+        {Name = "Radar_PlayerDot", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.PlayerDot or Color3.fromRGB(60, 170, 255) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.PlayerDot = val end if UI_Radar_PlayerDot then UI_Radar_PlayerDot:Set(val) end end},
+        {Name = "Radar_Team", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Team or Color3.fromRGB(0, 255, 0) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Team = val end if UI_Radar_Team then UI_Radar_Team:Set(val) end end},
+        {Name = "Radar_Enemy", Type = "Colorpicker", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Enemy or Color3.fromRGB(255, 0, 0) end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Enemy = val end if UI_Radar_Enemy then UI_Radar_Enemy:Set(val) end end},
+        {Name = "Radar_HealthColor", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Health_Color or true end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Health_Color = val end if UI_Radar_HealthColor then UI_Radar_HealthColor:Set(val) end end},
+        {Name = "Radar_TeamCheck", Type = "Toggle", Get = function() return getgenv().RadarInfo and getgenv().RadarInfo.Team_Check or true end, Set = function(val) if getgenv().RadarInfo then getgenv().RadarInfo.Team_Check = val end if UI_Radar_TeamCheck then UI_Radar_TeamCheck:Set(val) end end},
     }
 
     local function RegisterESPSettings(teamStr)

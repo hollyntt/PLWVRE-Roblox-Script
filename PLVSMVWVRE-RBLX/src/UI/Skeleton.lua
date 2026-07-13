@@ -1,4 +1,4 @@
--- Restructured to support dynamic loader settings and full safety guards
+-- Restructured to support dynamic loader settings, safety guards, and full cleanup
 
 getgenv().SkeletonSettings = getgenv().SkeletonSettings or {
     Enabled = false,
@@ -14,6 +14,21 @@ getgenv().SkeletonSettings = getgenv().SkeletonSettings or {
 
 local Settings = getgenv().SkeletonSettings
 
+local SkeletonConnections = {}
+local SkeletonDrawings = {}
+
+Settings.Unload = function()
+    Settings.Enabled = false
+    for _, conn in ipairs(SkeletonConnections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    for _, draw in ipairs(SkeletonDrawings) do
+        pcall(function() draw:Remove() end)
+    end
+    table.clear(SkeletonConnections)
+    table.clear(SkeletonDrawings)
+end
+
 ----------------------------------------------------------------
 
 local Player = game:GetService("Players").LocalPlayer
@@ -28,6 +43,8 @@ local function DrawLine()
     l.Color = Settings.Color
     l.Thickness = Settings.Thickness
     l.Transparency = Settings.Transparency
+    
+    table.insert(SkeletonDrawings, l)
     return l
 end
 
@@ -209,6 +226,7 @@ local function DrawESP(plr)
                 end
             end
         end)
+        table.insert(SkeletonConnections, connection)
     end
 
     local function UpdaterR6()
@@ -326,6 +344,7 @@ local function DrawESP(plr)
                 end
             end
         end)
+        table.insert(SkeletonConnections, connection)
     end
 
     if R15 then
@@ -341,8 +360,9 @@ for i, v in pairs(game:GetService("Players"):GetPlayers()) do
     end
 end
 
-game.Players.PlayerAdded:Connect(function(newplr)
+local playerAddedConn = game.Players.PlayerAdded:Connect(function(newplr)
     if newplr.Name ~= Player.Name then
         DrawESP(newplr)
     end
 end)
+table.insert(SkeletonConnections, playerAddedConn)

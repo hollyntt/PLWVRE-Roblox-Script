@@ -1,5 +1,5 @@
 -- Made by Blissful#4992
--- Restructured only to support dynamic loader settings
+-- Restructured only to support dynamic loader settings and full cleanup
 
 getgenv().RadarInfo = getgenv().RadarInfo or {
     Enabled = false,
@@ -18,6 +18,21 @@ getgenv().RadarInfo = getgenv().RadarInfo or {
 
 local RadarInfo = getgenv().RadarInfo
 
+local RadarConnections = {}
+local RadarDrawings = {}
+
+RadarInfo.Unload = function()
+    RadarInfo.Enabled = false
+    for _, conn in ipairs(RadarConnections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    for _, draw in ipairs(RadarDrawings) do
+        pcall(function() draw:Remove() end)
+    end
+    table.clear(RadarConnections)
+    table.clear(RadarDrawings)
+end
+
 ----------------------------------------------------------------
 
 local Players = game:service("Players")
@@ -29,7 +44,7 @@ local UIS = game:service("UserInputService")
 
 repeat wait() until Player.Character ~= nil and Player.Character.PrimaryPart ~= nil
 
--- Robust HTTP wrapper to prevent failure if Pastebin is blocked or unreachable
+-- Robust HTTP wrapper to prevent failure if Pastebin is unreachable
 local LerpColorModule
 pcall(function()
     LerpColorModule = loadstring(game:HttpGet("https://pastebin.com/raw/wRnsJeid"))()
@@ -55,6 +70,8 @@ local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
     c.Radius = Radius
     c.NumSides = math.clamp(Radius*55/100, 10, 75)
     c.Filled = Filled
+    
+    table.insert(RadarDrawings, c)
     return c
 end
 
@@ -131,6 +148,7 @@ local function PlaceDot(plr)
                 end
             end
         end)
+        table.insert(RadarConnections, c)
     end
     coroutine.wrap(Update)()
 end
@@ -150,18 +168,21 @@ local function NewLocalDot()
     d.PointA = RadarInfo.Position + Vector2.new(0, -6)
     d.PointB = RadarInfo.Position + Vector2.new(-3, 6)
     d.PointC = RadarInfo.Position + Vector2.new(3, 6)
+    
+    table.insert(RadarDrawings, d)
     return d
 end
 
 local LocalPlayerDot = NewLocalDot()
 
-Players.PlayerAdded:Connect(function(v)
+local playerAddedConn = Players.PlayerAdded:Connect(function(v)
     if v.Name ~= Player.Name then
         PlaceDot(v)
     end
     LocalPlayerDot:Remove()
     LocalPlayerDot = NewLocalDot()
 end)
+table.insert(RadarConnections, playerAddedConn)
 
 -- Loop
 coroutine.wrap(function()
@@ -193,6 +214,7 @@ coroutine.wrap(function()
         RadarBorder.Radius = RadarInfo.Radius
         RadarBorder.Color = RadarInfo.RadarBorder
     end)
+    table.insert(RadarConnections, c)
 end)()
 
 -- Draggable
@@ -233,4 +255,5 @@ coroutine.wrap(function()
             RadarInfo.Position = Vector2.new(Mouse.X, Mouse.Y) + offset
         end
     end)
+    table.insert(RadarConnections, c)
 end)()

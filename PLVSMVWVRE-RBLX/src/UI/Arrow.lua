@@ -1,5 +1,5 @@
 -- Made by Blissful#4992
--- Restructured only to support dynamic loader settings
+-- Restructured only to support dynamic loader settings and full cleanup
 
 getgenv().ArrowSettings = getgenv().ArrowSettings or {
     Enabled = false,
@@ -14,6 +14,21 @@ getgenv().ArrowSettings = getgenv().ArrowSettings or {
 }
 
 local Settings = getgenv().ArrowSettings
+
+local ArrowConnections = {}
+local ArrowDrawings = {}
+
+Settings.Unload = function()
+    Settings.Enabled = false
+    for _, conn in ipairs(ArrowConnections) do
+        pcall(function() conn:Disconnect() end)
+    end
+    for _, draw in ipairs(ArrowDrawings) do
+        pcall(function() draw:Remove() end)
+    end
+    table.clear(ArrowConnections)
+    table.clear(ArrowDrawings)
+end
 
 ----------------------------------------------------------------
 
@@ -62,6 +77,8 @@ local function DrawTriangle(color)
     l.Filled = Settings.TriangleFilled
     l.Thickness = Settings.TriangleThickness
     l.Transparency = 1 - Settings.TriangleTransparency
+    
+    table.insert(ArrowDrawings, l)
     return l
 end
 
@@ -122,6 +139,7 @@ local function ShowArrow(PLAYER)
                 end
             end
         end)
+        table.insert(ArrowConnections, c)
     end
 
     CWRAP(Update)()
@@ -133,8 +151,9 @@ for _,v in pairs(Players:GetChildren()) do
     end
 end
 
-Players.PlayerAdded:Connect(function(v)
+local playerAddedConn = Players.PlayerAdded:Connect(function(v)
     if v.Name ~= Player.Name then
         ShowArrow(v)
     end
 end)
+table.insert(ArrowConnections, playerAddedConn)
