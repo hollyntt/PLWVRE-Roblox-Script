@@ -3220,7 +3220,7 @@ local function PLVSMVWVRE_Menu()
     local ConfigSelector = TabUISettings:NewSelector("Saved Configs", "Select...", configList, function(Value)
         if Value ~= "Select..." then
             currentConfigName = Value
-            print("[XSX] Selected config: " .. currentConfigName)
+            print("[PLVSMVWVRE] Selected config: " .. currentConfigName)
         end
     end)
 
@@ -3228,35 +3228,35 @@ local function PLVSMVWVRE_Menu()
         for _, oldConfig in pairs(configList) do ConfigSelector:RemoveOption(oldConfig) end
         configList = library:ListConfigs()
         for _, newConfig in pairs(configList) do ConfigSelector:AddOption(newConfig) end
-        print("[XSX] Config list refreshed!")
+        print("[PLVSMVWVRE] Config list refreshed!")
     end)
     TabUISettings:NewSeperator()
     TabUISettings:NewButton("Save Config", function()
         if currentConfigName ~= "" and currentConfigName ~= "Select..." then
             if library:SaveConfig(currentConfigName) then
-                print("[XSX] Successfully saved config: " .. currentConfigName)
+                print("[PLVSMVWVRE] Successfully saved config: " .. currentConfigName)
                 if not table.find(configList, currentConfigName) then
                     table.insert(configList, currentConfigName)
                     ConfigSelector:AddOption(currentConfigName)
                 end
             else
-                warn("[XSX] Failed to save config.")
+                warn("[PLVSMVWVRE] Failed to save config.")
             end
         end
     end)
     TabUISettings:NewButton("Load Config", function()
         if currentConfigName ~= "" and currentConfigName ~= "Select..." then
             if library:LoadConfig(currentConfigName) then
-                print("[XSX] Successfully loaded config: " .. currentConfigName)
+                print("[PLVSMVWVRE] Successfully loaded config: " .. currentConfigName)
             else
-                warn("[XSX] Failed to load config.")
+                warn("[PLVSMVWVRE] Failed to load config.")
             end
         end
     end)
     TabUISettings:NewButton("Delete Config", function()
         if currentConfigName ~= "" and currentConfigName ~= "Select..." then
             if library:DeleteConfig(currentConfigName) then
-                print("[XSX] Deleted config: " .. currentConfigName)
+                print("[PLVSMVWVRE] Deleted config: " .. currentConfigName)
                 ConfigSelector:RemoveOption(currentConfigName)
                 local index = table.find(configList, currentConfigName)
                 if index then table.remove(configList, index) end
@@ -3271,14 +3271,14 @@ local function PLVSMVWVRE_Menu()
         if currentConfigName ~= "" and currentConfigName ~= "Select..." then
             if library:SetAutoload(currentConfigName) then
                 autoloadLabel:Text("Current Autoload: " .. currentConfigName)
-                print("[XSX] Set " .. currentConfigName .. " as autoload!")
+                print("[PLVSMVWVRE] Set " .. currentConfigName .. " as autoload!")
             end
         end
     end)
     TabUISettings:NewButton("Clear Autoload", function()
         if library:ClearAutoload() then
             autoloadLabel:Text("Current Autoload: None")
-            print("[XSX] Cleared autoload setting!")
+            print("[PLVSMVWVRE] Cleared autoload setting!")
         end
     end)
 
@@ -3288,7 +3288,7 @@ local function PLVSMVWVRE_Menu()
     task.spawn(function()
         local success = library:Autoload()
         if success then
-            print("[XSX] Autoloaded config successfully!")
+            print("[PLVSMVWVRE] Autoloaded config successfully!")
         end
     end)
     
