@@ -1,3 +1,2 @@
-- Sence ESP (The OG Esp on this script, its alive again.) (https://raw.githubusercontent.com/jensonhirst/Sirius/request/library/sense/source.lua)
-- FULL implementation of the new UI (Something atleast)
 - Add the Arrow ESP thingy (by Blissful#4992)
+- Replace the Radar ESP thingy (by Blissful#4992)
