@@ -18,6 +18,7 @@ local RunService = game:GetService("RunService")
 local CoreGuiService = game:GetService("CoreGui")
 local ContentService = game:GetService("ContentProvider")
 local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
 
 -- / Tween table & function
 local TweenTable = {
@@ -80,9 +81,11 @@ end
 
 local library = {
     version = "2.0.2",
-    title = title or "xsx " .. tostring(math.random(1,366)),
+    title = title or "PLVSMVWVRE " .. tostring(math.random(1,366)),
     fps = 0,
-    rank = "private"
+    rank = "private",
+    Flags = {}, -- Add this!
+    ConfigFolder = "PLVSMVWVRE V2" -- Add this! (Default folder name)
 }
 
 coroutine.wrap(function()
@@ -3984,136 +3987,139 @@ function library:Init(key)
 end
 return library
 
--- function library:SetConfigFolder(path)
---     self.ConfigFolder = path or self.ConfigFolder
---     if isfolder and makefolder and not isfolder(self.ConfigFolder) then
---         makefolder(self.ConfigFolder)
---     end
---     return self
--- end
+-- [[ Config Manager ]] --
 
--- local function xsx_ensureConfigFolder()
---     if not (isfolder and makefolder) then return end
+function library:SetConfigFolder(path)
+    self.ConfigFolder = path or self.ConfigFolder
+    if isfolder and makefolder and not isfolder(self.ConfigFolder) then
+        self:EnsureConfigFolder()
+    end
+    return self
+end
 
---     -- Create each segment of the path in order (e.g. "xsx" then "xsx/configs"),
---     -- since makefolder on UNC-style executors (Potassium included) isn't
---     -- guaranteed to create nested/missing parent directories in one call.
---     local built = ""
---     for segment in library.ConfigFolder:gmatch("[^/\\]+") do
---         built = (built == "") and segment or (built .. "/" .. segment)
---         if not isfolder(built) then
---             makefolder(built)
---         end
---     end
--- end
+function library:EnsureConfigFolder()
+    if not (isfolder and makefolder) then return end
 
--- -- Internal: called by each component's :Flag(name) method
--- function library:RegisterFlag(name, flagType, getFn, setFn)
---     if self.Flags[name] then
---         warn("[ConfigManager] Flag '" .. name .. "' is already registered, overwriting.")
---     end
---     self.Flags[name] = { Type = flagType, Get = getFn, Set = setFn }
--- end
+    -- Create each segment of the path in order (e.g. "xsx" then "xsx/configs"),
+    -- since makefolder on UNC-style executors (Potassium included) isn't
+    -- guaranteed to create nested/missing parent directories in one call.
+    local built = ""
+    for segment in self.ConfigFolder:gmatch("[^/\\]+") do
+        built = (built == "") and segment or (built .. "/" .. segment)
+        if not isfolder(built) then
+            makefolder(built)
+        end
+    end
+end
 
--- function library:SaveConfig(name)
---     name = name or "default"
---     if not (writefile and isfolder and makefolder) then
---         warn("[ConfigManager] File functions unavailable on this executor.")
---         return false
---     end
---     xsx_ensureConfigFolder()
+-- Internal: called by each component's :Flag(name) method
+function library:RegisterFlag(name, flagType, getFn, setFn)
+    if self.Flags[name] then
+        warn("[ConfigManager] Flag '" .. name .. "' is already registered, overwriting.")
+    end
+    self.Flags[name] = { Type = flagType, Get = getFn, Set = setFn }
+end
 
---     local data = {}
---     for flagName, flag in pairs(self.Flags) do
---         local ok, value = pcall(flag.Get)
---         if ok and value ~= nil then
---             if flag.Type == "Colorpicker" and typeof(value) == "Color3" then
---                 data[flagName] = { Type = flag.Type, Value = value:ToHex() }
---             else
---                 data[flagName] = { Type = flag.Type, Value = value }
---             end
---         end
---     end
+function library:SaveConfig(name)
+    name = name or "default"
+    if not (writefile and isfolder and makefolder) then
+        warn("[ConfigManager] File functions unavailable on this executor.")
+        return false
+    end
+    self:EnsureConfigFolder()
 
---     local ok, encoded = pcall(function()
---         return HttpService:JSONEncode(data)
---     end)
---     if not ok then
---         warn("[ConfigManager] Failed to encode config: " .. tostring(encoded))
---         return false
---     end
+    local data = {}
+    for flagName, flag in pairs(self.Flags) do
+        local ok, value = pcall(flag.Get)
+        if ok and value ~= nil then
+            if flag.Type == "Colorpicker" and typeof(value) == "Color3" then
+                data[flagName] = { Type = flag.Type, Value = value:ToHex() }
+            else
+                data[flagName] = { Type = flag.Type, Value = value }
+            end
+        end
+    end
 
---     writefile(self.ConfigFolder .. "/" .. name .. ".json", encoded)
---     return true
--- end
+    local ok, encoded = pcall(function()
+        return HttpService:JSONEncode(data)
+    end)
+    
+    if not ok then
+        warn("[ConfigManager] Failed to encode config: " .. tostring(encoded))
+        return false
+    end
 
--- function library:LoadConfig(name)
---     name = name or "default"
---     if not (readfile and isfile) then
---         warn("[ConfigManager] File functions unavailable on this executor.")
---         return false
---     end
+    writefile(self.ConfigFolder .. "/" .. name .. ".json", encoded)
+    return true
+end
 
---     local path = self.ConfigFolder .. "/" .. name .. ".json"
---     if not isfile(path) then
---         warn("[ConfigManager] Config '" .. name .. "' does not exist.")
---         return false
---     end
+function library:LoadConfig(name)
+    name = name or "default"
+    if not (readfile and isfile) then
+        warn("[ConfigManager] File functions unavailable on this executor.")
+        return false
+    end
 
---     local ok, raw = pcall(readfile, path)
---     if not ok then
---         warn("[ConfigManager] Failed to read config file.")
---         return false
---     end
+    local path = self.ConfigFolder .. "/" .. name .. ".json"
+    if not isfile(path) then
+        warn("[ConfigManager] Config '" .. name .. "' does not exist.")
+        return false
+    end
 
---     local ok2, decoded = pcall(function()
---         return HttpService:JSONDecode(raw)
---     end)
---     if not ok2 then
---         warn("[ConfigManager] Failed to decode config: " .. tostring(decoded))
---         return false
---     end
+    local ok, raw = pcall(readfile, path)
+    if not ok then
+        warn("[ConfigManager] Failed to read config file.")
+        return false
+    end
 
---     for flagName, saved in pairs(decoded) do
---         local flag = self.Flags[flagName]
---         if flag then
---             local value = saved.Value
---             if saved.Type == "Colorpicker" and type(value) == "string" then
---                 local ok3, color = pcall(Color3.fromHex, value)
---                 if ok3 then value = color end
---             end
---             pcall(flag.Set, value)
---         else
---             warn("[ConfigManager] No component registered for flag '" .. flagName .. "', skipping.")
---         end
---     end
---     return true
--- end
+    local ok2, decoded = pcall(function()
+        return HttpService:JSONDecode(raw)
+    end)
+    if not ok2 then
+        warn("[ConfigManager] Failed to decode config: " .. tostring(decoded))
+        return false
+    end
 
--- function library:ListConfigs()
---     if not (listfiles and isfolder) then
---         return {}
---     end
---     xsx_ensureConfigFolder()
+    for flagName, saved in pairs(decoded) do
+        local flag = self.Flags[flagName]
+        if flag then
+            local value = saved.Value
+            if saved.Type == "Colorpicker" and type(value) == "string" then
+                local ok3, color = pcall(Color3.fromHex, value)
+                if ok3 then value = color end
+            end
+            pcall(flag.Set, value)
+        else
+            warn("[ConfigManager] No component registered for flag '" .. flagName .. "', skipping.")
+        end
+    end
+    return true
+end
 
---     local list = {}
---     for _, file in pairs(listfiles(self.ConfigFolder)) do
---         local name = file:match("([^/\\]+)%.json$")
---         if name then
---             table.insert(list, name)
---         end
---     end
---     return list
--- end
+function library:ListConfigs()
+    if not (listfiles and isfolder) then
+        return {}
+    end
+    self:EnsureConfigFolder()
 
--- function library:DeleteConfig(name)
---     if not (delfile and isfile) then
---         return false
---     end
---     local path = self.ConfigFolder .. "/" .. (name or "default") .. ".json"
---     if isfile(path) then
---         delfile(path)
---         return true
---     end
---     return false
--- end
+    local list = {}
+    for _, file in pairs(listfiles(self.ConfigFolder)) do
+        local name = file:match("([^/\\]+)%.json$")
+        if name then
+            table.insert(list, name)
+        end
+    end
+    return list
+end
+
+function library:DeleteConfig(name)
+    if not (delfile and isfile) then
+        return false
+    end
+    local path = self.ConfigFolder .. "/" .. (name or "default") .. ".json"
+    if isfile(path) then
+        delfile(path)
+        return true
+    end
+    return false
+end
