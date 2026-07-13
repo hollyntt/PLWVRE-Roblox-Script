@@ -24,8 +24,7 @@ local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
     return c
 end
 
-getgenv().RadarInfo = getgenv().RadarInfo or {
-    Enabled = false,
+local RadarInfo = {
     Position = Vector2.new(200, 200),
     Radius = 100,
     Scale = 1, -- Determinant factor on the effect of the relative position for the 2D integration
@@ -38,8 +37,6 @@ getgenv().RadarInfo = getgenv().RadarInfo or {
     Health_Color = true,
     Team_Check = true
 }
-
-local RadarInfo = getgenv().RadarInfo
 
 local RadarBackground = NewCircle(0.9, RadarInfo.RadarBack, RadarInfo.Radius, true, 1)
 RadarBackground.Visible = true
