@@ -2528,14 +2528,16 @@ local function EndStuff()
 
     getgenv().Library.Unloaded = true
     Sense.Unload()
-    
-    -- Safe unload operations for newly registered items if they offer native cleanups
+
     pcall(function()
-        if type(ArrowESP) == "table" and ArrowESP.Unload then
-            ArrowESP:Unload()
+        if getgenv().ArrowSettings and getgenv().ArrowSettings.Unload then
+            getgenv().ArrowSettings.Unload()
         end
-        if type(Skeleton) == "table" and Skeleton.Unload then
-            Skeleton:Unload()
+    end)
+
+    pcall(function()
+        if getgenv().SkeletonSettings and getgenv().SkeletonSettings.Unload then
+            getgenv().SkeletonSettings.Unload()
         end
     end)
 
