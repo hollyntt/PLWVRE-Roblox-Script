@@ -362,24 +362,32 @@ local function killadonisforme()
 end
 
 
-local function Initiate()
+local function _X()
     killadonisforme()
     repeat task.wait() until game:IsLoaded()
     
     -- Added safety check for game:HttpGet to prevent crashing
-    local httpGet = game.HttpGet or game.HttpGetAsync
-    if httpGet then
-        local success, scriptContent = pcall(function()
-            return game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua")
-        end)
-        if success and scriptContent then
-            loadstring(scriptContent)()
-        else
-            warn("Failed to retrieve script content via HttpGet.")
+    -- 1. Verify loadstring is supported in the current environment
+    if not loadstring then
+        warn("loadstring is not defined or enabled in this environment.")
+        return
+    end
+
+    local sourceCode = "https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua"
+
+    -- 2. Compile the string without executing it immediately
+    local compiledFunction, compileError = loadstring(sourceCode)
+
+    if compiledFunction then
+        -- 3. Execute the function safely to catch runtime errors
+        local success, runError = pcall(compiledFunction)
+        if not success then
+            warn("Runtime error occurred during execution: " .. tostring(runError))
         end
     else
-        warn("HttpGet is not supported on this executor!")
+        -- 4. Handle syntax or parsing errors gracefully
+        warn("Compilation failed: " .. tostring(compileError))
     end
 end
 
-Initiate()
+_X()
