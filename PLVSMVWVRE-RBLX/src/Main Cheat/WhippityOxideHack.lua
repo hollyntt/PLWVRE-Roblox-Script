@@ -7,8 +7,6 @@ local UNCTestFinished = false
 local originalPcall = pcall
 local BetaBuild = false
 
-art = [[ PLVSMVWVRE.lol | Whippity Oxide Hack Nigga Yes Yes ]]
-
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 -- |                                         Hooking Method                                          |
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -704,8 +702,9 @@ function ChatSpammer()
 
 local function Console()
     rconsoleclear()
-    consolePrint(COLORS.MAGENTA, "PURPLE", art)
-    consolePrint(COLORS.YELLOW, "WARNING", "[NOTE] PLVSMVWVRE.lol - Official Finished Release since 2023")
+    if BetaBuild then
+        consolePrint(COLORS.YELLOW, "BETA", "This is a beta build, expect crashes and bugs! Report them in the discord server!")
+    end
     consolePrint(COLORS.WHITE, "INFO", string.rep("-", 100))
     consolePrint(COLORS.WHITE, "INFO", "|                                   [LOADER] Initializing Logs                                    |")
     consolePrint(COLORS.WHITE, "INFO", string.rep("-", 100))
