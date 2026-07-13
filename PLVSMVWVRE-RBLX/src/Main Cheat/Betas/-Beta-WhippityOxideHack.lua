@@ -2680,7 +2680,7 @@ local function PLVSMVWVRE_Menu()
     end)()
 
 
-    -- Initialize Sense Colors to match default expectations
+    -- Initialize Sense ESP Colors to match default expectations
     Sense.teamSettings.enemy.boxColor = { Color3.fromRGB(255, 0, 0), 1 }
     Sense.teamSettings.enemy.tracerColor = { Color3.fromRGB(255, 0, 0), 1 }
     Sense.teamSettings.enemy.chamsOutlineColor = { Color3.fromRGB(255, 0, 0), 0 }
@@ -2828,7 +2828,7 @@ local function PLVSMVWVRE_Menu()
     local OrbitState = false
     TabLocalPlayer:NewSection('Main')
     TabLocalPlayer:NewButton('Reset', function() Reset() end)
-    TabLocalPlayer:NewKeybind('Quick Reset', Enum.KeyCode.Minus, function() Reset() end)
+    local UI_LP_QuickReset = TabLocalPlayer:NewKeybind('Quick Reset', Enum.KeyCode.Minus, function() Reset() end)
     TabLocalPlayer:NewButton('Create Godmode UI', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/zephyr10101/ignore-touchinterests/main/main", true))() end)
     TabLocalPlayer:NewButton('Give Click Teleport', function()
         player1 = player
@@ -3029,7 +3029,7 @@ local function PLVSMVWVRE_Menu()
             Reset()
         end
     end)
-    TabOthers:NewKeybind('Immediant AllFlinger', Enum.KeyCode.Minus, function() FlingerAll() end)
+    local UI_Oth_Flinger = TabOthers:NewKeybind('Immediant AllFlinger', Enum.KeyCode.Minus, function() FlingerAll() end)
 
     TabOthers:NewSection('Load Exploits')
     TabOthers:NewButton('Load Dex', function() loadstring(game:HttpGet(('https://raw.githubusercontent.com/infyiff/backup/main/dex.lua'),true))() end)
@@ -3120,6 +3120,9 @@ local function PLVSMVWVRE_Menu()
     local ConfigFlags = {
         -- RAGE Main
         {Name = "Aimbot_Lock", Type = "Toggle", Get = function() return Aimbot.Enabled end, Set = function(val) UI_Aimbot_Lock:Set(val) end},
+        {Name = "Aimbot_Lock_Key", Type = "Keybind_Key", Get = function() return UI_Aimbot_Lock.Key end, Set = function(val) UI_Aimbot_Lock:SetKey(val) end},
+        {Name = "Aimbot_Lock_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Aimbot_Lock.KeyMode end, Set = function(val) UI_Aimbot_Lock:SetMode(val) end},
+        
         {Name = "Aimbot_Vis", Type = "Toggle", Get = function() return Aimbot.CheckVisibility end, Set = function(val) UI_Aimbot_Vis:Set(val) end},
         {Name = "Aimbot_Alive", Type = "Toggle", Get = function() return Aimbot.CheckAlive end, Set = function(val) UI_Aimbot_Alive:Set(val) end},
         {Name = "Aimbot_Team", Type = "Toggle", Get = function() return Aimbot.TeamCheck end, Set = function(val) UI_Aimbot_Team:Set(val) end},
@@ -3151,15 +3154,25 @@ local function PLVSMVWVRE_Menu()
         {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) UI_Aim_FOVSides:Value(val) end},
         {Name = "Aim_FOVThick", Type = "Slider", Get = function() return Aimbot.FOVThickness end, Set = function(val) UI_Aim_FOVThick:Value(val) end},
         {Name = "Aim_FOVC", Type = "Colorpicker", Get = function() return Aimbot.FOVColor end, Set = function(val) UI_Aim_FOVC:Set(val) end},
+        
         {Name = "Aim_TBot", Type = "Toggle", Get = function() return TriggerBotState end, Set = function(val) UI_Aim_TBot:Set(val) end},
+        {Name = "Aim_TBot_Key", Type = "Keybind_Key", Get = function() return UI_Aim_TBot.Key end, Set = function(val) UI_Aim_TBot:SetKey(val) end},
+        {Name = "Aim_TBot_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Aim_TBot.KeyMode end, Set = function(val) UI_Aim_TBot:SetMode(val) end},
+        
         {Name = "Aim_TSens", Type = "Slider", Get = function() return Aimbot.Triggerbot_Sensitivity * 100 end, Set = function(val) UI_Aim_TSens:Value(val) end},
         -- Movement
         {Name = "Move_Fly", Type = "Toggle", Get = function() return FlyState end, Set = function(val) UI_Move_Fly:Set(val) end},
+        {Name = "Move_Fly_Key", Type = "Keybind_Key", Get = function() return UI_Move_Fly.Key end, Set = function(val) UI_Move_Fly:SetKey(val) end},
+        {Name = "Move_Fly_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Move_Fly.KeyMode end, Set = function(val) UI_Move_Fly:SetMode(val) end},
+        
         {Name = "Move_WS", Type = "Slider", Get = function() return player.Character.Humanoid.WalkSpeed end, Set = function(val) UI_Move_WS:Value(val) end},
         {Name = "Move_JP", Type = "Slider", Get = function() return player.Character.Humanoid.JumpPower end, Set = function(val) UI_Move_JP:Value(val) end},
         {Name = "Move_FS", Type = "Slider", Get = function() return flySpeed end, Set = function(val) UI_Move_FS:Value(val) end},
         -- LocalPlayer
         {Name = "LP_Sit", Type = "Toggle", Get = function() return SitState end, Set = function(val) UI_LP_Sit:Set(val) end},
+        {Name = "LP_QuickReset_Key", Type = "Keybind_Key", Get = function() return UI_LP_QuickReset.Key end, Set = function(val) UI_LP_QuickReset:SetKey(val) end},
+        {Name = "LP_QuickReset_KeyMode", Type = "Keybind_Mode", Get = function() return UI_LP_QuickReset.KeyMode end, Set = function(val) UI_LP_QuickReset:SetMode(val) end},
+        
         {Name = "Orbit_On", Type = "Toggle", Get = function() return OrbitState end, Set = function(val) UI_LP_Orbit:Set(val) end},
         {Name = "Orbit_Target", Type = "Textbox", Get = function() return Orbiter_Settings.Target end, Set = function(val) Orbiter_Settings.Target = val end},
         {Name = "Orbit_Height", Type = "Slider", Get = function() return Orbiter_Settings.Height end, Set = function(val) UI_LP_OrbitH:Value(val) end},
@@ -3188,6 +3201,9 @@ local function PLVSMVWVRE_Menu()
         -- OTHERS
         {Name = "Oth_Skybox", Type = "Toggle", Get = function() return SkyboxState end, Set = function(val) UI_Oth_Skybox:Set(val) end},
         {Name = "Oth_WallClip", Type = "Toggle", Get = function() return WallClipState end, Set = function(val) UI_Oth_WallClip:Set(val) end},
+        {Name = "Oth_WallClip_Key", Type = "Keybind_Key", Get = function() return UI_Oth_WallClip.Key end, Set = function(val) UI_Oth_WallClip:SetKey(val) end},
+        {Name = "Oth_WallClip_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Oth_WallClip.KeyMode end, Set = function(val) UI_Oth_WallClip:SetMode(val) end},
+        
         {Name = "Oth_Zoom", Type = "Slider", Get = function() return player.CameraMaxZoomDistance end, Set = function(val) UI_Oth_Zoom:Value(val) end},
         {Name = "Oth_FOV", Type = "Slider", Get = function() return ExtraVisuals.FOV end, Set = function(val) UI_Oth_FOV:Value(val) end},
         {Name = "Oth_SndHM", Type = "Textbox", Get = function() return SoundIDHM end, Set = function(val) SoundIDHM = val end},
@@ -3206,6 +3222,10 @@ local function PLVSMVWVRE_Menu()
         {Name = "Chat_Mode", Type = "Slider", Get = function() return ChatSpammerrr.Mode end, Set = function(val) UI_Chat_Mode:Value(val) end},
         {Name = "Oth_Friend", Type = "Toggle", Get = function() return FriendBotState end, Set = function(val) UI_Oth_Friend:Set(val) end},
         {Name = "Oth_Targ", Type = "Textbox", Get = function() return NAMETAG_CONFIG.NAME end, Set = function(val) NAMETAG_CONFIG.NAME = val; NAMETAG_CONFIG.NAMEPLATE_TAG = "Target" end},
+        
+        {Name = "Oth_Flinger_Key", Type = "Keybind_Key", Get = function() return UI_Oth_Flinger.Key end, Set = function(val) UI_Oth_Flinger:SetKey(val) end},
+        {Name = "Oth_Flinger_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Oth_Flinger.KeyMode end, Set = function(val) UI_Oth_Flinger:SetMode(val) end},
+        
         {Name = "Oth_FPS", Type = "Slider", Get = function() return FPSCapState end, Set = function(val) if UI_Oth_FPS then UI_Oth_FPS:Value(val) end end},
         {Name = "Oth_Killfeed", Type = "Toggle", Get = function() return KillFeedState end, Set = function(val) KillfeedToggle:Set(val) end},
         -- ESP Shared Settings
@@ -3292,7 +3312,32 @@ local function PLVSMVWVRE_Menu()
         end
     end)
 
+    -- [[ AUTOLOAD UI CONTROLS ]]
+    local autoloadLabel = TabUISettings:NewLabel("Current Autoload: " .. (library:GetAutoload() or "None"), "left")
+    TabUISettings:NewButton("Set as Autoload", function()
+        if currentConfigName ~= "" and currentConfigName ~= "Select..." then
+            if library:SetAutoload(currentConfigName) then
+                autoloadLabel:Text("Current Autoload: " .. currentConfigName)
+                print("[XSX] Set " .. currentConfigName .. " as autoload!")
+            end
+        end
+    end)
+    TabUISettings:NewButton("Clear Autoload", function()
+        if library:ClearAutoload() then
+            autoloadLabel:Text("Current Autoload: None")
+            print("[XSX] Cleared autoload setting!")
+        end
+    end)
+
     Launch()
+
+    -- Trigger autoload
+    task.spawn(function()
+        local success = library:Autoload()
+        if success then
+            print("[XSX] Autoloaded config successfully!")
+        end
+    end)
     
     if getgenv().Library.Unloaded then
         for name, connection in pairs(EventConnections) do
