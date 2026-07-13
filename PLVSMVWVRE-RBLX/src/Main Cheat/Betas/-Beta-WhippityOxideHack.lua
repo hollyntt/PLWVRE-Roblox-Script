@@ -2828,7 +2828,11 @@ local function PLVSMVWVRE_Menu()
     local OrbitState = false
     TabLocalPlayer:NewSection('Main')
     TabLocalPlayer:NewButton('Reset', function() Reset() end)
-    local UI_LP_QuickReset = TabLocalPlayer:NewKeybind('Quick Reset', Enum.KeyCode.Minus, function() Reset() end)
+    local UI_LP_QuickReset = TabLocalPlayer:NewKeybind('Quick Reset', Enum.KeyCode.Minus, function(Active)
+        if Active then
+            Reset()
+        end
+    end)
     TabLocalPlayer:NewButton('Create Godmode UI', function() loadstring(game:HttpGet("https://raw.githubusercontent.com/zephyr10101/ignore-touchinterests/main/main", true))() end)
     TabLocalPlayer:NewButton('Give Click Teleport', function()
         player1 = player
@@ -3029,7 +3033,11 @@ local function PLVSMVWVRE_Menu()
             Reset()
         end
     end)
-    local UI_Oth_Flinger = TabOthers:NewKeybind('Immediant AllFlinger', Enum.KeyCode.Minus, function() FlingerAll() end)
+    local UI_Oth_Flinger = TabOthers:NewKeybind('Immediant AllFlinger', Enum.KeyCode.Minus, function(Active)
+        if Active then
+            FlingerAll()
+        end
+    end)
 
     TabOthers:NewSection('Load Exploits')
     TabOthers:NewButton('Load Dex', function() loadstring(game:HttpGet(('https://raw.githubusercontent.com/infyiff/backup/main/dex.lua'),true))() end)
