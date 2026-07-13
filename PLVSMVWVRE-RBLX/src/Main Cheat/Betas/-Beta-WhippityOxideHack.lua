@@ -2884,11 +2884,11 @@ local function PLVSMVWVRE_Menu()
     local UI_AA_Angle = TabLocalPlayer:NewSlider('Angle', '', false, '', {min = -180, max = 180, default = 180}, function(Value) AntiAim.SpinSwitchInterval = Value end)
     local UI_AA_Dir = TabLocalPlayer:NewSlider('Direction', '', false, '', {min = -1, max = 1, default = 1}, function(Value) AntiAim.SpinDirection = Value end)
 
-    local AntiCheatState = true
+    local AntiCheatState = false
     local AntiFallDmgState = false
     local AntiFlingState = false
     TabLocalPlayer:NewSection('Antis & Anticheat')
-    local UI_AC_On = TabLocalPlayer:NewToggle('Anticheat', true, function(Value) AntiCheatState = Value; Anticheat(Value) end)
+    local UI_AC_On = TabLocalPlayer:NewToggle('Anticheat', false, function(Value) AntiCheatState = Value; Anticheat(Value) end)
     local UI_AC_Speed = TabLocalPlayer:NewSlider('Speed Threshold', '', false, '', {min = 1, max = 999, default = playerWalkspeedCache}, function(Value) Anticheat_Settings.SPEED_THRESHOLD = Value end)
     local UI_AC_Jump = TabLocalPlayer:NewSlider('Jump Threshold', '', false, '', {min = 1, max = 999, default = playerJumpPowerCache}, function(Value) Anticheat_Settings.JUMP_THRESHOLD = Value end)
     local UI_AC_FlyD = TabLocalPlayer:NewSlider('Fly Threshold', '', false, '', {min = 1, max = 50, default = Anticheat_Settings.FLY_DETECTION_THRESHOLD}, function(Value) Anticheat_Settings.FLY_DETECTION_THRESHOLD = Value end)
