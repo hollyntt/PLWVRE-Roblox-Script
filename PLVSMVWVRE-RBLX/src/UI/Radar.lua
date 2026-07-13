@@ -1,30 +1,8 @@
 -- Made by Blissful#4992
-local Players = game:service("Players")
-local Player = Players.LocalPlayer
-local Mouse = Player:GetMouse()
-local Camera = game:service("Workspace").CurrentCamera
-local RS = game:service("RunService")
-local UIS = game:service("UserInputService")
-
-repeat wait() until Player.Character ~= nil and Player.Character.PrimaryPart ~= nil
-
-local LerpColorModule = loadstring(game:HttpGet("https://pastebin.com/raw/wRnsJeid"))()
-local HealthBarLerp = LerpColorModule:Lerp(Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0))
-
-local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
-    local c = Drawing.new("Circle")
-    c.Transparency = Transparency
-    c.Color = Color
-    c.Visible = false
-    c.Thickness = Thickness
-    c.Position = Vector2.new(0, 0)
-    c.Radius = Radius
-    c.NumSides = math.clamp(Radius*55/100, 10, 75)
-    c.Filled = Filled
-    return c
-end
+-- Restructured only to support dynamic loader settings
 
 getgenv().RadarInfo = getgenv().RadarInfo or {
+    Enabled = false,
     Position = Vector2.new(200, 200),
     Radius = 100,
     Scale = 1, -- Determinant factor on the effect of the relative position for the 2D integration
@@ -40,6 +18,45 @@ getgenv().RadarInfo = getgenv().RadarInfo or {
 
 local RadarInfo = getgenv().RadarInfo
 
+----------------------------------------------------------------
+
+local Players = game:service("Players")
+local Player = Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Camera = game:service("Workspace").CurrentCamera
+local RS = game:service("RunService")
+local UIS = game:service("UserInputService")
+
+repeat wait() until Player.Character ~= nil and Player.Character.PrimaryPart ~= nil
+
+-- Robust HTTP wrapper to prevent failure if Pastebin is blocked or unreachable
+local LerpColorModule
+pcall(function()
+    LerpColorModule = loadstring(game:HttpGet("https://pastebin.com/raw/wRnsJeid"))()
+end)
+
+local HealthBarLerp
+if LerpColorModule and LerpColorModule.Lerp then
+    HealthBarLerp = LerpColorModule:Lerp(Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0))
+else
+    HealthBarLerp = function(percent)
+        local ratio = math.clamp(percent, 0, 1)
+        return Color3.fromRGB(255 * (1 - ratio), 255 * ratio, 0)
+    end
+end
+
+local function NewCircle(Transparency, Color, Radius, Filled, Thickness)
+    local c = Drawing.new("Circle")
+    c.Transparency = Transparency
+    c.Color = Color
+    c.Visible = false
+    c.Thickness = Thickness
+    c.Position = Vector2.new(0, 0)
+    c.Radius = Radius
+    c.NumSides = math.clamp(Radius*55/100, 10, 75)
+    c.Filled = Filled
+    return c
+end
 
 local RadarBackground = NewCircle(0.9, RadarInfo.RadarBack, RadarInfo.Radius, true, 1)
 RadarBackground.Visible = true
@@ -68,6 +85,12 @@ local function PlaceDot(plr)
     local function Update()
         local c 
         c = game:service("RunService").RenderStepped:Connect(function()
+            -- Handle global toggle
+            if RadarInfo.Enabled == false then
+                PlayerDot.Visible = false
+                return
+            end
+
             local char = plr.Character
             if char and char:FindFirstChildOfClass("Humanoid") and char.PrimaryPart ~= nil and char:FindFirstChildOfClass("Humanoid").Health > 0 then
                 local hum = char:FindFirstChildOfClass("Humanoid")
@@ -144,6 +167,18 @@ end)
 coroutine.wrap(function()
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
+        -- Handle global toggle
+        if RadarInfo.Enabled == false then
+            if LocalPlayerDot ~= nil then LocalPlayerDot.Visible = false end
+            RadarBackground.Visible = false
+            RadarBorder.Visible = false
+            return
+        else
+            if LocalPlayerDot ~= nil then LocalPlayerDot.Visible = true end
+            RadarBackground.Visible = true
+            RadarBorder.Visible = true
+        end
+
         if LocalPlayerDot ~= nil then
             LocalPlayerDot.Color = RadarInfo.LocalPlayerDot
             LocalPlayerDot.PointA = RadarInfo.Position + Vector2.new(0, -6)
@@ -166,6 +201,7 @@ local inset = game:service("GuiService"):GetGuiInset()
 local dragging = false
 local offset = Vector2.new(0, 0)
 UIS.InputBegan:Connect(function(input)
+    if RadarInfo.Enabled == false then return end
     if input.UserInputType == Enum.UserInputType.MouseButton1 and (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
         offset = RadarInfo.Position - Vector2.new(Mouse.X, Mouse.Y)
         dragging = true
@@ -182,6 +218,11 @@ coroutine.wrap(function()
     local dot = NewCircle(1, Color3.fromRGB(255, 255, 255), 3, true, 1)
     local c 
     c = game:service("RunService").RenderStepped:Connect(function()
+        if RadarInfo.Enabled == false then
+            dot.Visible = false
+            return
+        end
+
         if (Vector2.new(Mouse.X, Mouse.Y + inset.Y) - RadarInfo.Position).magnitude < RadarInfo.Radius then
             dot.Position = Vector2.new(Mouse.X, Mouse.Y + inset.Y)
             dot.Visible = true
@@ -193,10 +234,3 @@ coroutine.wrap(function()
         end
     end)
 end)()
-
---[[ Example:
-wait(3)
-RadarInfo.Position = Vector2.new(300, 300)
-RadarInfo.Radius = 150
-RadarInfo.RadarBack = Color3.fromRGB(50, 0, 0)
-]]

@@ -33,7 +33,8 @@ local CWRAP = coroutine.wrap
 local ROUND = math.round
 
 local function GetRelative(pos, char)
-    if not char then return V2(0,0) end
+    -- Prevents spawn crash if character exists but PrimaryPart is nil
+    if not char or not char.PrimaryPart then return V2(0,0) end
 
     local rootP = char.PrimaryPart.Position
     local camP = Camera.CFrame.Position
