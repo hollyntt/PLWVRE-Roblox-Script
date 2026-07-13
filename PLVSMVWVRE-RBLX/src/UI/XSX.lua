@@ -3973,13 +3973,6 @@ function library:Init(key)
     end
     return TabLibrary
 end
-return library
-
--- ============================================================
---  Config Manager (paste this block right before `return library`)
---  Requires: writefile / readfile / isfile / isfolder / makefolder
---            / listfiles / delfile  (standard executor file API)
--- ============================================================
 
 function library:SetConfigFolder(path)
     self.ConfigFolder = path or self.ConfigFolder
@@ -4114,3 +4107,4 @@ function library:DeleteConfig(name)
     end
     return false
 end
+return library

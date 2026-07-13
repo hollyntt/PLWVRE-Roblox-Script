@@ -2448,13 +2448,6 @@ end
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 local function PLVSMVWVRE_Menu()
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://3101925304" 
-    sound.Volume = 1 
-    sound.Pitch = 0.5
-    sound.Looped = false 
-    sound.Parent = workspace 
-    
     local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/XSX.lua"))()
     library.title = cheatname
     
@@ -2471,6 +2464,13 @@ local function PLVSMVWVRE_Menu()
     Sense.teamSettings.friendly.chamsOutlineColor = { Color3.fromRGB(0, 255, 0), 0 }
 
     library:Introduction()
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://3101925304" 
+    sound.Volume = 1 
+    sound.Pitch = 0.5
+    sound.Looped = false 
+    sound.Parent = workspace 
     sound:Play()
 
     task.wait(1)
