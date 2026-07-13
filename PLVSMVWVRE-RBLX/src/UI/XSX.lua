@@ -1,10 +1,3 @@
---[[
-  UI lib made by bungie#0001
-  
-  - Please do not use this without permission, I am working really hard on this UI to make it perfect and do not have a big 
-    problem with other people using it, please just make sure you message me and ask me before using.
-]]
-
 -- / Locals
 local Workspace = game:GetService("Workspace")
 local Player = game:GetService("Players").LocalPlayer
@@ -1981,7 +1974,11 @@ function library:Init(key)
                 end
     
                 function ToggleFunctions:SetKey(new)
-                    ChosenKey = new.Name or new
+                    if typeof(new) == "EnumItem" then
+                        ChosenKey = new.Name
+                    else
+                        ChosenKey = tostring(new)
+                    end
                     ToggleFunctions.Key = ChosenKey
                     UpdateKeybindText()
                     return ToggleFunctions
@@ -2328,7 +2325,16 @@ function library:Init(key)
             }
             function KeybindFunctions:Fire() callback(State, ChosenKey) return KeybindFunctions end
             function KeybindFunctions:SetFunction(new) callback = new or function() end return KeybindFunctions end
-            function KeybindFunctions:SetKey(new) ChosenKey = new.Name or new; KeybindFunctions.Key = ChosenKey; UpdateKeybindText(); return KeybindFunctions end
+            function KeybindFunctions:SetKey(new) 
+                if typeof(new) == "EnumItem" then
+                    ChosenKey = new.Name
+                else
+                    ChosenKey = tostring(new)
+                end
+                KeybindFunctions.Key = ChosenKey
+                UpdateKeybindText()
+                return KeybindFunctions 
+            end
             function KeybindFunctions:SetMode(new) Mode = new or Mode; KeybindFunctions.KeyMode = Mode; UpdateKeybindText(); return KeybindFunctions end
             function KeybindFunctions:Text(new) keybindLabel.Text = new or keybindLabel.Text; return KeybindFunctions end
             function KeybindFunctions:Hide() keybindFrame.Visible = false return KeybindFunctions end
@@ -2375,7 +2381,7 @@ function library:Init(key)
     
                 textboxFolder.Name = "textboxFolder"
                 textboxFolder.Parent = textboxFrame
-    
+        
                 textboxFolderLayout.Name = "textboxFolderLayout"
                 textboxFolderLayout.Parent = textboxFolder
                 textboxFolderLayout.FillDirection = Enum.FillDirection.Horizontal
