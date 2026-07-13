@@ -67,8 +67,7 @@ local flyForce, flyConnection
 
 -- Sirius Sense ESP remains untouched
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-local ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))()
-local Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))()
+local ArrowESP, Radar
 local ExecName = identifyexecutor()
 local SoundIDHM = 5794214857;
 local SoundIDK = 5764885315;
@@ -244,7 +243,7 @@ getgenv().Library = {
         if Notif then
             Notif:Notify(text, time or 5, "information")
         else
-            print("[Mock Library Notify]:", text)
+            print("[uh hi]:", text)
         end
     end,
     SetWatermarkVisibility = function() end,
@@ -2607,6 +2606,8 @@ local function Launch()
     Cache_Old_Walkspeed_and_JumpPower() Success_Notificate("Initialized Cache!")
     InitiateLagDetection() Success_Notificate("Initialized LagDetection!")
     Sense.Load() Success_Notificate("Initialized Sense!")
+    getgenv().ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))() Success_Notificate("Initialized ArrowESP!")
+    getgenv().Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))() Success_Notificate("Initialized RadarESP!")
 
     Notificate(COLORS.WHITE, "Setting up Hooks...")
 
