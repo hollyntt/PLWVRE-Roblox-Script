@@ -3171,126 +3171,160 @@ local function PLVSMVWVRE_Menu()
     -- ==========================================
     local ConfigFlags = {
         -- RAGE Main
-        {Name = "Aimbot_Lock", Type = "Toggle", Get = function() return Aimbot.Enabled end, Set = function(val) UI_Aimbot_Lock:Set(val) end},
+        {Name = "Aimbot_Lock", Type = "Toggle", Get = function() return Aimbot.Enabled end, Set = function(val) Aimbot.Enabled = val; UI_Aimbot_Lock:Set(val) end},
         {Name = "Aimbot_Lock_Key", Type = "Keybind_Key", Get = function() return UI_Aimbot_Lock.Key end, Set = function(val) UI_Aimbot_Lock:SetKey(val) end},
         {Name = "Aimbot_Lock_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Aimbot_Lock.KeyMode end, Set = function(val) UI_Aimbot_Lock:SetMode(val) end},
         
-        {Name = "Aimbot_Vis", Type = "Toggle", Get = function() return Aimbot.CheckVisibility end, Set = function(val) UI_Aimbot_Vis:Set(val) end},
-        {Name = "Aimbot_Alive", Type = "Toggle", Get = function() return Aimbot.CheckAlive end, Set = function(val) UI_Aimbot_Alive:Set(val) end},
-        {Name = "Aimbot_Team", Type = "Toggle", Get = function() return Aimbot.TeamCheck end, Set = function(val) UI_Aimbot_Team:Set(val) end},
-        {Name = "Aimbot_FOVCheck", Type = "Toggle", Get = function() return Aimbot.FOVCheck end, Set = function(val) UI_Aimbot_FOV:Set(val) end},
-        {Name = "Aimbot_Forcefield", Type = "Toggle", Get = function() return Aimbot.CheckForcefield end, Set = function(val) UI_Aimbot_Respawn:Set(val) end},
-        {Name = "Aimbot_Prediction", Type = "Toggle", Get = function() return Aimbot.Prediction end, Set = function(val) UI_Aimbot_Pred:Set(val) end},
-        {Name = "Aimbot_AutoShoot", Type = "Toggle", Get = function() return Aimbot.AutoShoot end, Set = function(val) UI_Aimbot_AutoShoot:Set(val) end},
-        {Name = "Aimbot_Resolver", Type = "Toggle", Get = function() return Aimbot.Resolver end, Set = function(val) UI_Aimbot_Resolver:Set(val) end},
+        {Name = "Aimbot_Vis", Type = "Toggle", Get = function() return Aimbot.CheckVisibility end, Set = function(val) Aimbot.CheckVisibility = val; UI_Aimbot_Vis:Set(val) end},
+        {Name = "Aimbot_Alive", Type = "Toggle", Get = function() return Aimbot.CheckAlive end, Set = function(val) Aimbot.CheckAlive = val; UI_Aimbot_Alive:Set(val) end},
+        {Name = "Aimbot_Team", Type = "Toggle", Get = function() return Aimbot.TeamCheck end, Set = function(val) Aimbot.TeamCheck = val; UI_Aimbot_Team:Set(val) end},
+        {Name = "Aimbot_FOVCheck", Type = "Toggle", Get = function() return Aimbot.FOVCheck end, Set = function(val) Aimbot.FOVCheck = val; UI_Aimbot_FOV:Set(val) end},
+        {Name = "Aimbot_Forcefield", Type = "Toggle", Get = function() return Aimbot.CheckForcefield end, Set = function(val) Aimbot.CheckForcefield = val; UI_Aimbot_Respawn:Set(val) end},
+        {Name = "Aimbot_Prediction", Type = "Toggle", Get = function() return Aimbot.Prediction end, Set = function(val) Aimbot.Prediction = val; UI_Aimbot_Pred:Set(val) end},
+        {Name = "Aimbot_AutoShoot", Type = "Toggle", Get = function() return Aimbot.AutoShoot end, Set = function(val) Aimbot.AutoShoot = val; UI_Aimbot_AutoShoot:Set(val) end},
+        {Name = "Aimbot_Resolver", Type = "Toggle", Get = function() return Aimbot.Resolver end, Set = function(val) Aimbot.Resolver = val; UI_Aimbot_Resolver:Set(val) end},
+        
         -- RCS
-        {Name = "RCS_Enabled", Type = "Toggle", Get = function() return RCS_Sets.Enabled end, Set = function(val) UI_RCS_Toggle:Set(val) end},
-        {Name = "RCS_Control", Type = "Slider", Get = function() return RCS_Sets.RecoilControl end, Set = function(val) UI_RCS_Control:Value(val) end},
-        {Name = "RCS_DownAim", Type = "Slider", Get = function() return RCS_Sets.RecoilDownAim end, Set = function(val) UI_RCS_DownAim:Value(val) end},
-        {Name = "RCS_Speed", Type = "Slider", Get = function() return RCS_Sets.Speed end, Set = function(val) UI_RCS_Speed:Value(val) end},
+        {Name = "RCS_Enabled", Type = "Toggle", Get = function() return RCS_Sets.Enabled end, Set = function(val) RCS_Sets.Enabled = val; UI_RCS_Toggle:Set(val) end},
+        {Name = "RCS_Control", Type = "Slider", Get = function() return RCS_Sets.RecoilControl end, Set = function(val) RCS_Sets.RecoilControl = val; UI_RCS_Control:Value(val) end},
+        {Name = "RCS_DownAim", Type = "Slider", Get = function() return RCS_Sets.RecoilDownAim end, Set = function(val) RCS_Sets.RecoilDownAim = val; UI_RCS_DownAim:Value(val) end},
+        {Name = "RCS_Speed", Type = "Slider", Get = function() return RCS_Sets.Speed end, Set = function(val) RCS_Sets.Speed = val; UI_RCS_Speed:Value(val) end},
+        
         -- Aim Settings
-        {Name = "Aim_ASDelay", Type = "Slider", Get = function() return Aimbot.AutoShoot_Delay * 10 end, Set = function(val) UI_Aim_ASDelay:Value(val) end},
-        {Name = "Aim_Smooth", Type = "Slider", Get = function() return Aimbot.Smoothing * 100 end, Set = function(val) UI_Aim_Smooth:Value(val) end},
-        {Name = "Aim_Dist", Type = "Slider", Get = function() return Aimbot.Distance end, Set = function(val) UI_Aim_Dist:Value(val) end},
-        {Name = "Aim_Offset", Type = "Slider", Get = function() return Aimbot.Prediction_Offset end, Set = function(val) UI_Aim_Offset:Value(val) end},
+        {Name = "Aim_ASDelay", Type = "Slider", Get = function() return Aimbot.AutoShoot_Delay * 10 end, Set = function(val) Aimbot.AutoShoot_Delay = val / 10; UI_Aim_ASDelay:Value(val) end},
+        {Name = "Aim_Smooth", Type = "Slider", Get = function() return Aimbot.Smoothing * 100 end, Set = function(val) Aimbot.Smoothing = val / 100; UI_Aim_Smooth:Value(val) end},
+        {Name = "Aim_Dist", Type = "Slider", Get = function() return Aimbot.Distance end, Set = function(val) Aimbot.Distance = val; UI_Aim_Dist:Value(val) end},
+        {Name = "Aim_Offset", Type = "Slider", Get = function() return Aimbot.Prediction_Offset end, Set = function(val) Aimbot.Prediction_Offset = val; UI_Aim_Offset:Value(val) end},
+        
         -- Resolver Settings
-        {Name = "Res_Hist", Type = "Slider", Get = function() return Aimbot.ResolverHistory * 10 end, Set = function(val) UI_Res_Hist:Value(val) end},
-        {Name = "Res_PredErr", Type = "Slider", Get = function() return Aimbot.MaxPredictionError end, Set = function(val) UI_Res_PredErr:Value(val) end},
-        {Name = "Res_Smooth", Type = "Slider", Get = function() return Aimbot.VelocitySmoothing * 100 end, Set = function(val) UI_Res_Smooth:Value(val) end},
-        {Name = "Res_Jitter", Type = "Slider", Get = function() return Aimbot.JitterThreshold * 100 end, Set = function(val) UI_Res_Jitter:Value(val) end},
-        {Name = "Res_Conf", Type = "Slider", Get = function() return Aimbot.MinPredictionConfidence * 100 end, Set = function(val) UI_Res_Conf:Value(val) end},
+        {Name = "Res_Hist", Type = "Slider", Get = function() return Aimbot.ResolverHistory * 10 end, Set = function(val) Aimbot.ResolverHistory = val / 10; UI_Res_Hist:Value(val) end},
+        {Name = "Res_PredErr", Type = "Slider", Get = function() return Aimbot.MaxPredictionError end, Set = function(val) Aimbot.MaxPredictionError = val; UI_Res_PredErr:Value(val) end},
+        {Name = "Res_Smooth", Type = "Slider", Get = function() return Aimbot.VelocitySmoothing * 100 end, Set = function(val) Aimbot.VelocitySmoothing = val / 100; UI_Res_Smooth:Value(val) end},
+        {Name = "Res_Jitter", Type = "Slider", Get = function() return Aimbot.JitterThreshold * 100 end, Set = function(val) Aimbot.JitterThreshold = val / 100; UI_Res_Jitter:Value(val) end},
+        {Name = "Res_Conf", Type = "Slider", Get = function() return Aimbot.MinPredictionConfidence * 100 end, Set = function(val) Aimbot.MinPredictionConfidence = val / 100; UI_Res_Conf:Value(val) end},
+        
         -- Misc
         {Name = "Aim_Hitbox", Type = "Dropdown", Get = function() return Aimbot.Hitbox end, Set = function(val) Aimbot.Hitbox = val; UI_Aim_Hitbox:Text(val) end},
-        {Name = "Aim_FOVVis", Type = "Toggle", Get = function() return Aimbot.FOVVisible end, Set = function(val) UI_Aim_FOVVis:Set(val) end},
-        {Name = "Aim_FOVRad", Type = "Slider", Get = function() return Aimbot.FOVRadius end, Set = function(val) UI_Aim_FOVRad:Value(val) end},
-        {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) UI_Aim_FOVSides:Value(val) end},
-        {Name = "Aim_FOVThick", Type = "Slider", Get = function() return Aimbot.FOVThickness end, Set = function(val) UI_Aim_FOVThick:Value(val) end},
-        {Name = "Aim_FOVC", Type = "Colorpicker", Get = function() return Aimbot.FOVColor end, Set = function(val) UI_Aim_FOVC:Set(val) end},
+        {Name = "Aim_FOVVis", Type = "Toggle", Get = function() return Aimbot.FOVVisible end, Set = function(val) Aimbot.FOVVisible = val; UI_Aim_FOVVis:Set(val) end},
+        {Name = "Aim_FOVRad", Type = "Slider", Get = function() return Aimbot.FOVRadius end, Set = function(val) Aimbot.FOVRadius = val; UI_Aim_FOVRad:Value(val) end},
+        {Name = "Aim_FOVSides", Type = "Slider", Get = function() return Aimbot.FOVSides end, Set = function(val) Aimbot.FOVSides = val; UI_Aim_FOVSides:Value(val) end},
+        {Name = "Aim_FOVThick", Type = "Slider", Get = function() return Aimbot.FOVThickness end, Set = function(val) Aimbot.FOVThickness = val; UI_Aim_FOVThick:Value(val) end},
+        {Name = "Aim_FOVC", Type = "Colorpicker", Get = function() return Aimbot.FOVColor end, Set = function(val) Aimbot.FOVColor = val; UI_Aim_FOVC:Set(val) end},
         
-        {Name = "Aim_TBot", Type = "Toggle", Get = function() return TriggerBotState end, Set = function(val) UI_Aim_TBot:Set(val) end},
+        {Name = "Aim_TBot", Type = "Toggle", Get = function() return TriggerBotState end, Set = function(val) TriggerBotState = val; TriggerBot(val); UI_Aim_TBot:Set(val) end},
         {Name = "Aim_TBot_Key", Type = "Keybind_Key", Get = function() return UI_Aim_TBot.Key end, Set = function(val) UI_Aim_TBot:SetKey(val) end},
         {Name = "Aim_TBot_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Aim_TBot.KeyMode end, Set = function(val) UI_Aim_TBot:SetMode(val) end},
         
-        {Name = "Aim_TSens", Type = "Slider", Get = function() return Aimbot.Triggerbot_Sensitivity * 100 end, Set = function(val) UI_Aim_TSens:Value(val) end},
+        {Name = "Aim_TSens", Type = "Slider", Get = function() return Aimbot.Triggerbot_Sensitivity * 100 end, Set = function(val) Aimbot.Triggerbot_Sensitivity = val / 100; UI_Aim_TSens:Value(val) end},
+        
         -- Movement
-        {Name = "Move_Fly", Type = "Toggle", Get = function() return FlyState end, Set = function(val) UI_Move_Fly:Set(val) end},
+        {Name = "Move_Fly", Type = "Toggle", Get = function() return FlyState end, Set = function(val) FlyState = val; FlyActivate(val); UI_Move_Fly:Set(val) end},
         {Name = "Move_Fly_Key", Type = "Keybind_Key", Get = function() return UI_Move_Fly.Key end, Set = function(val) UI_Move_Fly:SetKey(val) end},
         {Name = "Move_Fly_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Move_Fly.KeyMode end, Set = function(val) UI_Move_Fly:SetMode(val) end},
         
-        {Name = "Move_WS", Type = "Slider", Get = function() return player.Character.Humanoid.WalkSpeed end, Set = function(val) UI_Move_WS:Value(val) end},
-        {Name = "Move_JP", Type = "Slider", Get = function() return player.Character.Humanoid.JumpPower end, Set = function(val) UI_Move_JP:Value(val) end},
-        {Name = "Move_FS", Type = "Slider", Get = function() return flySpeed end, Set = function(val) UI_Move_FS:Value(val) end},
+        {Name = "Move_WS", Type = "Slider", Get = function() return player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.WalkSpeed or playerWalkspeedCache end, Set = function(val) if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid.WalkSpeed = val end; UI_Move_WS:Value(val) end},
+        {Name = "Move_JP", Type = "Slider", Get = function() return player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.JumpPower or playerJumpPowerCache end, Set = function(val) if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid.JumpPower = val end; UI_Move_JP:Value(val) end},
+        {Name = "Move_FS", Type = "Slider", Get = function() return flySpeed end, Set = function(val) flySpeed = val; UI_Move_FS:Value(val) end},
+        
         -- LocalPlayer
-        {Name = "LP_Sit", Type = "Toggle", Get = function() return SitState end, Set = function(val) UI_LP_Sit:Set(val) end},
+        {Name = "LP_Sit", Type = "Toggle", Get = function() return SitState end, Set = function(val) SitState = val; if player.Character and player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid.Sit = val end; UI_LP_Sit:Set(val) end},
         {Name = "LP_QuickReset_Key", Type = "Keybind_Key", Get = function() return UI_LP_QuickReset.Key end, Set = function(val) UI_LP_QuickReset:SetKey(val) end},
         {Name = "LP_QuickReset_KeyMode", Type = "Keybind_Mode", Get = function() return UI_LP_QuickReset.KeyMode end, Set = function(val) UI_LP_QuickReset:SetMode(val) end},
         
-        {Name = "Orbit_On", Type = "Toggle", Get = function() return OrbitState end, Set = function(val) UI_LP_Orbit:Set(val) end},
+        {Name = "Orbit_On", Type = "Toggle", Get = function() return OrbitState end, Set = function(val) OrbitState = val; Orbiter(val); UI_LP_Orbit:Set(val) end},
         {Name = "Orbit_Target", Type = "Textbox", Get = function() return Orbiter_Settings.Target end, Set = function(val) Orbiter_Settings.Target = val end},
-        {Name = "Orbit_Height", Type = "Slider", Get = function() return Orbiter_Settings.Height end, Set = function(val) UI_LP_OrbitH:Value(val) end},
-        {Name = "Orbit_Speed", Type = "Slider", Get = function() return Orbiter_Settings.Speed end, Set = function(val) UI_LP_OrbitS:Value(val) end},
-        {Name = "Orbit_Radius", Type = "Slider", Get = function() return Orbiter_Settings.RadiusScale * 10 end, Set = function(val) UI_LP_OrbitR:Value(val) end},
-        {Name = "AA_On", Type = "Toggle", Get = function() return AntiAim.Activated end, Set = function(val) UI_AA_On:Set(val) end},
-        {Name = "AA_Jitter", Type = "Slider", Get = function() return AntiAim.Jitter * 100 end, Set = function(val) UI_AA_Jitter:Value(val) end},
-        {Name = "AA_X", Type = "Slider", Get = function() return AntiAim.Jitter_X * 100 end, Set = function(val) UI_AA_X:Value(val) end},
-        {Name = "AA_Z", Type = "Slider", Get = function() return AntiAim.Jitter_Z * 100 end, Set = function(val) UI_AA_Z:Value(val) end},
-        {Name = "AA_Speed", Type = "Slider", Get = function() return AntiAim.SpinSpeed end, Set = function(val) UI_AA_Speed:Value(val) end},
-        {Name = "AA_Angle", Type = "Slider", Get = function() return AntiAim.SpinSwitchInterval end, Set = function(val) UI_AA_Angle:Value(val) end},
-        {Name = "AA_Dir", Type = "Slider", Get = function() return AntiAim.SpinDirection end, Set = function(val) UI_AA_Dir:Value(val) end},
-        {Name = "AC_On", Type = "Toggle", Get = function() return AntiCheatState end, Set = function(val) UI_AC_On:Set(val) end},
-        {Name = "AC_Speed", Type = "Slider", Get = function() return Anticheat_Settings.SPEED_THRESHOLD end, Set = function(val) UI_AC_Speed:Value(val) end},
-        {Name = "AC_Jump", Type = "Slider", Get = function() return Anticheat_Settings.JUMP_THRESHOLD end, Set = function(val) UI_AC_Jump:Value(val) end},
-        {Name = "AC_FlyD", Type = "Slider", Get = function() return Anticheat_Settings.FLY_DETECTION_THRESHOLD end, Set = function(val) UI_AC_FlyD:Value(val) end},
-        {Name = "AC_FlyV", Type = "Slider", Get = function() return Anticheat_Settings.FLY_VELOCITY_THRESHOLD end, Set = function(val) UI_AC_FlyV:Value(val) end},
-        {Name = "AC_Tele", Type = "Slider", Get = function() return Anticheat_Settings.TELEPORT_THRESHOLD end, Set = function(val) UI_AC_Tele:Value(val) end},
-        {Name = "AC_Spin", Type = "Slider", Get = function() return Anticheat_Settings.SPIN_DETECTION_THRESHOLD end, Set = function(val) UI_AC_Spin:Value(val) end},
-        {Name = "AC_MolD", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DISTANCE_THRESHOLD * 10 end, Set = function(val) UI_AC_MolD:Value(val) end},
-        {Name = "AC_MolT", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DURATION_THRESHOLD end, Set = function(val) UI_AC_MolT:Value(val) end},
-        {Name = "AC_Spikes", Type = "Slider", Get = function() return Anticheat_Settings.MAX_SPIKES end, Set = function(val) UI_AC_Spikes:Value(val) end},
-        {Name = "AC_AutoRep", Type = "Toggle", Get = function() return Anticheat_Settings.REPORT end, Set = function(val) UI_AC_AutoRep:Set(val) end},
-        {Name = "LP_FallDmg", Type = "Toggle", Get = function() return AntiFallDmgState end, Set = function(val) UI_LP_FallDmg:Set(val) end},
-        {Name = "LP_AntiFling", Type = "Toggle", Get = function() return AntiFlingState end, Set = function(val) UI_LP_AntiFling:Set(val) end},
+        {Name = "Orbit_Height", Type = "Slider", Get = function() return Orbiter_Settings.Height end, Set = function(val) Orbiter_Settings.Height = val; UI_LP_OrbitH:Value(val) end},
+        {Name = "Orbit_Speed", Type = "Slider", Get = function() return Orbiter_Settings.Speed end, Set = function(val) Orbiter_Settings.Speed = val; UI_LP_OrbitS:Value(val) end},
+        {Name = "Orbit_Radius", Type = "Slider", Get = function() return Orbiter_Settings.RadiusScale * 10 end, Set = function(val) Orbiter_Settings.RadiusScale = val / 10; UI_LP_OrbitR:Value(val) end},
+        {Name = "AA_On", Type = "Toggle", Get = function() return AntiAim.Activated end, Set = function(val) AntiAim.Activated = val; UI_AA_On:Set(val) end},
+        {Name = "AA_Jitter", Type = "Slider", Get = function() return AntiAim.Jitter * 100 end, Set = function(val) AntiAim.Jitter = val / 100; UI_AA_Jitter:Value(val) end},
+        {Name = "AA_X", Type = "Slider", Get = function() return AntiAim.Jitter_X * 100 end, Set = function(val) AntiAim.Jitter_X = val / 100; UI_AA_X:Value(val) end},
+        {Name = "AA_Z", Type = "Slider", Get = function() return AntiAim.Jitter_Z * 100 end, Set = function(val) AntiAim.Jitter_Z = val / 100; UI_AA_Z:Value(val) end},
+        {Name = "AA_Speed", Type = "Slider", Get = function() return AntiAim.SpinSpeed end, Set = function(val) AntiAim.SpinSpeed = val; UI_AA_Speed:Value(val) end},
+        {Name = "AA_Angle", Type = "Slider", Get = function() return AntiAim.SpinSwitchInterval end, Set = function(val) AntiAim.SpinSwitchInterval = val; UI_AA_Angle:Value(val) end},
+        {Name = "AA_Dir", Type = "Slider", Get = function() return AntiAim.SpinDirection end, Set = function(val) AntiAim.SpinDirection = val; UI_AA_Dir:Value(val) end},
+        {Name = "AC_On", Type = "Toggle", Get = function() return AntiCheatState end, Set = function(val) AntiCheatState = val; Anticheat(val); UI_AC_On:Set(val) end},
+        {Name = "AC_Speed", Type = "Slider", Get = function() return Anticheat_Settings.SPEED_THRESHOLD end, Set = function(val) Anticheat_Settings.SPEED_THRESHOLD = val; UI_AC_Speed:Value(val) end},
+        {Name = "AC_Jump", Type = "Slider", Get = function() return Anticheat_Settings.JUMP_THRESHOLD end, Set = function(val) Anticheat_Settings.JUMP_THRESHOLD = val; UI_AC_Jump:Value(val) end},
+        {Name = "AC_FlyD", Type = "Slider", Get = function() return Anticheat_Settings.FLY_DETECTION_THRESHOLD end, Set = function(val) Anticheat_Settings.FLY_DETECTION_THRESHOLD = val; UI_AC_FlyD:Value(val) end},
+        {Name = "AC_FlyV", Type = "Slider", Get = function() return Anticheat_Settings.FLY_VELOCITY_THRESHOLD end, Set = function(val) Anticheat_Settings.FLY_VELOCITY_THRESHOLD = val; UI_AC_FlyV:Value(val) end},
+        {Name = "AC_Tele", Type = "Slider", Get = function() return Anticheat_Settings.TELEPORT_THRESHOLD end, Set = function(val) Anticheat_Settings.TELEPORT_THRESHOLD = val; UI_AC_Tele:Value(val) end},
+        {Name = "AC_Spin", Type = "Slider", Get = function() return Anticheat_Settings.SPIN_DETECTION_THRESHOLD end, Set = function(val) Anticheat_Settings.SPIN_DETECTION_THRESHOLD = val; UI_AC_Spin:Value(val) end},
+        {Name = "AC_MolD", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DISTANCE_THRESHOLD * 10 end, Set = function(val) Anticheat_Settings.HOOK_DISTANCE_THRESHOLD = val / 10; UI_AC_MolD:Value(val) end},
+        {Name = "AC_MolT", Type = "Slider", Get = function() return Anticheat_Settings.HOOK_DURATION_THRESHOLD end, Set = function(val) Anticheat_Settings.HOOK_DURATION_THRESHOLD = val; UI_AC_MolT:Value(val) end},
+        {Name = "AC_Spikes", Type = "Slider", Get = function() return Anticheat_Settings.MAX_SPIKES end, Set = function(val) Anticheat_Settings.MAX_SPIKES = val; UI_AC_Spikes:Value(val) end},
+        {Name = "AC_AutoRep", Type = "Toggle", Get = function() return Anticheat_Settings.REPORT end, Set = function(val) Anticheat_Settings.REPORT = val; UI_AC_AutoRep:Set(val) end},
+        {Name = "LP_FallDmg", Type = "Toggle", Get = function() return AntiFallDmgState end, Set = function(val) AntiFallDmgState = val; AntiFallDmg(val); UI_LP_FallDmg:Set(val) end},
+        {Name = "LP_AntiFling", Type = "Toggle", Get = function() return AntiFlingState end, Set = function(val) AntiFlingState = val; disableCanCollide(val); UI_LP_AntiFling:Set(val) end},
+        
         -- OTHERS
-        {Name = "Oth_Skybox", Type = "Toggle", Get = function() return SkyboxState end, Set = function(val) UI_Oth_Skybox:Set(val) end},
-        {Name = "Oth_WallClip", Type = "Toggle", Get = function() return WallClipState end, Set = function(val) UI_Oth_WallClip:Set(val) end},
+        {Name = "Oth_Skybox", Type = "Toggle", Get = function() return SkyboxState end, Set = function(val) 
+            SkyboxState = val
+            UI_Oth_Skybox:Set(val)
+            if val == true then
+                if not game.Lighting:FindFirstChild("PLVSMVWVRE.lol") then
+                    local SkyBox = Instance.new("Sky")
+                    SkyBox.Name = "PLVSMVWVRE.lol"
+                    SkyBox.Parent = game.Lighting
+                    SkyBox.SkyboxBk = "http://www.roblox.com/asset/?id=271042516"
+                    SkyBox.SkyboxDn = "http://www.roblox.com/asset/?id=271077243"
+                    SkyBox.SkyboxFt = "http://www.roblox.com/asset/?id=271042556"
+                    SkyBox.SkyboxRt = "http://www.roblox.com/asset/?id=271042467"
+                    SkyBox.SkyboxLf = "http://www.roblox.com/asset/?id=271042310"
+                    SkyBox.SkyboxUp = "http://www.roblox.com/asset/?id=271077958"
+                    SkyBox.StarCount = 0
+                end
+            else
+                for _, v in ipairs(game:GetService("Lighting"):GetDescendants()) do
+                    if v.Name == "PLVSMVWVRE.lol" then v:Destroy() end
+                end
+            end
+        end},
+        {Name = "Oth_WallClip", Type = "Toggle", Get = function() return WallClipState end, Set = function(val) 
+            WallClipState = val
+            UI_Oth_WallClip:Set(val)
+            player.DevCameraOcclusionMode = val and "Invisicam" or "Zoom"
+        end},
         {Name = "Oth_WallClip_Key", Type = "Keybind_Key", Get = function() return UI_Oth_WallClip.Key end, Set = function(val) UI_Oth_WallClip:SetKey(val) end},
         {Name = "Oth_WallClip_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Oth_WallClip.KeyMode end, Set = function(val) UI_Oth_WallClip:SetMode(val) end},
         
-        {Name = "Oth_Zoom", Type = "Slider", Get = function() return player.CameraMaxZoomDistance end, Set = function(val) UI_Oth_Zoom:Value(val) end},
-        {Name = "Oth_FOV", Type = "Slider", Get = function() return ExtraVisuals.FOV end, Set = function(val) UI_Oth_FOV:Value(val) end},
+        {Name = "Oth_Zoom", Type = "Slider", Get = function() return player.CameraMaxZoomDistance end, Set = function(val) player.CameraMaxZoomDistance = val; UI_Oth_Zoom:Value(val) end},
+        {Name = "Oth_FOV", Type = "Slider", Get = function() return ExtraVisuals.FOV end, Set = function(val) ExtraVisuals.FOV = val; UI_Oth_FOV:Value(val) end},
         {Name = "Oth_SndHM", Type = "Textbox", Get = function() return SoundIDHM end, Set = function(val) SoundIDHM = val end},
         {Name = "Oth_SndK", Type = "Textbox", Get = function() return SoundIDK end, Set = function(val) SoundIDK = val end},
-        {Name = "Cross_On", Type = "Toggle", Get = function() return Crosshair.Enabled end, Set = function(val) UI_Cross_On:Set(val) end},
-        {Name = "Cross_Sides", Type = "Slider", Get = function() return Crosshair.Sides end, Set = function(val) UI_Cross_Sides:Value(val) end},
-        {Name = "Cross_Gap", Type = "Slider", Get = function() return Crosshair.Size end, Set = function(val) UI_Cross_Gap:Value(val) end},
-        {Name = "Cross_Rot", Type = "Slider", Get = function() return Crosshair.Rotation end, Set = function(val) UI_Cross_Rot:Value(val) end},
-        {Name = "Cross_Thick", Type = "Slider", Get = function() return Crosshair.Thickness end, Set = function(val) UI_Cross_Thick:Value(val) end},
-        {Name = "Cross_Len", Type = "Slider", Get = function() return Crosshair.Gap end, Set = function(val) UI_Cross_Len:Value(val) end},
-        {Name = "Cross_X", Type = "Slider", Get = function() return Crosshair.x_Off end, Set = function(val) UI_Cross_X:Value(val) end},
-        {Name = "Cross_Y", Type = "Slider", Get = function() return Crosshair.y_Off end, Set = function(val) UI_Cross_Y:Value(val) end},
-        {Name = "Cross_C", Type = "Colorpicker", Get = function() return Crosshair.Color end, Set = function(val) UI_Cross_C:Set(val) end},
-        {Name = "Plate_C", Type = "Colorpicker", Get = function() return NAMETAG_CONFIG.NAMEPLATE_COLOR end, Set = function(val) UI_Plate_C:Set(val) end},
-        {Name = "Chat_On", Type = "Toggle", Get = function() return ChatSpammerrr.Activated end, Set = function(val) UI_Chat_On:Set(val) end},
-        {Name = "Chat_Mode", Type = "Slider", Get = function() return ChatSpammerrr.Mode end, Set = function(val) UI_Chat_Mode:Value(val) end},
-        {Name = "Oth_Friend", Type = "Toggle", Get = function() return FriendBotState end, Set = function(val) UI_Oth_Friend:Set(val) end},
+        {Name = "Cross_On", Type = "Toggle", Get = function() return Crosshair.Enabled end, Set = function(val) Crosshair.Enabled = val; UI_Cross_On:Set(val) end},
+        {Name = "Cross_Sides", Type = "Slider", Get = function() return Crosshair.Sides end, Set = function(val) Crosshair.Sides = val; UI_Cross_Sides:Value(val) end},
+        {Name = "Cross_Gap", Type = "Slider", Get = function() return Crosshair.Size end, Set = function(val) Crosshair.Size = val; UI_Cross_Gap:Value(val) end},
+        {Name = "Cross_Rot", Type = "Slider", Get = function() return Crosshair.Rotation end, Set = function(val) Crosshair.Rotation = val; UI_Cross_Rot:Value(val) end},
+        {Name = "Cross_Thick", Type = "Slider", Get = function() return Crosshair.Thickness end, Set = function(val) Crosshair.Thickness = val; UI_Cross_Thick:Value(val) end},
+        {Name = "Cross_Len", Type = "Slider", Get = function() return Crosshair.Gap end, Set = function(val) Crosshair.Gap = val; UI_Cross_Len:Value(val) end},
+        {Name = "Cross_X", Type = "Slider", Get = function() return Crosshair.x_Off end, Set = function(val) Crosshair.x_Off = val; UI_Cross_X:Value(val) end},
+        {Name = "Cross_Y", Type = "Slider", Get = function() return Crosshair.y_Off end, Set = function(val) Crosshair.y_Off = val; UI_Cross_Y:Value(val) end},
+        {Name = "Cross_C", Type = "Colorpicker", Get = function() return Crosshair.Color end, Set = function(val) Crosshair.Color = val; UI_Cross_C:Set(val) end},
+        {Name = "Plate_C", Type = "Colorpicker", Get = function() return NAMETAG_CONFIG.NAMEPLATE_COLOR end, Set = function(val) NAMETAG_CONFIG.NAMEPLATE_COLOR = val; UI_Plate_C:Set(val) end},
+        {Name = "Chat_On", Type = "Toggle", Get = function() return ChatSpammerrr.Activated end, Set = function(val) ChatSpammerrr.Activated = val; UI_Chat_On:Set(val) end},
+        {Name = "Chat_Mode", Type = "Slider", Get = function() return ChatSpammerrr.Mode end, Set = function(val) ChatSpammerrr.Mode = val; UI_Chat_Mode:Value(val) end},
+        {Name = "Oth_Friend", Type = "Toggle", Get = function() return FriendBotState end, Set = function(val) FriendBotState = val; FB(val); UI_Oth_Friend:Set(val) end},
         {Name = "Oth_Targ", Type = "Textbox", Get = function() return NAMETAG_CONFIG.NAME end, Set = function(val) NAMETAG_CONFIG.NAME = val; NAMETAG_CONFIG.NAMEPLATE_TAG = "Target" end},
         
         {Name = "Oth_Flinger_Key", Type = "Keybind_Key", Get = function() return UI_Oth_Flinger.Key end, Set = function(val) UI_Oth_Flinger:SetKey(val) end},
         {Name = "Oth_Flinger_KeyMode", Type = "Keybind_Mode", Get = function() return UI_Oth_Flinger.KeyMode end, Set = function(val) UI_Oth_Flinger:SetMode(val) end},
         
-        {Name = "Oth_FPS", Type = "Slider", Get = function() return FPSCapState end, Set = function(val) if UI_Oth_FPS then UI_Oth_FPS:Value(val) end end},
-        {Name = "Oth_Killfeed", Type = "Toggle", Get = function() return KillFeedState end, Set = function(val) KillfeedToggle:Set(val) end},
+        {Name = "Oth_FPS", Type = "Slider", Get = function() return FPSCapState end, Set = function(val) if UI_Oth_FPS then FPSCapState = val; setfpscap(val); UI_Oth_FPS:Value(val) end end},
+        {Name = "Oth_Killfeed", Type = "Toggle", Get = function() return KillFeedState end, Set = function(val) KillFeedState = val; HitDetection(val); KillfeedToggle:Set(val) end},
+        
         -- ESP Shared Settings
         {Name = "ESP_Origin", Type = "Dropdown", Get = function() return Sense.teamSettings.enemy.tracerOrigin end, Set = function(val) Sense.teamSettings.enemy.tracerOrigin = val; Sense.teamSettings.friendly.tracerOrigin = val; UI_ESP_Origin:Text(val) end},
-        {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) UI_ESP_TextS:Value(val) end},
-        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) UI_ESP_MaxD:Value(val) end}, -- Added missing comma here
-        {Name = "Skeleton_Enabled", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Enabled or false end, Set = function(val) UI_Skeleton_Enabled:Set(val) end},
-        {Name = "Skeleton_Thickness", Type = "Slider", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Thickness or 1 end, Set = function(val) UI_Skeleton_Thickness:Value(val) end},
-        {Name = "Skeleton_Transparency", Type = "Slider", Get = function() return getgenv().SkeletonSettings and (getgenv().SkeletonSettings.Transparency * 100) or 100 end, Set = function(val) UI_Skeleton_Transparency:Value(val) end},
-        {Name = "Skeleton_UseTeamColor", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.UseTeamColor or true end, Set = function(val) UI_Skeleton_UseTeamColor:Set(val) end},
-        {Name = "Skeleton_Color", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Color or Color3.fromRGB(255, 255, 255) end, Set = function(val) UI_Skeleton_Color:Set(val) end},
-        {Name = "Skeleton_TeamColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.TeamColor or Color3.fromRGB(0, 255, 0) end, Set = function(val) UI_Skeleton_TeamColor:Set(val) end},
-        {Name = "Skeleton_EnemyColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.EnemyColor or Color3.fromRGB(255, 0, 0) end, Set = function(val) UI_Skeleton_EnemyColor:Set(val) end},
+        {Name = "ESP_TextSize", Type = "Slider", Get = function() return Sense.sharedSettings.textSize end, Set = function(val) Sense.sharedSettings.textSize = val; UI_ESP_TextS:Value(val) end},
+        {Name = "ESP_MaxDist", Type = "Slider", Get = function() return Sense.sharedSettings.maxDistance end, Set = function(val) Sense.sharedSettings.maxDistance = val; UI_ESP_MaxD:Value(val) end},
+        
+        {Name = "Skeleton_Enabled", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Enabled or false end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.Enabled = val end; UI_Skeleton_Enabled:Set(val) end},
+        {Name = "Skeleton_Thickness", Type = "Slider", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Thickness or 1 end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.Thickness = val end; UI_Skeleton_Thickness:Value(val) end},
+        {Name = "Skeleton_Transparency", Type = "Slider", Get = function() return getgenv().SkeletonSettings and (getgenv().SkeletonSettings.Transparency * 100) or 100 end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.Transparency = val / 100 end; UI_Skeleton_Transparency:Value(val) end},
+        {Name = "Skeleton_UseTeamColor", Type = "Toggle", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.UseTeamColor or true end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.UseTeamColor = val end; UI_Skeleton_UseTeamColor:Set(val) end},
+        {Name = "Skeleton_Color", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.Color or Color3.fromRGB(255, 255, 255) end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.Color = val end; UI_Skeleton_Color:Set(val) end},
+        {Name = "Skeleton_TeamColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.TeamColor or Color3.fromRGB(0, 255, 0) end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.TeamColor = val end; UI_Skeleton_TeamColor:Set(val) end},
+        {Name = "Skeleton_EnemyColor", Type = "Colorpicker", Get = function() return getgenv().SkeletonSettings and getgenv().SkeletonSettings.EnemyColor or Color3.fromRGB(255, 0, 0) end, Set = function(val) if getgenv().SkeletonSettings then getgenv().SkeletonSettings.EnemyColor = val end; UI_Skeleton_EnemyColor:Set(val) end},
 
         {Name = "Arrow_Enabled", Type = "Toggle", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.Enabled or false end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.Enabled = val end if UI_Arrow_Enabled then UI_Arrow_Enabled:Set(val) end end},
         {Name = "Arrow_Dist", Type = "Slider", Get = function() return getgenv().ArrowSettings and getgenv().ArrowSettings.DistFromCenter or 80 end, Set = function(val) if getgenv().ArrowSettings then getgenv().ArrowSettings.DistFromCenter = val end if UI_Arrow_Dist then UI_Arrow_Dist:Value(val) end end},
