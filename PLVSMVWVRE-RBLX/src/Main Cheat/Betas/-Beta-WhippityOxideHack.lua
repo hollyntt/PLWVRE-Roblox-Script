@@ -67,16 +67,8 @@ local flyForce, flyConnection
 
 -- Sirius Sense ESP remains untouched
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-
--- Assigned specific global/file scope loadstrings to ArrowESP and Radar
-local ArrowESP, Radar
-pcall(function()
-    ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))()
-end)
-pcall(function()
-    Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))()
-end)
-
+local ArrowESP = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Arrow.lua'))()
+local Radar = loadstring(game:HttpGet('https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/UI/Radar.lua'))()
 local ExecName = identifyexecutor()
 local SoundIDHM = 5794214857;
 local SoundIDK = 5764885315;
