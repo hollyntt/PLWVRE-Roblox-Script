@@ -1469,7 +1469,7 @@ function AntiAimFunction()
                         local Hitbox = character:FindFirstChild(HitboxName)
                         if Hitbox then return Hitbox end
                     end
-                enda
+                end
             end
 
             -- 2. Fallback to the old singular string setting if the table is missing
