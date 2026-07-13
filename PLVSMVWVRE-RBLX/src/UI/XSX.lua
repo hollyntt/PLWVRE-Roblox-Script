@@ -769,7 +769,7 @@ function library:Introduction()
     PLVSMVWVRELogo.Position = UDim2.new(0.5, 0, 0.5, 0)
     PLVSMVWVRELogo.Size = UDim2.new(0, 448, 0, 150)
     PLVSMVWVRELogo.Visible = true
-    PLVSMVWVRELogo.Image = "http://www.roblox.com/asset/?id=107397658571201"
+    PLVSMVWVRELogo.Image = "http://www.roblox.com/asset/?id=9365068051"
     PLVSMVWVRELogo.ImageColor3 = Color3.fromRGB(159, 115, 255)
     PLVSMVWVRELogo.ImageTransparency = 1
     
@@ -803,7 +803,7 @@ function library:Introduction()
     text.Position = UDim2.new(0.912751675, 0, 0, 0)
     text.Size = UDim2.new(0, 26, 0, 21)
     text.Font = Enum.Font.Code
-    text.Text = "an open-source, free, and lightweight Roblox exploit."
+    text.Text = "v2"
     text.TextColor3 = Color3.fromRGB(124, 124, 124)
     text.TextSize = 10.000
     text.TextTransparency = 1
