@@ -56,7 +56,10 @@ local flyForce, flyConnection
 -- Sirius Sense ESP remains untouched
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 local ArrowESP, Skeleton
-local ExecName = identifyexecutor()
+local ExecName = (identifyexecutor and identifyexecutor() or getexecutorname and getexecutorname() or "Unknown Executor")
+if not ExecName or ExecName == "" then
+    ExecName = "Unknown Executor"
+end
 local SoundIDHM = 5794214857;
 local SoundIDK = 5764885315;
 local TargetFling = "nil"
@@ -2597,7 +2600,7 @@ function AntiAimFunction()
             end)
         end
         
-        getgenv().Library:Notify(art.."\n[NOTE] PLVSMVWVRE.lol - Official Finished Release since 2023", 6)
+        getgenv().Library:Notify((art or "PLVSMVWVRE").."\n[NOTE] PLVSMVWVRE.lol - Official Finished Release since 2023", 6)
 
         Console() Success_Notificate("Console Hooked.")
 
