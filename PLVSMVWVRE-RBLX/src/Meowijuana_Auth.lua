@@ -360,7 +360,6 @@ local function killadonisforme()
 end
 
 local function _X()
-    repeat task.wait() until game:IsLoaded()
     Deob()
     killadonisforme()
     
