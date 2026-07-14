@@ -1,7 +1,7 @@
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 -- |                                 If Adonis Exists Kill him Method                                |
 -- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-local function Deob()
+function Deob()
     --// Known service names (hardcoded for compatibility)
     local KNOWN_SERVICES = {
         "AccessControlService",
@@ -260,129 +260,73 @@ local function Deob()
     end)
 end
 
+Deob()
+
 local function killadonisforme() 
-    -- Safe environment fallbacks
-    local setthreadidentity = setthreadidentity or setidentity or setthreadcontext or (syn and syn.set_thread_identity)
-    local hookfunction = hookfunction or replaceclosure or (detour and detour.hook)
-    local getgc = getgc or get_gc_objects
-    local newcclosure = newcclosure or function(f) return f end
-    local getrenv = getrenv
-
-    if not hookfunction then
-        warn("Bypass Check: hookfunction is not supported on your executor.")
-        return
-    end
-
-    if not getgc then
-        warn("Bypass Check: getgc is not supported on your executor.")
-        return
-    end
-
     local getinfo = getinfo or debug.getinfo
     local DEBUG = true
     local Hooked = {}
     
     local Detected, Kill
     
-    if setthreadidentity then
-        pcall(function() setthreadidentity(2) end)
-    end
+    setthreadidentity(2)
     
-    local gcObjects = {}
-    local successGC, errGC = pcall(function() gcObjects = getgc(true) end)
-
-    if successGC and type(gcObjects) == "table" then
-        for i, v in pairs(gcObjects) do
-            if typeof(v) == "table" then
-                local DetectFunc = rawget(v, "Detected")
-                local KillFunc = rawget(v, "Kill")
-            
-                if typeof(DetectFunc) == "function" and not Detected then
-                    Detected = DetectFunc
+    for i, v in getgc(true) do
+        if typeof(v) == "table" then
+            local DetectFunc = rawget(v, "Detected")
+            local KillFunc = rawget(v, "Kill")
+        
+            if typeof(DetectFunc) == "function" and not Detected then
+                Detected = DetectFunc
+                
+                local Old; Old = hookfunction(Detected, function(Action, Info, NoCrash)
+                    if Action ~= "_" then
+                        if DEBUG then
+                            warn(`Adonis AntiCheat flagged\nMethod: {Action}\nInfo: {Info}`)
+                        end
+                    end
                     
-                    local successHook, errHook = pcall(function()
-                        hookfunction(Detected, function(Action, Info, NoCrash)
-                            if Action ~= "_" then
-                                if DEBUG then
-                                    warn(`Adonis AntiCheat flagged\nMethod: {Action}\nInfo: {Info}`)
-                                end
-                            end
-                            
-                            return true
-                        end)
-                    end)
-        
-                    if successHook then
-                        table.insert(Hooked, Detected)
+                    return true
+                end)
+    
+                table.insert(Hooked, Detected)
+            end
+    
+            if rawget(v, "Variables") and rawget(v, "Process") and typeof(KillFunc) == "function" and not Kill then
+                Kill = KillFunc
+                local Old; Old = hookfunction(Kill, function(Info)
+                    if DEBUG then
+                        warn(`Adonis AntiCheat tried to kill (fallback): {Info}`)
                     end
-                end
-        
-                if rawget(v, "Variables") and rawget(v, "Process") and typeof(KillFunc) == "function" and not Kill then
-                    Kill = KillFunc
-                    local successHook2, errHook2 = pcall(function()
-                        hookfunction(Kill, function(Info)
-                            if DEBUG then
-                                        warn(`Adonis AntiCheat tried to kill (fallback): {Info}`)
-                                    end
-                        end)
-                    end)
-        
-                    if successHook2 then
-                        table.insert(Hooked, Kill)
-                    end
-                end
+                end)
+    
+                table.insert(Hooked, Kill)
             end
         end
     end
     
-    local debugInfo = (getrenv and pcall(getrenv) and getrenv().debug and getrenv().debug.info) or debug.info
-    if debugInfo then
-        pcall(function()
-            local Old; Old = hookfunction(debugInfo, newcclosure(function(...)
-                local LevelOrFunc, Info = ...
-            
-                if Detected and LevelOrFunc == Detected then
-                    if DEBUG then
-                        warn(`zins | adonis bypassed`)
-                    end
-            
-                    return coroutine.yield(coroutine.running())
-                end
-                
-                return Old(...)
-            end))
-        end)
-    end
-
-    if setthreadidentity then
-        pcall(function() setthreadidentity(7) end)
-    end
-end
-
-local function _X()
-    Deob()
-    killadonisforme()
+    local Old; Old = hookfunction(getrenv().debug.info, newcclosure(function(...)
+        local LevelOrFunc, Info = ...
     
-    -- Added safety check for game:HttpGet to prevent crashing
-    -- 1. Verify loadstring is supported in the current environment
-    local success, scriptContent = pcall(function()
-        return game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua")
-    end)
-
-    if success and scriptContent then
-        print("Received raw content length: " .. #scriptContent)
-        print("First 50 characters of content: " .. string.sub(scriptContent, 1, 50))
-
-        local compiledChunk, compileError = loadstring(scriptContent)
-        if compiledChunk then
-            print("Compilation successful! Safe to execute.")
-            pcall(compiledChunk)
-        else
-            warn("Compilation failed: " .. tostring(compileError))
+        if Detected and LevelOrFunc == Detected then
+            if DEBUG then
+                warn(`zins | adonis bypassed`)
+            end
+    
+            return coroutine.yield(coroutine.running())
         end
-    else
-        warn("Failed to fetch script content.")
-    end
+        
+        return Old(...)
+    end))
+    -- setthreadidentity(9)
+    setthreadidentity(7)
 end
 
-_X()
+
+local function Initiate()
+    killadonisforme()
+    repeat task.wait() until game:IsLoaded()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/hollyntt/PLWVRE-Roblox-Script/refs/heads/main/PLVSMVWVRE-RBLX/src/Main%20Cheat/WhippityOxideHack.lua"))()
+end
+
+Initiate()
